@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0a0d">
+<title>Săgetător — Horoscop</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root{
+  --bg:#0b0a0d;
+  --bg-2:#151217;
+  --ink:#f1ece1;
+  --ink-soft:#b3a996;
+  --gold:#cda86a;
+  --gold-bright:#ecd49a;
+  --line:rgba(205,168,106,0.35);
+  --line-soft:rgba(205,168,106,0.18);
+  --card:rgba(241,236,225,0.03);
+  --btn-text:#0b0a0d;
+}
+body.light{
+  --bg:#f3ede1;
+  --bg-2:#eae0cb;
+  --ink:#1c1712;
+  --ink-soft:#6b5f4a;
+  --gold:#9c7936;
+  --gold-bright:#b5924f;
+  --line:rgba(28,23,18,0.22);
+  --line-soft:rgba(28,23,18,0.1);
+  --card:rgba(28,23,18,0.035);
+  --btn-text:#f3ede1;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+button{touch-action:manipulation;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Cormorant Garamond', serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+  transition:background .5s ease, color .5s ease;
+}
+
+/* ornamental gold frame around the whole page */
+.frame{
+  position:fixed;
+  inset:14px;
+  border:1px solid var(--line);
+  pointer-events:none;
+  z-index:5;
+}
+.frame::before, .frame::after,
+.frame-corner-br, .frame-corner-bl{
+  content:"";
+  position:fixed;
+  width:22px; height:22px;
+  border-color:var(--gold);
+  z-index:6;
+  pointer-events:none;
+}
+.frame::before{top:14px; left:14px; border-top:2px solid var(--gold); border-left:2px solid var(--gold);}
+.frame::after{top:14px; right:14px; border-top:2px solid var(--gold); border-right:2px solid var(--gold);}
+.frame-corner-bl{bottom:14px; left:14px; border-bottom:2px solid var(--gold); border-left:2px solid var(--gold);}
+.frame-corner-br{bottom:14px; right:14px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold);}
+
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;}
+
+.mono{font-family:'Montserrat',sans-serif;}
+
+@keyframes fadeSlideIn{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+@keyframes shakeArrow{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-3px) rotate(-1deg);}
+  40%{transform:translateX(3px) rotate(1deg);}
+  60%{transform:translateX(-2px);}
+  80%{transform:translateX(2px);}
+}
+@keyframes dotPulse{
+  0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent);}
+  50%{box-shadow:0 0 0 8px color-mix(in srgb, var(--gold) 10%, transparent);}
+}
+@keyframes shimmer{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+.reveal{opacity:0; animation:fadeSlideIn .7s ease forwards;}
+.reveal-section{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+.reveal-section.in-view{opacity:1; transform:translateY(0);}
+
+.topline{
+  position:relative;
+  z-index:1;
+  max-width:600px;
+  margin:0 auto;
+  padding:44px 30px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.theme-toggle{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  padding:8px 14px;
+  cursor:pointer;
+  transition:all .25s ease;
+}
+.theme-toggle:hover{border-color:var(--gold); color:var(--gold);}
+.theme-toggle:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+.hero{
+  position:relative;
+  z-index:1;
+  max-width:600px;
+  margin:0 auto;
+  padding:18px 30px 0;
+  text-align:center;
+}
+.eyebrow{
+  font-family:'Montserrat',sans-serif;
+  font-size:21px;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:18px;
+}
+.wordmark{
+  font-family:'Cormorant Garamond', serif;
+  font-weight:300;
+  font-style:italic;
+  font-size:clamp(50px,11vw,84px);
+  letter-spacing:.03em;
+  margin:0;
+  line-height:1;
+  background:linear-gradient(100deg, var(--gold) 0%, var(--gold-bright) 25%, var(--gold) 50%, var(--gold-bright) 75%, var(--gold) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shimmer 7s linear infinite;
+}
+.dates{
+  font-family:'Montserrat',sans-serif;
+  font-size:10.5px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-top:14px;
+}
+
+.ornament{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  max-width:340px;
+  margin:26px auto;
+}
+.ornament::before, .ornament::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+.ornament span{color:var(--gold); font-size:13px;}
+
+.symbol-wrap{
+  display:flex;
+  justify-content:center;
+  margin:8px auto 10px;
+  cursor:pointer;
+}
+.symbol-wrap svg{transition:filter .3s ease;}
+.symbol-wrap:hover svg{filter:drop-shadow(0 0 10px color-mix(in srgb, var(--gold) 55%, transparent));}
+.symbol-wrap.shooting svg{animation:shakeArrow .4s ease;}
+
+nav.tabs{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:22px;
+  margin:22px 0 0;
+}
+nav.tabs button{
+  background:none;
+  border:none;
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  padding:6px 2px;
+  cursor:pointer;
+  border-bottom:1px solid transparent;
+  transition:color .25s ease, border-color .25s ease;
+}
+nav.tabs button:hover{color:var(--gold);}
+nav.tabs button.active{color:var(--gold); border-color:var(--gold);}
+nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+.stage{
+  position:relative;
+  z-index:1;
+  max-width:600px;
+  margin:0 auto;
+  padding:38px 30px 100px;
+}
+
+.card{
+  border:1px solid var(--line);
+  padding:44px 38px;
+  position:relative;
+  text-align:center;
+}
+.card::before{content:"";position:absolute;top:-1px;left:-1px;width:14px;height:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
+.card::after{content:"";position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
+
+.card-head h2{
+  font-family:'Montserrat',sans-serif;
+  font-weight:500;
+  font-size:11px;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin:0 0 6px;
+}
+.card-period{
+  font-style:italic;
+  font-size:15px;
+  color:var(--ink-soft);
+  margin-bottom:26px;
+}
+
+.reading{
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px;
+  font-weight:500;
+  line-height:1.3;
+  color:var(--ink);
+  margin:0 0 18px;
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity .3s ease, transform .3s ease;
+}
+.reading.swap{opacity:0; transform:translateY(6px);}
+.reading strong{color:var(--gold); font-weight:500; font-style:italic;}
+
+.reading-bullets{
+  list-style:none;
+  margin:0 0 32px;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  text-align:left;
+  max-width:420px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.reading-bullets li{
+  font-size:15px;
+  line-height:1.5;
+  color:var(--ink-soft);
+  padding-left:22px;
+  position:relative;
+}
+.reading-bullets li::before{
+  content:"✨️";
+  position:absolute;
+  left:0; top:0;
+  font-size:13px;
+}
+
+.energy-block{margin:0 0 30px;}
+.energy-label{
+  display:flex;
+  justify-content:space-between;
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+}
+.energy-label span:last-child{color:var(--gold); font-weight:600;}
+.energy-track{
+  height:3px;
+  background:var(--line-soft);
+  position:relative;
+}
+.energy-track > i{
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transition:width 1.4s cubic-bezier(.2,.8,.2,1);
+}
+
+.universe-block{
+  margin:0 0 30px;
+  padding:20px 22px;
+  border:1px solid var(--line-soft);
+  background:var(--card);
+}
+.universe-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+.universe-text{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:17px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  margin:0;
+}
+
+.stat-row{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin:0 0 30px;
+  text-align:left;
+}
+#stat-row.stat-row{
+  flex-direction:row;
+  justify-content:space-between;
+  gap:10px;
+}
+.gauge{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+}
+.gauge svg{overflow:visible;}
+.gauge-ring{
+  transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.gauge-num{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:15px;
+  fill:var(--gold);
+}
+.gauge-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  text-align:center;
+}
+
+.stat .label{
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+  display:flex;
+  justify-content:space-between;
+}
+.stat .bar{position:relative;}
+.bar{
+  height:1px;
+  background:var(--line-soft);
+  position:relative;
+}
+.bar > i{
+  display:block;
+  height:1px;
+  width:0%;
+  background:var(--gold);
+  position:relative;
+}
+.bar > i::after{
+  content:"";
+  position:absolute;
+  right:-2px; top:50%;
+  width:5px; height:5px;
+  background:var(--gold);
+  transform:translateY(-50%) rotate(45deg);
+}
+
+.pinned-note{
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  opacity:.75;
+}
+.api-note{
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  color:var(--gold);
+  opacity:.8;
+  margin-top:4px;
+}
+
+.btn-row{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  margin-top:28px;
+  flex-wrap:wrap;
+}
+.share-btn{
+  background:none;
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  font-family:'Montserrat',sans-serif;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  padding:11px 20px;
+  cursor:pointer;
+  transition:all .25s ease;
+}
+.share-btn:hover{border-color:var(--gold); color:var(--gold);}
+.share-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+.extra-divider{
+  display:flex; align-items:center; gap:12px; margin:34px 0 16px;
+}
+.extra-divider::before, .extra-divider::after{content:"";flex:1;height:1px;background:var(--line-soft);}
+.extra-divider span{
+  font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); white-space:nowrap;
+}
+.extra-btn{
+  display:block; margin:0 auto;
+  background:none; border:1px dashed var(--line);
+  font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-soft); padding:10px 22px; cursor:pointer; transition:all .25s ease;
+}
+.extra-btn:hover{border-color:var(--gold); color:var(--gold);}
+.extra-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+.extra-btn.pulse{animation:shakeArrow .4s ease;}
+.extra-panel{max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .35s ease, margin .4s ease;}
+.extra-panel.open{max-height:220px; opacity:1; margin-top:18px;}
+.extra-label{font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;}
+.extra-text{
+  font-style:italic; font-size:17px; line-height:1.6; color:var(--ink-soft); margin:0;
+  padding:16px; border:1px solid var(--line-soft);
+}
+.extra-text strong{color:var(--gold); font-weight:500;}
+
+/* briefs */
+.briefs{margin-top:70px; display:flex; flex-direction:column; gap:56px;}
+.brief-title{
+  text-align:center;
+  font-family:'Montserrat',sans-serif;
+  font-size:10.5px;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:22px;
+}
+.brief-sub{
+  text-align:center;
+  font-style:italic;
+  font-size:13px;
+  color:var(--ink-soft);
+  margin:-14px 0 20px;
+}
+
+.traits{display:flex; flex-direction:column; gap:14px;}
+.trait{
+  display:grid;
+  grid-template-columns:20px 1fr;
+  gap:12px;
+  align-items:baseline;
+  border-bottom:1px solid var(--line-soft);
+  padding-bottom:12px;
+  text-align:left;
+}
+.trait .glyph{color:var(--gold); font-size:14px;}
+.trait .name{
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink);
+  grid-column:2;
+}
+.trait.sky-score .name{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; letter-spacing:0; text-transform:none; color:var(--gold);}
+.trait .desc{grid-column:2; font-size:14px; color:var(--ink-soft); font-style:italic; margin-top:3px;}
+
+.compat{display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
+.compat-btn{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  background-color:#0b0a0d; border:1px solid var(--gold); color:var(--gold);
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px;
+  font-variant-emoji:text;
+  padding:8px 18px; cursor:pointer; transition:all .25s ease;
+  -webkit-tap-highlight-color:transparent;
+  outline-color:#b5541f;
+}
+.compat-btn:hover{border-color:var(--gold-bright); color:var(--gold-bright); box-shadow:0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);}
+.compat-btn.active{background:var(--gold); border-color:var(--gold); color:#0b0a0d;}
+.compat-btn:focus-visible{outline:1px solid #b5541f; outline-offset:3px;}
+.compat-btn::selection, .compat-btn *::selection{background:#b5541f; color:#0b0a0d;}
+.compat-detail{
+  max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .3s ease, margin .4s ease;
+  text-align:center; color:var(--ink-soft);
+}
+.compat-detail.open{max-height:420px; opacity:1; margin-top:18px;}
+.compat-pct{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; color:var(--ink); margin-bottom:8px;
+}
+.compat-pct span{color:var(--gold); font-weight:600;}
+.compat-desc{font-style:italic; font-size:14px; line-height:1.55; margin-bottom:16px;}
+.compat-stars{display:flex; flex-direction:column; gap:8px; max-width:260px; margin:0 auto;}
+.compat-stars > div{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:.04em;
+}
+.compat-stars span{color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; font-size:9.5px;}
+.compat-stars b{color:var(--gold); font-size:13px; letter-spacing:1px;}
+.compat-astro{
+  margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft);
+  font-family:'Montserrat',sans-serif; font-size:10.5px; letter-spacing:.03em;
+  color:var(--gold); line-height:1.6; font-style:normal;
+}
+
+.timeline{display:flex; flex-direction:column; gap:0;}
+.tl-item{
+  display:grid; grid-template-columns:96px 1fr; gap:14px;
+  padding:12px 0; border-bottom:1px solid var(--line-soft); text-align:left; position:relative;
+}
+.tl-item.today::before{
+  content:""; position:absolute; left:-16px; top:50%; width:5px; height:5px;
+  background:var(--gold); transform:translateY(-50%) rotate(45deg); animation:dotPulse 1.8s ease-in-out infinite;
+}
+.tl-date{font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
+.tl-desc{font-size:13.5px; color:var(--ink-soft); font-style:italic; line-height:1.5;}
+
+footer{
+  text-align:center;
+  margin-top:70px;
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  opacity:.6;
+}
+
+.toast{
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--gold); color:var(--btn-text);
+  font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  padding:11px 22px; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; z-index:10;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+@media (max-width:640px){
+  .frame{inset:6px;}
+  .frame::before, .frame::after, .frame-corner-bl, .frame-corner-br{width:12px;height:12px;}
+
+  .topline{padding:22px 18px 0;}
+  .hero{padding:14px 18px 0;}
+  .stage{padding:26px 18px 70px;}
+
+  .eyebrow{font-size:16px; margin-bottom:12px;}
+  .wordmark{font-size:clamp(42px,15vw,60px);}
+  .dates{font-size:9.5px; letter-spacing:.16em;}
+
+  .ornament{margin:20px auto;}
+  .symbol-wrap svg{width:170px; height:auto;}
+
+  nav.tabs{gap:14px; flex-wrap:wrap; row-gap:10px;}
+  nav.tabs button{font-size:12px; padding:8px 4px; min-height:32px;}
+
+  .card{padding:30px 20px;}
+  .reading{font-size:24px;}
+  .reading-bullets{max-width:none;}
+  .reading-bullets li{font-size:14.5px;}
+
+  .btn-row{flex-direction:column; gap:10px;}
+  .share-btn{width:100%; text-align:center; padding:13px 20px; min-height:44px;}
+  .extra-btn{width:100%; padding:13px 20px; min-height:44px;}
+
+  .theme-toggle{padding:10px 14px; min-height:38px;}
+
+  .briefs{margin-top:50px; gap:44px;}
+  .brief-title{font-size:12px;}
+
+  .compat{gap:8px;}
+  .compat-btn{padding:10px 14px; font-size:14px; min-height:40px;}
+
+  .tl-item{grid-template-columns:80px 1fr; gap:10px;}
+
+  .stat-row#stat-row{gap:6px;}
+  .gauge svg{width:52px; height:52px;}
+}
+
+@media (max-width:380px){
+  .wordmark{font-size:38px;}
+  .card{padding:26px 16px;}
+  .reading{font-size:21px;}
+}
+@media (prefers-reduced-motion: reduce){
+  * {animation:none !important; transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="frame"></div>
+<div class="frame-corner-bl"></div>
+<div class="frame-corner-br"></div>
+
+<div class="topline" style="justify-content:flex-end;">
+  <button class="theme-toggle" id="theme-btn">☾ Mod luminos</button>
+</div>
+
+<div class="hero">
+  <div class="eyebrow reveal" style="animation-delay:.05s">Horoscop</div>
+  <h1 class="wordmark reveal" style="animation-delay:.12s">Săgetător</h1>
+  <div class="dates reveal" style="animation-delay:.22s">22 Noiembrie — 21 Decembrie</div>
+
+  <div class="ornament reveal" style="animation-delay:.3s"><span>✦</span></div>
+
+  <div class="symbol-wrap" id="symbol-wrap" title="Atinge pentru a trage din nou">
+    <svg width="240" height="150" viewBox="0 0 240 150" fill="none" id="bow-svg">
+      <defs>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="var(--gold-bright)"/>
+          <stop offset="100%" stop-color="var(--gold)"/>
+        </linearGradient>
+        <radialGradient id="gemGrad" cx="35%" cy="30%" r="75%">
+          <stop offset="0%" stop-color="var(--gold-bright)"/>
+          <stop offset="100%" stop-color="var(--gold)"/>
+        </radialGradient>
+      </defs>
+
+      <g id="bowline" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <!-- outer faceted limb -->
+        <path d="M48,14 C8,32 -4,58 24,75 C-4,92 8,118 48,136"
+              stroke="url(#goldGrad)" stroke-width="1.6"
+              stroke-dasharray="270" stroke-dashoffset="270">
+          <animate attributeName="stroke-dashoffset" from="270" to="0" dur="1.3s" fill="freeze"/>
+        </path>
+        <!-- inner bright highlight, slightly offset for a faceted metal look -->
+        <path d="M50,19 C20,34 10,57 31,75 C10,93 20,116 50,131"
+              stroke="var(--gold-bright)" stroke-width="0.6" opacity="0.65"
+              stroke-dasharray="230" stroke-dashoffset="230">
+          <animate attributeName="stroke-dashoffset" from="230" to="0" dur="1.3s" begin="0.15s" fill="freeze"/>
+        </path>
+
+        <!-- taut string -->
+        <line x1="48" y1="14" x2="130" y2="75" stroke="var(--ink-soft)" stroke-width="0.8" opacity="0.5"
+              stroke-dasharray="103" stroke-dashoffset="103">
+          <animate attributeName="stroke-dashoffset" from="103" to="0" dur="0.7s" begin="1.15s" fill="freeze"/>
+        </line>
+        <line x1="48" y1="136" x2="130" y2="75" stroke="var(--ink-soft)" stroke-width="0.8" opacity="0.5"
+              stroke-dasharray="103" stroke-dashoffset="103">
+          <animate attributeName="stroke-dashoffset" from="103" to="0" dur="0.7s" begin="1.15s" fill="freeze"/>
+        </line>
+
+        <!-- arrow shaft -->
+        <line x1="130" y1="75" x2="212" y2="75" stroke="var(--gold)" stroke-width="1.3"
+              stroke-dasharray="82" stroke-dashoffset="82">
+          <animate attributeName="stroke-dashoffset" from="82" to="0" dur="0.5s" begin="1.55s" fill="freeze"/>
+        </line>
+      </g>
+
+      <!-- fletching flourish -->
+      <g opacity="0">
+        <animate attributeName="opacity" from="0" to="1" dur="0.35s" begin="1.9s" fill="freeze"/>
+        <path d="M136,75 C144,68 152,66 158,68 C150,71 144,73 136,75 Z" fill="url(#goldGrad)" opacity="0.85"/>
+        <path d="M136,75 C144,82 152,84 158,82 C150,79 144,77 136,75 Z" fill="var(--gold)" opacity="0.7"/>
+      </g>
+
+      <!-- arrowhead -->
+      <path d="M209,67 L230,75 L209,83 L216,75 Z" fill="url(#goldGrad)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" dur="0.25s" begin="2s" fill="freeze"/>
+      </path>
+
+      <!-- gems: top tip, bottom tip, grip -->
+      <g fill="url(#gemGrad)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.35s" fill="freeze"/>
+        <path d="M48,9 L52,14 L48,19 L44,14 Z"/>
+        <path d="M48,131 L52,136 L48,141 L44,136 Z"/>
+        <path d="M24,70 L29,75 L24,80 L19,75 Z"/>
+      </g>
+
+      <!-- twinkling sparkles -->
+      <g fill="var(--gold-bright)">
+        <path d="M48,4 L49.4,7.6 L53,9 L49.4,10.4 L48,14 L46.6,10.4 L43,9 L46.6,7.6 Z" opacity="0">
+          <animate attributeName="opacity" values="0;1;0.3;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.6s" begin="2.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M226,62 L227,64.6 L229.6,65.6 L227,66.6 L226,69.2 L225,66.6 L222.4,65.6 L225,64.6 Z" opacity="0">
+          <animate attributeName="opacity" values="0;1;0.2;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.2s" begin="2.35s" repeatCount="indefinite"/>
+        </path>
+        <path d="M14,40 L14.8,42 L16.8,42.8 L14.8,43.6 L14,45.6 L13.2,43.6 L11.2,42.8 L13.2,42 Z" opacity="0">
+          <animate attributeName="opacity" values="0;1;0.3;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="3s" begin="2.5s" repeatCount="indefinite"/>
+        </path>
+        <path d="M20,108 L20.8,110 L22.8,110.8 L20.8,111.6 L20,113.6 L19.2,111.6 L17.2,110.8 L19.2,110 Z" opacity="0">
+          <animate attributeName="opacity" values="0;1;0.2;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.8s" begin="2.65s" repeatCount="indefinite"/>
+        </path>
+      </g>
+    </svg>
+  </div>
+
+  <nav class="tabs reveal" style="animation-delay:.4s">
+    <button data-tab="zi" class="active">Zilnic</button>
+    <button data-tab="sapt">Săptămânal</button>
+    <button data-tab="luna">Lunar</button>
+  </nav>
+</div>
+
+<div class="stage">
+
+  <div class="card reveal" style="animation-delay:.5s">
+    <div class="card-head">
+      <h2 id="card-title">Citirea zilei</h2>
+    </div>
+    <div class="card-period" id="card-period"></div>
+
+    <p class="reading" id="reading-text"></p>
+    <ul class="reading-bullets" id="reading-bullets"></ul>
+
+    <div class="stat-row" id="stat-row"></div>
+
+    <div class="energy-block">
+      <div class="energy-label">
+        <span>Energie folosită azi</span>
+        <span id="energy-pct">0%</span>
+      </div>
+      <div class="energy-track"><i id="energy-fill" style="width:0%"></i></div>
+    </div>
+
+    <div class="universe-block">
+      <div class="universe-label">Mesajul Universului</div>
+      <p class="universe-text" id="universe-text"></p>
+    </div>
+
+    <div class="pinned-note" id="pinned-note"></div>
+    <div class="api-note" id="api-note"></div>
+
+    <div class="btn-row">
+      <button class="share-btn" id="share-btn">Trimite citirea</button>
+    </div>
+
+    <div class="extra-divider"><span>sau, pentru distracție</span></div>
+    <button class="extra-btn" id="extra-btn">Trage o săgeată — mesaj extra</button>
+    <div class="extra-panel" id="extra-panel">
+      <div class="extra-label">Mesaj suplimentar, nu înlocuiește citirea oficială de mai sus</div>
+      <p class="extra-text" id="extra-text"></p>
+    </div>
+  </div>
+
+  <div class="briefs">
+
+    <section class="reveal-section">
+      <div class="brief-title">Cerul de azi</div>
+      <div class="traits">
+        <div class="trait sky-score"><span class="glyph">✦</span><div class="name" id="sky-score-value">—</div><div class="desc">Scor astrologic al zilei</div></div>
+        <div class="trait"><span class="glyph" id="sky-moon-glyph">☾</span><div class="name" id="sky-moon-value">—</div><div class="desc">Faza lunii, azi</div></div>
+        <div class="trait"><span class="glyph">✓</span><div class="name">Bun pentru</div><div class="desc" id="sky-good-value">—</div></div>
+        <div class="trait"><span class="glyph">✗</span><div class="name">De evitat</div><div class="desc" id="sky-avoid-value">—</div></div>
+      </div>
+    </section>
+
+    <section class="reveal-section">
+      <div class="brief-title">Astăzi, pe scurt</div>
+      <div class="stat-row" id="lucky-row" style="text-align:center;"></div>
+    </section>
+
+    <section class="reveal-section">
+      <div class="brief-title">Compatibilitate</div>
+      <div class="brief-sub">Atinge un semn</div>
+      <div class="compat" id="compat-list">
+        <button class="compat-btn" data-sign="berbec">♈︎ Berbec</button>
+        <button class="compat-btn" data-sign="taur">♉︎ Taur</button>
+        <button class="compat-btn" data-sign="gemeni">♊︎ Gemeni</button>
+        <button class="compat-btn" data-sign="rac">♋︎ Rac</button>
+        <button class="compat-btn" data-sign="leu">♌︎ Leu</button>
+        <button class="compat-btn" data-sign="fecioara">♍︎ Fecioară</button>
+        <button class="compat-btn" data-sign="balanta">♎︎ Balanță</button>
+        <button class="compat-btn" data-sign="scorpion">♏︎ Scorpion</button>
+        <button class="compat-btn" data-sign="sagetator">♐︎ Săgetător</button>
+        <button class="compat-btn" data-sign="capricorn">♑︎ Capricorn</button>
+        <button class="compat-btn" data-sign="varsator">♒︎ Vărsător</button>
+        <button class="compat-btn" data-sign="pesti">♓︎ Pești</button>
+      </div>
+      <div class="compat-detail" id="compat-detail"></div>
+    </section>
+
+    <section class="reveal-section">
+      <div class="brief-title" id="calendar-title">Cerul lunii</div>
+      <div class="brief-sub">Evenimente ale lunii pentru Săgetător</div>
+      <div class="timeline" id="calendar-timeline"></div>
+    </section>
+
+  </div>
+
+  <footer>Element Foc &nbsp;·&nbsp; Planeta Jupiter &nbsp;·&nbsp; Piatra Turcoaz</footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- storage shim: keeps the app working even when opened as a plain
+// downloaded file, where window.storage (Claude's persistent store) doesn't exist ----------
+(function(){
+  if(window.storage && typeof window.storage.get === 'function') return;
+  const mem = {};
+  const k = (key, shared) => (shared ? 'shared:' : 'priv:') + key;
+  window.storage = {
+    async get(key, shared){
+      const kk = k(key, shared);
+      if(!(kk in mem)) throw new Error('key not found');
+      return {key, value: mem[kk], shared: !!shared};
+    },
+    async set(key, value, shared){
+      mem[k(key, shared)] = value;
+      return {key, value, shared: !!shared};
+    },
+    async delete(key, shared){
+      const kk = k(key, shared);
+      const existed = kk in mem;
+      delete mem[kk];
+      return {key, deleted: existed, shared: !!shared};
+    },
+    async list(prefix, shared){
+      const pfx = k(prefix || '', shared);
+      const keys = Object.keys(mem).filter(x=>x.startsWith(pfx)).map(x=>x.slice((shared?'shared:':'priv:').length));
+      return {keys, prefix, shared: !!shared};
+    }
+  };
+})();
+
+// ---------- starfield ----------
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const count = Math.floor((canvas.width*canvas.height)/9000);
+  stars = Array.from({length:count},()=>({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*1.3+0.2,
+    a:Math.random()*0.6+0.15,
+    tw:Math.random()*0.015+0.003,
+    dir:Math.random()>0.5?1:-1
+  }));
+}
+let shootingStars = [];
+function maybeSpawnShootingStar(){
+  if(Math.random() < 0.022 && shootingStars.length < 5){
+    const startX = Math.random()*canvas.width*0.75;
+    shootingStars.push({
+      x:startX, y: -10,
+      vx: 5 + Math.random()*3,
+      vy: 3 + Math.random()*2,
+      life: 1
+    });
+  }
+}
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const isLight = document.body.classList.contains('light');
+  const starColor = isLight ? '36,31,19' : '246,241,230';
+  ctx.fillStyle = `rgb(${starColor})`;
+  for(const s of stars){
+    s.a += s.tw*s.dir;
+    if(s.a>0.8||s.a<0.1) s.dir*=-1;
+    ctx.globalAlpha = s.a;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  maybeSpawnShootingStar();
+  shootingStars.forEach(s=>{
+    const grad = ctx.createLinearGradient(s.x, s.y, s.x - s.vx*8, s.y - s.vy*8);
+    grad.addColorStop(0, `rgba(${isLight?'194,90,36':'227,169,74'},${s.life})`);
+    grad.addColorStop(1, `rgba(${isLight?'194,90,36':'227,169,74'},0)`);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x - s.vx*8, s.y - s.vy*8);
+    ctx.stroke();
+    s.x += s.vx; s.y += s.vy; s.life -= 0.012;
+  });
+  shootingStars = shootingStars.filter(s=>s.life>0 && s.y < canvas.height+20);
+
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize',resize);
+resize();
+draw();
+
+// ---------- theme toggle ----------
+const themeBtn = document.getElementById('theme-btn');
+themeBtn.addEventListener('click', ()=>{
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  themeBtn.textContent = isLight ? '☀ Mod nocturn' : '☾ Mod luminos';
+});
+
+document.getElementById('symbol-wrap').addEventListener('click', ()=>{
+  const svg = document.getElementById('bow-svg');
+  const fresh = svg.cloneNode(true);
+  svg.parentNode.replaceChild(fresh, svg);
+  fresh.id = 'bow-svg';
+});
+
+// ---------- toast ----------
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+// ---------- content pools ----------
+const data = {
+  zi: {
+    title: "Citirea zilei",
+    entries: [
+      {head:"Astăzi ai șansa să schimbi direcția unei situații.",
+       bullets:["Dragoste: spune ce simți, fără ocolișuri.","Finanțe: evită cumpărăturile impulsive.","Carieră: apare o oportunitate neașteptată."]},
+      {head:"O idee bruscă îți schimbă planul zilei.",
+       bullets:["Dragoste: ascultă mai mult decât vorbești.","Finanțe: verifică un abonament sau o factură.","Carieră: propune ideea, nu o ține doar pentru tine."]},
+      {head:"Cineva îți pune la încercare răbdarea azi.",
+       bullets:["Dragoste: nu răspunde pe moment, la cald.","Finanțe: amână o decizie financiară majoră.","Carieră: alege calmul în locul disputei."]},
+      {head:"O conversație sinceră deblochează ceva important.",
+       bullets:["Dragoste: spune ce ai evitat să spui.","Finanțe: o veste bună despre un venit.","Carieră: cineva îți remarcă efortul."]},
+      {head:"Energia ta atrage atenția celor din jur azi.",
+       bullets:["Dragoste: farmecul tău e la cote maxime.","Finanțe: bun moment pentru o negociere.","Carieră: prezintă-te, nu te ascunde."]},
+      {head:"Jupiter îți șoptește să riști puțin mai mult.",
+       bullets:["Dragoste: fă primul pas, o dată.","Finanțe: o investiție mică merită atenție.","Carieră: cere ce ți se cuvine."]},
+      {head:"E o zi bună pentru a spune nu unui lucru vechi.",
+       bullets:["Dragoste: pune o limită sănătoasă.","Finanțe: refuză o cheltuială de moment.","Carieră: renunță la o sarcină care nu-ți aparține."]}
+    ],
+    stats:[["Energie",[62,95]],["Dragoste",[45,90]],["Carieră",[50,92]]]
+  },
+  sapt: {
+    title: "Săptămâna aceasta",
+    entries: [
+      {head:"Săptămâna te împinge spre o decizie amânată.",
+       bullets:["Dragoste: o discuție clarifică tot.","Finanțe: nu semna nimic în grabă vinerea.","Carieră: o inițiativă îți aduce vizibilitate."]},
+      {head:"Relațiile trec printr-o etapă de reașezare.",
+       bullets:["Dragoste: spune ce simți, nu presupune.","Finanțe: cheltuieli mici, dar dese — atenție.","Carieră: cere feedback direct, nu ghici."]},
+      {head:"O oportunitate de la job cere inițiativă.",
+       bullets:["Dragoste: fă loc pentru celălalt în program.","Finanțe: o veste financiară bună se conturează.","Carieră: ridică mâna primul, nu ultimul."]},
+      {head:"O călătorie scurtă îți resetează perspectiva.",
+       bullets:["Dragoste: ieșiți din rutina obișnuită.","Finanțe: bugetează din timp, nu improviza.","Carieră: o idee venită din drum prinde contur."]},
+      {head:"Ai tendința să promiți prea mult săptămâna asta.",
+       bullets:["Dragoste: alege calitatea timpului, nu cantitatea.","Finanțe: trei priorități, nu zece.","Carieră: spune nu unei sarcini în plus."]}
+    ],
+    stats:[["Focus",[55,88]],["Social",[60,94]],["Bani",[40,85]]]
+  },
+  luna: {
+    title: "Luna aceasta",
+    entries: [
+      {head:"Luna deschide un capitol de creștere reală.",
+       bullets:["Dragoste: o relație capătă profunzime nouă.","Finanțe: un venit suplimentar prinde contur.","Carieră: studiul sau formarea dă roade."]},
+      {head:"Jupiter îți amplifică tot ce pui în mișcare acum.",
+       bullets:["Dragoste: ce construiești acum durează.","Finanțe: extinde, dar cu cap.","Carieră: expansiunea vine cu responsabilitate."]},
+      {head:"O relație importantă cere onestitate profundă.",
+       bullets:["Dragoste: adevărul, chiar dacă doare puțin.","Finanțe: transparență în cheltuieli comune.","Carieră: o conversație dificilă nu mai poate fi amânată."]},
+      {head:"Cariera ta primește un test de răbdare luna asta.",
+       bullets:["Dragoste: susținerea partenerului contează.","Finanțe: rezultatele vin spre final de lună.","Carieră: constanța bate graba."]},
+      {head:"E o lună potrivită să reînveți ceva ce credeai știut.",
+       bullets:["Dragoste: privește relația cu ochi noi.","Finanțe: revizuiește un obicei financiar vechi.","Carieră: o abilitate veche merită actualizată."]}
+    ],
+    stats:[["Creștere",[70,97]],["Stabilitate",[35,75]],["Noroc",[60,96]]]
+  }
+};
+
+const universePool = [
+  "Nu tot ce e greu acum e greșit — unele lucruri se coc încet, ca vinul.",
+  "Ai voie să nu știi încă răspunsul. Claritatea vine, nu o forța.",
+  "Ceea ce ceri cu convingere, universul găsește o cale să-ți aducă.",
+  "Odihna nu e o pauză din drum — e parte din drum.",
+  "Persoana potrivită nu îți cere să fii mai mic ca să încapă lângă tine.",
+  "Azi nu trebuie să ai toate răspunsurile. E suficient un singur pas corect.",
+  "Ce simți acum e informație, nu adevăr absolut. Lasă-i timp.",
+  "Nu ai întârziat la nimic. Drumul tău are propriul lui ceas."
+];
+
+// ---------- compatibility, grounded in real astrological factors ----------
+// Săgetător is a Fire sign. Base affinity follows classical element theory:
+// Fire-Fire strongest, Fire-Air good (air feeds fire), Fire-Earth/Water harder.
+const elementBase = {
+  foc:     {pct:88, love:4, friends:4, sex:4, comm:3, challenges:2},
+  aer:     {pct:79, love:3, friends:4, sex:3, comm:4, challenges:2},
+  pamant:  {pct:59, love:3, friends:3, sex:3, comm:2, challenges:4},
+  apa:     {pct:54, love:4, friends:2, sex:3, comm:2, challenges:4}
+};
+
+const zodiacData = {
+  berbec:    {element:'foc',    offset:{pct:+3, comm:-1, challenges:+1}, note:"amândoi conduceți drumul, cine cedează primul câștigă, de fapt."},
+  taur:      {element:'pamant', offset:{pct:-1}, note:"tu cauți mișcare, el caută stabilitate, se poate găsi un mijloc azi."},
+  gemeni:    {element:'aer',    offset:{pct:+2, friends:+1, comm:+1}, note:"conversația curge ușor, dar rămâneți amândoi puțin superficiali azi."},
+  rac:       {element:'apa',    offset:{pct:-2, love:+1, friends:-1}, note:"emoția lui e mai profundă decât libertatea ta, echilibrul cere efort azi."},
+  leu:       {element:'foc',    offset:{pct:+5, love:+1, friends:+1}, note:"cea mai naturală alianță de foc, vă hrăniți reciproc încrederea."},
+  fecioara:  {element:'pamant', offset:{pct:-4, comm:0, challenges:+1}, note:"detaliile lui vs. spontaneitatea ta, atenție la critici azi."},
+  balanta:   {element:'aer',    offset:{pct:+1, friends:+1, comm:+1}, note:"focul și aerul se hrănesc reciproc, farmecul ei, curajul tău."},
+  scorpion:  {element:'apa',    offset:{pct:0, love:+1, friends:-1, challenges:+1}, note:"atracție intensă, dar el cere mai multă profunzime decât oferi azi."},
+  sagetator: {element:'foc',    offset:{pct:+2, friends:+1}, note:"vă înțelegeți din priviri, și repetați amândoi aceleași greșeli."},
+  capricorn: {element:'pamant', offset:{pct:-1, love:-1, comm:-1}, note:"ambiția lui e rigidă, a ta e liberă, nevoie de răbdare azi."},
+  varsator:  {element:'aer',    offset:{pct:+3, friends:+1, comm:+1}, note:"două spirite libere, niciunul nu vrea să fie „ținut în lesă\"."},
+  pesti:     {element:'apa',    offset:{pct:+1, love:+1, comm:-1}, note:"el visează, tu explorezi, ritmuri diferite, dar compatibile azi."}
+};
+
+// today's real astrological influence: moon phase (already computed) + Mercury retrograde window
+function getDailyAstroModifiers(){
+  const moon = getMoonPhase(new Date());
+  const now = new Date();
+  const mercuryRetro = now >= new Date(2026,5,29) && now <= new Date(2026,6,23);
+
+  const mod = {foc:0, aer:0, pamant:0, apa:0};
+  const notes = [];
+
+  if(moon.name === 'Lună Plină'){
+    mod.apa += 6; mod.foc += 2;
+    notes.push(`Luna Plină de azi (${moon.glyph}) amplifică emoțiile, plus pentru semnele de Apă`);
+  } else if(moon.name === 'Lună Nouă'){
+    mod.foc += 4;
+    notes.push(`Luna Nouă de azi (${moon.glyph}) favorizează începuturile, plus pentru semnele de Foc`);
+  } else if(moon.name === 'Primul pătrar' || moon.name === 'Ultimul pătrar'){
+    mod.aer += 3;
+    notes.push(`Faza lunară de azi (${moon.glyph}) ascute comunicarea, plus pentru semnele de Aer`);
+  } else if(moon.name === 'Lună crescătoare'){
+    mod.foc += 1;
+  } else if(moon.name === 'Lună descrescătoare'){
+    mod.pamant += 1;
+  }
+
+  if(mercuryRetro){
+    mod.aer -= 4; mod.pamant -= 2;
+    notes.push('Mercur retrograd îngreunează comunicarea, mai ales cu semnele de Aer');
+  }
+
+  return {mod, note: notes.join(' · ')};
+}
+
+function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+function renderCompat(){
+  const dayKey = todayKey();
+  const {mod, note} = getDailyAstroModifiers();
+
+  document.querySelectorAll('.compat-btn').forEach(btn=>{
+    const sign = btn.dataset.sign;
+    const z = zodiacData[sign];
+    if(!z) return;
+    const base = elementBase[z.element];
+    const off = z.offset || {};
+    const elMod = mod[z.element] || 0;
+
+    // small daily jitter so it's not identical to yesterday even without a major transit
+    const jitter = (hashStr(dayKey+sign+'j') % 5) - 2; // -2..+2
+
+    const pct = clamp(base.pct + (off.pct||0) + elMod + jitter, 32, 98);
+    const love = clamp(base.love + (off.love||0) + (elMod>0?1:0), 1, 5);
+    const friends = clamp(base.friends + (off.friends||0), 1, 5);
+    const sex = clamp(base.sex + (off.sex||0), 1, 5);
+    const comm = clamp(base.comm + (off.comm||0) + (elMod<0 && z.element==='aer' ? -1 : 0), 1, 5);
+    const challenges = clamp(base.challenges + (off.challenges||0), 1, 5);
+
+    btn.dataset.pct = pct;
+    btn.dataset.love = love;
+    btn.dataset.friends = friends;
+    btn.dataset.sex = sex;
+    btn.dataset.comm = comm;
+    btn.dataset.challenges = challenges;
+    btn.dataset.desc = `Astăzi: ${z.note}`;
+    btn.dataset.astro = note || 'Nicio influență astrologică majoră azi — doar afinitatea naturală de element.';
+  });
+}
+
+const luckyPool = {
+  numar: ["3","7","9","12","21"],
+  culoare: ["Turcoaz","Purpuriu","Auriu","Cărămiziu"],
+  cuvant: ["Îndrăzneală","Adevăr","Drum","Foc"]
+};
+
+// real July 2026 astrological events, framed for Sagittarius
+const calendarEvents = [
+  {date:"7 iul", desc:"Neptun intră retrograd — bun moment să verifici ce planuri sunt reale și ce sunt doar iluzii frumoase."},
+  {date:"9 iul", desc:"Venus schimbă semnul — relațiile cer mai multă onestitate concretă, nu doar gesturi mari."},
+  {date:"14 iul", desc:"Lună Nouă în Rac — un ciclu nou legat de casă și siguranță emoțională, chiar dacă instinctul tău e să pleci în altă parte."},
+  {date:"22 iul", desc:"Soarele intră în Leu — se activează zona ta de aventură, filosofie și expansiune. Perioadă bună pentru a îndrăzni."},
+  {date:"23 iul", desc:"Mercur redevine direct după retrogradarea din Rac — comunicarea și proiectele amânate încep să avanseze."},
+  {date:"26 iul", desc:"Saturn intră retrograd — o lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
+  {date:"29 iul", desc:"Lună Plină în Vărsător, în aspect favorabil cu Jupiter — una dintre cele mai norocoase zile ale anului pentru noi direcții."}
+];
+
+function randRange([a,b], seed){
+  const r = seed !== undefined ? seed : Math.random();
+  return Math.floor(r*(b-a+1))+a;
+}
+function todayKey(){
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+
+// ---------- Romanian date labels ----------
+const RO_ZILE = ["duminică","luni","marți","miercuri","joi","vineri","sâmbătă"];
+const RO_LUNI = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+
+function formatDayLabel(d){
+  return `${RO_ZILE[d.getDay()]}, ${d.getDate()} ${RO_LUNI[d.getMonth()]} ${d.getFullYear()}`;
+}
+function startOfWeek(d){
+  const day = d.getDay(); // 0 = duminică
+  const diff = (day === 0 ? -6 : 1 - day); // luni ca prima zi
+  const monday = new Date(d);
+  monday.setDate(d.getDate() + diff);
+  return monday;
+}
+function formatWeekLabel(d){
+  const mon = startOfWeek(d);
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const sameMonth = mon.getMonth() === sun.getMonth();
+  const monStr = `${mon.getDate()} ${sameMonth ? '' : RO_LUNI[mon.getMonth()]}`.trim();
+  const sunStr = `${sun.getDate()} ${RO_LUNI[sun.getMonth()]} ${sun.getFullYear()}`;
+  return `${monStr} — ${sunStr}`;
+}
+function formatMonthLabel(d){
+  return `${RO_LUNI[d.getMonth()]} ${d.getFullYear()}`;
+}
+function periodLabelFor(tab){
+  const now = new Date();
+  if(tab === 'zi') return formatDayLabel(now);
+  if(tab === 'sapt') return `săptămâna ${formatWeekLabel(now)}`;
+  if(tab === 'luna') return formatMonthLabel(now).replace(/^./, c=>c.toUpperCase());
+  return '';
+}
+function hashStr(s){
+  let h = 0;
+  for(let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; }
+  return h;
+}
+
+let currentTab = 'zi';
+
+function renderStats(container, statDefs, seedBase){
+  container.innerHTML = statDefs.map(([label,range])=>{
+    const seed = ((hashStr(seedBase+label) % 1000) / 1000);
+    const v = randRange(range, seed);
+    return `<div class="stat">
+      <div class="label">${label}</div>
+      <div class="value">${v}%</div>
+      <div class="bar"><i data-target="${v}" style="width:0%"></i></div>
+    </div>`;
+  }).join('');
+  // trigger fill animation on next frame so the CSS transition actually plays
+  requestAnimationFrame(()=>{
+    container.querySelectorAll('.bar > i').forEach(bar=>{
+      bar.style.width = bar.dataset.target + '%';
+    });
+  });
+}
+
+function renderLucky(){
+  const row = document.getElementById('lucky-row');
+  const key = todayKey();
+  const n = luckyPool.numar[hashStr(key+'n') % luckyPool.numar.length];
+  const c = luckyPool.culoare[hashStr(key+'c') % luckyPool.culoare.length];
+  const w = luckyPool.cuvant[hashStr(key+'w') % luckyPool.cuvant.length];
+  row.innerHTML = `
+    <div class="stat"><div class="label">Număr</div><div class="value">${n}</div></div>
+    <div class="stat"><div class="label">Culoare</div><div class="value">${c}</div></div>
+    <div class="stat"><div class="label">Cuvânt cheie</div><div class="value">${w}</div></div>
+  `;
+}
+
+// ---------- moon phase (real astronomical approximation) ----------
+function getMoonPhase(date){
+  const synodic = 29.53058867;
+  const knownNewMoon = Date.UTC(2000,0,6,18,14,0);
+  const diffDays = (date.getTime() - knownNewMoon) / 86400000;
+  const phase = ((diffDays % synodic) + synodic) % synodic;
+  const frac = phase / synodic;
+  if(frac < 0.03 || frac > 0.97) return {name:'Lună Nouă', glyph:'🌑'};
+  if(frac < 0.22) return {name:'Lună crescătoare', glyph:'🌒'};
+  if(frac < 0.28) return {name:'Primul pătrar', glyph:'🌓'};
+  if(frac < 0.47) return {name:'Lună crescătoare', glyph:'🌔'};
+  if(frac < 0.53) return {name:'Lună Plină', glyph:'🌕'};
+  if(frac < 0.72) return {name:'Lună descrescătoare', glyph:'🌖'};
+  if(frac < 0.78) return {name:'Ultimul pătrar', glyph:'🌗'};
+  return {name:'Lună descrescătoare', glyph:'🌘'};
+}
+
+const goodForPool = [
+  "decizii, drumuri scurte, conversații sincere",
+  "începuturi, negocieri, exerciții fizice",
+  "planuri de călătorie, studiu, networking",
+  "curaj, propuneri, prezentări",
+  "reconectare cu prieteni vechi, sport",
+  "clarificări în relații, decizii financiare mici",
+  "creativitate, idei noi, ieșiri spontane"
+];
+const avoidPool = [
+  "impulsivitate, promisiuni pripite",
+  "conflicte inutile, decizii de moment",
+  "cheltuieli mari, angajamente pe termen lung",
+  "certuri cu superiorii, graba",
+  "exces de sinceritate fără tact",
+  "amânarea unei conversații importante",
+  "supraestimarea propriei răbdări"
+];
+
+function renderSky(){
+  const dayKey = todayKey();
+  const score = 58 + (hashStr(dayKey+'score') % 41); // 58–98
+  document.getElementById('sky-score-value').textContent = `${score}/100`;
+
+  const moon = getMoonPhase(new Date());
+  document.getElementById('sky-moon-glyph').textContent = moon.glyph;
+  document.getElementById('sky-moon-value').textContent = moon.name;
+
+  document.getElementById('sky-good-value').textContent = goodForPool[hashStr(dayKey+'good') % goodForPool.length];
+  document.getElementById('sky-avoid-value').textContent = avoidPool[hashStr(dayKey+'avoid') % avoidPool.length];
+}
+
+function renderCalendar(){
+  const wrap = document.getElementById('calendar-timeline');
+  const now = new Date();
+  const todayNum = now.getDate();
+  document.getElementById('calendar-title').textContent = `Cerul lunii ${formatMonthLabel(now)}`;
+  wrap.innerHTML = calendarEvents.map(ev=>{
+    const dayNum = parseInt(ev.date);
+    const isToday = now.getMonth()===6 && now.getFullYear()===2026 && dayNum===todayNum;
+    return `<div class="tl-item${isToday?' today':''}">
+      <div class="tl-date">${ev.date}${isToday?' · azi':''}</div>
+      <div class="tl-desc">${ev.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---------- live reading via Claude API, with offline fallback ----------
+async function tryFetchAIReading(tab, fresh){
+  try{
+    const url = `/.netlify/functions/get-reading?tab=${tab}${fresh ? '&fresh=1' : ''}`;
+    const response = await fetch(url);
+    if(!response.ok) return null;
+    const parsed = await response.json();
+    if(!parsed.head || !Array.isArray(parsed.bullets) || !Array.isArray(parsed.stats) || parsed.stats.length < 3) return null;
+    return parsed;
+  }catch(e){ return null; }
+}
+
+function renderStatsDirect(container, pairs){
+  const R = 26, C = 2 * Math.PI * R;
+  container.innerHTML = pairs.map(([label, value])=>{
+    const v = Math.max(0, Math.min(100, Math.round(value)));
+    return `<div class="gauge">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="${R}" fill="none" stroke="var(--line-soft)" stroke-width="3"/>
+        <circle class="gauge-ring" cx="32" cy="32" r="${R}" fill="none" stroke="url(#goldGrad)" stroke-width="3"
+          stroke-linecap="round" transform="rotate(-90 32 32)"
+          stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${C - (v/100)*C}"/>
+        <text x="32" y="37" text-anchor="middle" class="gauge-num">${v}</text>
+      </svg>
+      <div class="gauge-label">${label}</div>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(()=>{
+    container.querySelectorAll('.gauge-ring').forEach(ring=>{
+      ring.style.strokeDashoffset = ring.dataset.target;
+    });
+  });
+}
+
+
+async function getStoredIndex(tabKey, dayKey){
+  try{
+    const res = await window.storage.get(`reading:${tabKey}:${dayKey}`);
+    return res ? JSON.parse(res.value) : null;
+  }catch(e){ return null; }
+}
+async function setStoredIndex(tabKey, dayKey, idx, ts){
+  try{ await window.storage.set(`reading:${tabKey}:${dayKey}`, JSON.stringify({idx, ts})); }
+  catch(e){ /* storage unavailable, continue without persistence */ }
+}
+
+let lastReadingText = '';
+
+// ---------- official reading: one fixed result per day / week / month ----------
+async function renderReading(){
+  const d = data[currentTab];
+  const dayKey = todayKey();
+  const readingEl = document.getElementById('reading-text');
+  const bulletsEl = document.getElementById('reading-bullets');
+  const universeEl = document.getElementById('universe-text');
+  const cardEl = document.querySelector('.card');
+  const apiNote = document.getElementById('api-note');
+
+  const applyContent = async ()=>{
+    document.getElementById('card-title').textContent = d.title;
+    document.getElementById('card-period').textContent = periodLabelFor(currentTab);
+
+    let head = null, bullets = null, universe = null;
+    let statsPairs = null;
+    let generatedAt = null;
+    apiNote.textContent = '';
+
+    // 1. reuse the official reading already generated for this period, if any
+    try{
+      const cached = await window.storage.get(`ai-reading:${currentTab}:${dayKey}`);
+      if(cached && cached.value){
+        const parsed = JSON.parse(cached.value);
+        head = parsed.head; bullets = parsed.bullets; universe = parsed.universe;
+        statsPairs = parsed.stats.map(s=>[s.label, s.value]);
+        generatedAt = parsed.ts;
+      }
+    }catch(e){ /* nothing cached yet */ }
+
+    // 2. otherwise generate it once, live, and lock it in for the rest of the period
+    if(!head){
+      const ai = await tryFetchAIReading(currentTab);
+      if(ai){
+        ai.ts = Date.now();
+        head = ai.head; bullets = ai.bullets; universe = ai.universe;
+        statsPairs = ai.stats.map(s=>[s.label, s.value]);
+        generatedAt = ai.ts;
+        try{ await window.storage.set(`ai-reading:${currentTab}:${dayKey}`, JSON.stringify(ai)); }catch(e){}
+      }
+    }
+
+    // 3. offline fallback — deterministic pick (same input → same output), not random
+    if(!head){
+      let stored = await getStoredIndex(currentTab, dayKey);
+      let idx;
+      if(stored && Number.isInteger(stored.idx) && stored.idx < d.entries.length){
+        idx = stored.idx;
+        generatedAt = stored.ts;
+      } else {
+        idx = hashStr(currentTab+dayKey) % d.entries.length;
+        generatedAt = Date.now();
+        await setStoredIndex(currentTab, dayKey, idx, generatedAt);
+      }
+      const entry = d.entries[idx];
+      head = entry.head;
+      bullets = entry.bullets;
+      universe = universePool[hashStr(currentTab+dayKey+'u') % universePool.length];
+      statsPairs = d.stats.map(([label, range])=>{
+        const seed = (hashStr(currentTab+dayKey+idx+label) % 1000) / 1000;
+        return [label, randRange(range, seed)];
+      });
+      apiNote.textContent = 'Citire locală — fără conexiune la generatorul live';
+    }
+
+    readingEl.innerHTML = head;
+    bulletsEl.innerHTML = (bullets || []).map(b => `<li>${b}</li>`).join('');
+    universeEl.textContent = universe || '';
+    lastReadingText = readingEl.textContent + ' ' + (bullets || []).join(' ');
+
+    renderStatsDirect(document.getElementById('stat-row'), statsPairs);
+
+    const note = document.getElementById('pinned-note');
+    const timeStr = generatedAt ? new Date(generatedAt).toLocaleString('ro-RO', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'}) : '';
+    note.textContent = `Citirea oficială pentru ${currentTab === 'zi' ? 'ziua' : currentTab === 'sapt' ? 'săptămâna' : 'luna'} curentă${timeStr ? ' · actualizat ' + timeStr : ''}`;
+
+    readingEl.classList.remove('swap');
+    cardEl.classList.add('flash');
+    setTimeout(()=>cardEl.classList.remove('flash'), 500);
+  };
+
+  // crossfade: fade out, swap content, fade in
+  readingEl.classList.add('swap');
+  setTimeout(applyContent, 180);
+}
+
+// ---------- extra bonus message: separate from the official reading, freshly random every time ----------
+async function renderExtra(){
+  const panel = document.getElementById('extra-panel');
+  const textEl = document.getElementById('extra-text');
+  const d = data[currentTab];
+
+  panel.classList.add('open');
+  textEl.textContent = 'Se trage o săgeată…';
+
+  let bonus = null;
+  const ai = await tryFetchAIReading(currentTab, true);
+  if(ai) bonus = ai.head;
+  if(!bonus){
+    const idx = Math.floor(Math.random()*d.entries.length);
+    bonus = d.entries[idx].head;
+  }
+  textEl.innerHTML = bonus;
+}
+
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    document.getElementById('extra-panel').classList.remove('open');
+    renderReading();
+  });
+});
+
+document.getElementById('extra-btn').addEventListener('click', (e)=>{
+  const btn = e.currentTarget;
+  btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
+  const symbol = document.getElementById('symbol-wrap');
+  symbol.classList.remove('shooting'); void symbol.offsetWidth; symbol.classList.add('shooting');
+  renderExtra();
+});
+
+// ---------- scroll reveal ----------
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal-section').forEach(el=>revealObserver.observe(el));
+
+document.getElementById('share-btn').addEventListener('click', async ()=>{
+  const shareText = `Horoscop Săgetător: ${lastReadingText}`;
+  if(navigator.share){
+    try{ await navigator.share({title:'Horoscop Săgetător', text: shareText}); return; }
+    catch(e){ /* user cancelled or share failed — fall through to copy */ }
+  }
+  try{
+    await navigator.clipboard.writeText(shareText);
+    showToast('Copiat în clipboard ✦');
+    return;
+  }catch(e){ /* Clipboard API blocked — try legacy fallback below */ }
+  try{
+    const ta = document.createElement('textarea');
+    ta.value = shareText;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast(ok ? 'Copiat în clipboard ✦' : 'Nu am putut copia — selectează textul manual');
+  }catch(e){
+    showToast('Nu am putut copia — selectează textul manual');
+  }
+});
+
+// ---------- compatibility detail toggle ----------
+function starsFor(n){
+  const full = '★'.repeat(n);
+  const empty = '☆'.repeat(5 - n);
+  return full + empty;
+}
+document.querySelectorAll('.compat-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const detail = document.getElementById('compat-detail');
+    const isActive = btn.classList.contains('active');
+    document.querySelectorAll('.compat-btn').forEach(b=>b.classList.remove('active'));
+    if(isActive){
+      detail.classList.remove('open');
+      detail.innerHTML = '';
+    } else {
+      btn.classList.add('active');
+      const d = btn.dataset;
+      detail.innerHTML = `
+        <div class="compat-pct">Compatibilitate: <span>${d.pct}%</span></div>
+        <div class="compat-desc">${d.desc}</div>
+        <div class="compat-stars">
+          <div><span>Iubire</span><b>${starsFor(+d.love)}</b></div>
+          <div><span>Prieteni</span><b>${starsFor(+d.friends)}</b></div>
+          <div><span>Sex</span><b>${starsFor(+d.sex)}</b></div>
+          <div><span>Comunicare</span><b>${starsFor(+d.comm)}</b></div>
+          <div><span>Provocări</span><b>${starsFor(+d.challenges)}</b></div>
+        </div>
+        <div class="compat-astro">${d.astro}</div>`;
+      detail.classList.add('open');
+    }
+  });
+});
+
+// ---------- live "energy used today" bar, based on time of day ----------
+function renderEnergyBar(){
+  const now = new Date();
+  const minutesSinceMidnight = now.getHours()*60 + now.getMinutes();
+  const pct = Math.round((minutesSinceMidnight / (24*60)) * 100);
+  document.getElementById('energy-pct').textContent = `${pct}%`;
+  document.getElementById('energy-fill').style.width = `${pct}%`;
+}
+
+renderReading();
+renderLucky();
+renderCalendar();
+renderSky();
+renderCompat();
+renderEnergyBar();
+setInterval(renderEnergyBar, 60000);
+</script>
+
+
+</body>
+</html>
