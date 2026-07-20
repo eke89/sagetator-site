@@ -7,30 +7,37 @@ const CAT_MAP = {
 };
 
 function buildPrompt(cat) {
-  return `Scrie un horoscop scurt, scanabil, în limba română, pentru zodia Săgetător (Sagittarius), pentru ${cat.period}. Format: o propoziție-titlu, foarte scurtă și directă (max 12 cuvinte), plus exact 3 bullet-uri scurte (max 8 cuvinte fiecare) pentru Dragoste / Finanțe / Carieră. Adaugă separat un "mesaj al universului" — o propoziție emoțională, caldă, diferită ca ton de horoscop (nu despre zodie, despre viață în general). Răspunde DOAR cu JSON valid, fără text suplimentar, fără markdown, exact în acest format:
-{"head":"...","bullets":["Dragoste: ...","Finanțe: ...","Carieră: ..."],"universe":"...","stats":[{"label":"${cat.labels[0]}","value":NUMĂR_0_100},{"label":"${cat.labels[1]}","value":NUMĂR_0_100},{"label":"${cat.labels[2]}","value":NUMĂR_0_100}]}`;
+  var p1 = 'Scrie un horoscop scurt, scanabil, in limba romana, pentru zodia Sagetator (Sagittarius), pentru ' + cat.period + '. ';
+  var p2 = 'Format: o propozitie-titlu, foarte scurta si directa (max 12 cuvinte), plus exact 3 bullet-uri scurte (max 8 cuvinte fiecare) pentru Dragoste / Finante / Cariera. ';
+  var p3 = 'Adauga separat un "mesaj al universului" - o propozitie emotionala, calda, diferita ca ton de horoscop (nu despre zodie, despre viata in general). ';
+  var p4 = 'Raspunde DOAR cu JSON valid, fara text suplimentar, fara markdown, exact in acest format: ';
+  var schema = '{"head":"...","bullets":["Dragoste: ...","Finante: ...","Cariera: ..."],"universe":"...","stats":[';
+  schema += '{"label":"' + cat.labels[0] + '","value":NUMAR_0_100},';
+  schema += '{"label":"' + cat.labels[1] + '","value":NUMAR_0_100},';
+  schema += '{"label":"' + cat.labels[2] + '","value":NUMAR_0_100}]}';
+  return p1 + p2 + p3 + p4 + schema;
 }
 
 function todayKey() {
-  const d = new Date();
-  return ${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()};
+  var d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 }
 
 exports.handler = async (event) => {
-  const params = event.queryStringParameters || {};
-  const tab = params.tab || 'zi';
-  const isFresh = params.fresh === '1';
+  var params = event.queryStringParameters || {};
+  var tab = params.tab || 'zi';
+  var isFresh = params.fresh === '1';
 
   if (!CAT_MAP[tab]) {
     return { statusCode: 400, body: JSON.stringify({ error: 'invalid tab' }) };
   }
 
-  const store = getStore('sagetator-readings');
-  const cacheKey = ${tab}:${todayKey()};
+  var store = getStore('sagetator-readings');
+  var cacheKey = tab + ':' + todayKey();
 
   if (!isFresh) {
     try {
-      const cached = await store.get(cacheKey, { type: 'json' });
+      var cached = await store.get(cacheKey, { type: 'json' });
       if (cached) {
         return {
           statusCode: 200,
@@ -38,17 +45,19 @@ exports.handler = async (event) => {
           body: JSON.stringify(cached)
         };
       }
-    } catch (e) {}
+    } catch (e) {
+      // fall through and generate
+    }
   }
 
-  const cat = CAT_MAP[tab];
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  var cat = CAT_MAP[tab];
+  var apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return { statusCode: 500, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured' }) };
   }
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,14 +72,14 @@ exports.handler = async (event) => {
     });
 
     if (!response.ok) {
-      const errText = await response.text();
+      var errText = await response.text();
       return { statusCode: 502, body: JSON.stringify({ error: 'Anthropic API error', detail: errText }) };
     }
 
-    const data = await response.json();
-    const text = (data.content || []).map((b) => b.text || '').join('').trim();
-    const clean = text.replace(/json|/g, '').trim();
-    const parsed = JSON.parse(clean);
+    var data = await response.json();
+    var text = (data.content || []).map(function (b) { return b.text || ''; }).join('').trim();
+    var clean = text.replace(/```json|```/g, '').trim();
+    var parsed = JSON.parse(clean);
 
     if (!parsed.head || !Array.isArray(parsed.bullets) || !Array.isArray(parsed.stats)) {
       return { statusCode: 502, body: JSON.stringify({ error: 'malformed generation' }) };
