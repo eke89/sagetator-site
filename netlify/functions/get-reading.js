@@ -23,6 +23,15 @@ function todayKey() {
   return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 }
 
+function getConfiguredStore() {
+  var siteID = process.env.NETLIFY_SITE_ID;
+  var token = process.env.NETLIFY_TOKEN;
+  if (siteID && token) {
+    return getStore({ name: 'sagetator-readings', siteID: siteID, token: token });
+  }
+  return getStore('sagetator-readings');
+}
+
 exports.handler = async (event) => {
   var params = event.queryStringParameters || {};
   var tab = params.tab || 'zi';
@@ -32,7 +41,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'invalid tab' }) };
   }
 
-  var store = getStore('sagetator-readings');
+  var store = getConfiguredStore();
   var cacheKey = tab + ':' + todayKey();
 
   if (!isFresh) {
@@ -88,7 +97,7 @@ exports.handler = async (event) => {
     parsed.ts = Date.now();
 
     if (!isFresh) {
-      await store.setJSON(cacheKey, parsed);
+      try { await store.setJSON(cacheKey, parsed); } catch (e) { /* caching failed, still return the reading */ }
     }
 
     return {
