@@ -1446,9 +1446,6 @@ footer div:last-child{margin-bottom:0;}
   .reading{font-size:15px;}
   .reading-hook{font-size:19px;}
 }
-@media (prefers-reduced-motion: reduce){
-  * {animation:none !important; transition:none !important;}
-}
 </style>
 </head>
 <body>
@@ -2413,23 +2410,9 @@ const AI_SIGN_KEYS = {
 };
 
 async function renderCompat(){
-  // try the AI-generated compatibility from today's cached reading (same call the daily
-  // reading already uses, so this costs nothing extra — it's just reading the cache)
-  try{
-    const res = await fetch('/.netlify/functions/get-reading?tab=zi');
-    if(res.ok){
-      const data = await res.json();
-      if(data && data.compat){
-        applyCompatData(data.compat);
-        return;
-      }
-    }
-  }catch(e){ /* fall through */ }
-
-  // today's cache doesn't have compatibility yet (stale cache, or unreachable) — don't wait
-  // on a brand-new live generation just for this, that would make every page load slow.
-  // Use the fast, local, date-based calculation instead; it self-heals automatically once
-  // the scheduled function regenerates today's cache with compatibility included.
+  // compatibility is always computed locally now — fast, instant, no network wait.
+  // (the AI used to generate this too, but it was the heaviest part of the prompt and
+  // was causing generation to take 30-40+ seconds, past Netlify's function time limit.)
   renderCompatLocal();
 }
 
