@@ -1,3 +1,4 @@
+const { schedule } = require('@netlify/functions');
 const { getStore } = require('@netlify/blobs');
 
 const CAT_MAP = {
@@ -9,7 +10,6 @@ const CAT_MAP = {
 
 var SIGNS = ['Berbec','Taur','Gemeni','Rac','Leu','Fecioara','Balanta','Scorpion','Sagetator','Capricorn','Varsator','Pesti'];
 
-// ---------- real astrological context, computed from the actual date, injected into the prompt ----------
 function getMoonPhaseInfo(date) {
   var synodic = 29.53058867;
   var knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
@@ -26,7 +26,6 @@ function getMoonPhaseInfo(date) {
   return 'Luna descrescatoare';
 }
 
-// known real transits for 2026 relevant to this window (extend over time as needed)
 var KNOWN_TRANSITS = [
   { start: Date.UTC(2026, 5, 29), end: Date.UTC(2026, 6, 23), label: 'Mercur retrograd in Rac' },
   { start: Date.UTC(2026, 6, 7),  end: Date.UTC(2026, 8, 1),  label: 'Neptun retrograd in Berbec' },
@@ -43,6 +42,16 @@ function getActiveTransits(date) {
     }
   }
   return active;
+}
+
+function todayKey() {
+  var parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Bucharest',
+    year: 'numeric', month: 'numeric', day: 'numeric'
+  }).formatToParts(new Date());
+  var map = {};
+  parts.forEach(function (p) { map[p.type] = p.value; });
+  return map.year + '-' + map.month + '-' + map.day;
 }
 
 function buildAstroContext() {
@@ -81,16 +90,6 @@ function buildPrompt(cat) {
   return p0 + pStyle + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p9b + p10 + p11 + schema;
 }
 
-function todayKey() {
-  var parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Bucharest',
-    year: 'numeric', month: 'numeric', day: 'numeric'
-  }).formatToParts(new Date());
-  var map = {};
-  parts.forEach(function (p) { map[p.type] = p.value; });
-  return map.year + '-' + map.month + '-' + map.day;
-}
-
 function getConfiguredStore() {
   var siteID = process.env.NETLIFY_SITE_ID;
   var token = process.env.NETLIFY_TOKEN;
@@ -100,143 +99,75 @@ function getConfiguredStore() {
   return getStore('sagetator-readings');
 }
 
-exports.handler = async (event) => {
-  var params = event.queryStringParameters || {};
-  var tab = params.tab || 'zi';
-  var isFresh = params.fresh === '1';
+async function generateAndCache(tab, store, dayKey) {
+  var cacheKey = tab + ':' + dayKey;
 
-  if (!CAT_MAP[tab]) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'invalid tab' }) };
-  }
+  // avoid regenerating if something (a visitor, or a retry of this same run) already cached it
+  try {
+    var existing = await store.get(cacheKey, { type: 'json' });
+    if (existing) return { tab: tab, status: 'already-cached' };
+  } catch (e) { /* proceed to generate */ }
 
-  var store = getConfiguredStore();
-
-  // ---------- archive: list past cached readings for this tab ----------
-  if (params.list === '1') {
-    try {
-      var listResult = await store.list({ prefix: tab + ':' });
-      var blobs = [];
-      if (listResult && Array.isArray(listResult.blobs)) {
-        blobs = listResult.blobs;
-      } else if (Array.isArray(listResult)) {
-        blobs = listResult;
-      }
-      var items = blobs.map(function (b) {
-        var key = (typeof b === 'string') ? b : b.key;
-        var day = key.slice(tab.length + 1);
-        var parts = day.split('-').map(Number);
-        var sortVal = (parts[0] || 0) * 10000 + (parts[1] || 0) * 100 + (parts[2] || 0);
-        return { key: key, day: day, sortVal: sortVal };
-      });
-      items.sort(function (a, b) { return b.sortVal - a.sortVal; });
-      items = items.slice(0, 14);
-
-      var results = [];
-      for (var i = 0; i < items.length; i++) {
-        try {
-          var val = await store.get(items[i].key, { type: 'json' });
-          if (val) {
-            results.push({
-              date: items[i].day,
-              intro: val.intro || '',
-              keepThought: val.keepThought || '',
-              scores: val.scores || null,
-              ts: val.ts || null
-            });
-          }
-        } catch (e) { /* skip unreadable entry */ }
-      }
-
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: results })
-      };
-    } catch (e) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'list failed', detail: String(e) }) };
-    }
-  }
-
-  // ---------- archive: read one specific past day (never generates new content) ----------
-  if (params.date) {
-    var archiveKey = tab + ':' + params.date;
-    try {
-      var archived = await store.get(archiveKey, { type: 'json' });
-      if (archived) {
-        return {
-          statusCode: 200,
-          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=86400' },
-          body: JSON.stringify(archived)
-        };
-      }
-    } catch (e) { /* fall through to 404 */ }
-    return { statusCode: 404, body: JSON.stringify({ error: 'not found in archive' }) };
-  }
-
-  var cacheKey = tab + ':' + todayKey();
-
-  if (!isFresh) {
-    try {
-      var cached = await store.get(cacheKey, { type: 'json' });
-      if (cached) {
-        return {
-          statusCode: 200,
-          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=1800' },
-          body: JSON.stringify(cached)
-        };
-      }
-    } catch (e) {
-      // fall through and generate
-    }
-  }
+  var apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return { tab: tab, status: 'no-api-key' };
 
   var cat = CAT_MAP[tab];
-  var apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured' }) };
+  var response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      max_tokens: 3200,
+      messages: [{ role: 'user', content: buildPrompt(cat) }]
+    })
+  });
+
+  if (!response.ok) {
+    var errText = await response.text();
+    return { tab: tab, status: 'api-error', detail: errText };
   }
 
-  try {
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-5',
-        max_tokens: 3200,
-        messages: [{ role: 'user', content: buildPrompt(cat) }]
-      })
-    });
+  var data = await response.json();
+  var text = (data.content || []).map(function (b) { return b.text || ''; }).join('').trim();
+  var clean = text.replace(/```json|```/g, '').trim();
+  var parsed = JSON.parse(clean);
 
-    if (!response.ok) {
-      var errText = await response.text();
-      return { statusCode: 502, body: JSON.stringify({ error: 'Anthropic API error', detail: errText }) };
-    }
-
-    var data = await response.json();
-    var text = (data.content || []).map(function (b) { return b.text || ''; }).join('').trim();
-    var clean = text.replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(clean);
-
-    if (!parsed.intro || !parsed.areas || !parsed.scores) {
-      return { statusCode: 502, body: JSON.stringify({ error: 'malformed generation' }) };
-    }
-
-    parsed.ts = Date.now();
-
-    if (!isFresh) {
-      try { await store.setJSON(cacheKey, parsed); } catch (e) { /* caching failed, still return the reading */ }
-    }
-
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(parsed)
-    };
-  } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'generation failed', detail: String(e) }) };
+  if (!parsed.intro || !parsed.areas || !parsed.scores) {
+    return { tab: tab, status: 'malformed' };
   }
+
+  parsed.ts = Date.now();
+  await store.setJSON(cacheKey, parsed);
+  return { tab: tab, status: 'generated' };
+}
+
+// runs daily at 22:00 UTC — midnight in Romania during winter (UTC+2), 1am during summer DST (UTC+3);
+// the date it caches under is always computed in Europe/Bucharest, so it lines up with what visitors see either way.
+// this function ONLY generates and caches the day's content. Push notifications are sent separately,
+// later in the day, by scheduled-notify.js — so the reading is always ready before anyone gets pinged about it.
+const handler = async () => {
+  var store = getConfiguredStore();
+  var dayKey = todayKey();
+  var results = [];
+  var tabs = Object.keys(CAT_MAP);
+
+  for (var i = 0; i < tabs.length; i++) {
+    try {
+      var r = await generateAndCache(tabs[i], store, dayKey);
+      results.push(r);
+    } catch (e) {
+      results.push({ tab: tabs[i], status: 'error', detail: String(e) });
+    }
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ dayKey: dayKey, results: results })
+  };
 };
+
+exports.handler = schedule('0 22 * * *', handler);
