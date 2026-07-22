@@ -92,12 +92,21 @@ function todayKey() {
 }
 
 function getConfiguredStore() {
-  var siteID = process.env.NETLIFY_SITE_ID;
-  var token = process.env.NETLIFY_TOKEN;
-  if (siteID && token) {
-    return getStore({ name: 'sagetator-readings', siteID: siteID, token: token });
+  // Prefer Netlify's automatic Blobs context — it's provided natively at runtime for any
+  // function actually deployed on Netlify, and is always correctly scoped to this exact site.
+  // Manual siteID/token are only needed for tools running OUTSIDE Netlify's own infrastructure
+  // (e.g. a local script) — using them here risks silent failures if they ever go stale or
+  // point at the wrong site, which would make every single request regenerate from scratch.
+  try {
+    return getStore('sagetator-readings');
+  } catch (e) {
+    var siteID = process.env.NETLIFY_SITE_ID;
+    var token = process.env.NETLIFY_TOKEN;
+    if (siteID && token) {
+      return getStore({ name: 'sagetator-readings', siteID: siteID, token: token });
+    }
+    throw e;
   }
-  return getStore('sagetator-readings');
 }
 
 exports.handler = async (event) => {
@@ -186,7 +195,7 @@ exports.handler = async (event) => {
         };
       }
     } catch (e) {
-      // fall through and generate
+      console.error('cache read failed for', cacheKey, ':', String(e));
     }
   }
 
@@ -228,7 +237,7 @@ exports.handler = async (event) => {
     parsed.ts = Date.now();
 
     if (!isFresh) {
-      try { await store.setJSON(cacheKey, parsed); } catch (e) { /* caching failed, still return the reading */ }
+      try { await store.setJSON(cacheKey, parsed); } catch (e) { console.error('cache write failed for', cacheKey, ':', String(e)); }
     }
 
     return {
