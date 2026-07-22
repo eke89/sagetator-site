@@ -77,6 +77,19 @@ body{
 .frame-corner-br{bottom:14px; right:14px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold);}
 
 #stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;}
+.entrance-flash{
+  position:fixed;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 32%, rgba(236,212,154,0.55), rgba(236,212,154,0.12) 35%, transparent 65%);
+  animation:entranceFlash 1.3s ease-out forwards;
+}
+@keyframes entranceFlash{
+  0%{ opacity:0; }
+  15%{ opacity:1; }
+  100%{ opacity:0; }
+}
 
 .mono{font-family:'Montserrat',sans-serif;}
 
@@ -202,6 +215,15 @@ body{
   font-size:16px;
   color:var(--gold-bright);
   margin-top:12px;
+}
+.hero-club-line{
+  font-family:'Montserrat',sans-serif;
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-top:10px;
+  opacity:.85;
 }
 .streak-badge{
   display:inline-flex;
@@ -498,8 +520,32 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   color:var(--ink-soft);
   margin-bottom:26px;
 }
+.tldr-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px 18px;
+  margin:-14px 0 26px;
+  font-family:'Montserrat',sans-serif;
+  font-size:12px;
+  color:var(--ink-soft);
+}
+.tldr-row span{white-space:nowrap;}
 
 .reading-skeleton{margin:0 0 16px;}
+.loading-msg{
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  letter-spacing:.03em;
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:16px;
+  animation:loadingPulse 1.6s ease-in-out infinite;
+}
+@keyframes loadingPulse{
+  0%,100%{opacity:.6;}
+  50%{opacity:1;}
+}
 .reading-skeleton.hidden{display:none;}
 .skel-line, .skel-block{
   background:linear-gradient(90deg, var(--line-soft) 25%, color-mix(in srgb, var(--gold) 18%, transparent) 50%, var(--line-soft) 75%);
@@ -641,6 +687,16 @@ body.light .area-icon{color:#8a8f96;}
   position:absolute;
   left:0;
   color:var(--gold);
+}
+.ring-explain{
+  margin-top:10px;
+  padding:10px 14px;
+  border:1px dashed var(--line-soft);
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:13px;
+  color:var(--gold-bright);
+  line-height:1.5;
 }
 
 .mini-block{
@@ -1096,6 +1152,11 @@ body.light .area-icon{color:#8a8f96;}
 .extra-btn:hover{border-color:var(--gold); color:var(--gold);}
 .extra-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 .extra-btn.pulse{animation:shakeArrow .4s ease;}
+.extra-burst{
+  position:relative;
+  height:0;
+  pointer-events:none;
+}
 .extra-panel{max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .35s ease, margin .4s ease;}
 .extra-panel.open{max-height:1400px; opacity:1; margin-top:18px;}
 .extra-label{font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;}
@@ -1134,6 +1195,52 @@ body.light .area-icon{color:#8a8f96;}
   margin:-14px 0 20px;
 }
 
+.sky-map{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:16px;
+  margin-bottom:24px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--line-soft);
+}
+.sky-body{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  min-width:64px;
+}
+.sky-body-icon{
+  width:44px; height:44px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  color:var(--gold-bright);
+  position:relative;
+}
+.sky-body-sign{
+  position:absolute;
+  bottom:-8px; right:-8px;
+  background:var(--bg);
+  border:1px solid var(--gold);
+  border-radius:50%;
+  width:24px; height:24px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px;
+  color:var(--gold);
+}
+.sky-body-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:8.5px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  text-align:center;
+}
 .traits{display:flex; flex-direction:column; gap:14px;}
 .trait{
   display:grid;
@@ -1347,6 +1454,7 @@ footer div:last-child{margin-bottom:0;}
 <body>
 
 <canvas id="stars"></canvas>
+<div class="entrance-flash" id="entrance-flash"></div>
 <div class="frame"></div>
 <div class="frame-corner-bl"></div>
 <div class="frame-corner-br"></div>
@@ -1365,6 +1473,7 @@ footer div:last-child{margin-bottom:0;}
   <h1 class="wordmark reveal" style="animation-delay:.12s">Săgetător</h1>
   <div class="dates reveal" style="animation-delay:.22s">22 Noiembrie – 21 Decembrie</div>
   <div class="hero-promise reveal" style="animation-delay:.28s">Mai mult decât un horoscop.<br>O direcție pentru ziua ta.</div>
+  <div class="hero-club-line reveal" style="animation-delay:.3s">Ai intrat în universul ✨️Sagittarius Decoded✨️</div>
   <div class="streak-badge reveal" id="streak-badge" style="animation-delay:.32s; display:none;"></div>
   <button class="install-btn" id="install-btn" style="display:none;">📲 Adaugă pe ecranul principal</button>
   <button class="install-btn" id="notif-btn" style="display:none; margin-top:8px;">🔔 Amintește-mi zilnic</button>
@@ -1527,8 +1636,10 @@ footer div:last-child{margin-bottom:0;}
       <h2 id="card-title">Horoscopul zilei</h2>
     </div>
     <div class="card-period" id="card-period"></div>
+    <div class="tldr-row" id="tldr-row" style="display:none;"></div>
 
     <div class="reading-skeleton" id="reading-skeleton">
+      <div class="loading-msg" id="loading-msg">✦ Se generează citirea ta, pe baza cerului de azi… <span id="loading-secs">0</span>s</div>
       <div class="skel-line skel-w90"></div>
       <div class="skel-line skel-w75"></div>
       <div class="skel-line skel-w60"></div>
@@ -1625,19 +1736,10 @@ footer div:last-child{margin-bottom:0;}
 
     <div class="pinned-note" id="pinned-note"></div>
     <div class="api-note" id="api-note"></div>
-    <div class="return-note">✦ Toate secțiunile se actualizează mâine,<br>la o citire nouă și completă.</div>
+    <div class="return-note">✦ Mâine se schimbă energia astrală.<br>Revino pentru o citire nouă și completă.</div>
   </div>
 
   <div class="card card-secondary reveal">
-    <div class="archive-callout" id="archive-callout">
-      <div class="archive-callout-text">Ai ratat ultimele zile? <button class="archive-btn" id="archive-btn">Vezi arhiva</button></div>
-    </div>
-    <div class="archive-panel" id="archive-panel" style="display:none;">
-      <div class="archive-panel-inner" id="archive-panel-inner">
-        <div class="archive-loading">Se încarcă arhiva…</div>
-      </div>
-    </div>
-
     <div class="archive-callout" id="saved-callout" style="display:none;">
       <div class="archive-callout-text">Gânduri salvate <button class="archive-btn" id="saved-btn">Vezi colecția</button></div>
     </div>
@@ -1651,8 +1753,9 @@ footer div:last-child{margin-bottom:0;}
       <button class="share-btn" id="share-image-btn">🖼 Distribuie ca imagine</button>
     </div>
 
-    <div class="extra-divider"><span>sau, pentru distracție</span></div>
-    <button class="extra-btn" id="extra-btn">🏹 Oracolul Săgetătorului</button>
+    <div class="extra-divider"><span>ritualul zilnic</span></div>
+    <button class="extra-btn" id="extra-btn">✨ Deschide mesajul zilei</button>
+    <div class="extra-burst" id="extra-burst"></div>
     <div class="extra-panel" id="extra-panel">
       <div class="extra-label">Mesaj suplimentar, nu înlocuiește citirea oficială de mai sus</div>
       <p class="extra-text" id="extra-text"></p>
@@ -1664,6 +1767,7 @@ footer div:last-child{margin-bottom:0;}
     <section class="reveal-section card card-secondary">
       <div class="brief-title">Cerul de azi</div>
         <div class="brief-title-sub">Influențele astrale ale zilei</div>
+      <div class="sky-map" id="sky-map"></div>
       <div class="traits">
         <div class="trait"><span class="glyph" id="sky-moon-glyph">☾</span><div class="name" id="sky-moon-value">—</div><div class="desc">Faza lunii, azi</div></div>
         <div class="trait"><span class="glyph">✓</span><div class="name">Bun pentru</div><div class="desc" id="sky-good-value">—</div></div>
@@ -2469,6 +2573,16 @@ function hashStr(s){
   return h;
 }
 
+function personalGreetingFor(tab, fallbackTitle){
+  if(tab === 'zi'){
+    const h = new Date().getHours();
+    if(h < 12) return 'Bună dimineața, Săgetător!';
+    if(h < 18) return 'Salut, Săgetător!';
+    return 'Bună seara, Săgetător!';
+  }
+  return fallbackTitle;
+}
+
 let currentTab = 'zi';
 
 function renderStats(container, statDefs, seedBase){
@@ -2525,6 +2639,31 @@ const avoidPool = [
   "supraestimarea propriei răbdări"
 ];
 
+const ZODIAC_RANGES = [
+  {sign:'Capricorn', glyph:'♑', pictogram:'🐐', from:[12,22], to:[1,19]},
+  {sign:'Vărsător', glyph:'♒', pictogram:'🏺', from:[1,20], to:[2,18]},
+  {sign:'Pești', glyph:'♓', pictogram:'🐟', from:[2,19], to:[3,20]},
+  {sign:'Berbec', glyph:'♈', pictogram:'🐏', from:[3,21], to:[4,19]},
+  {sign:'Taur', glyph:'♉', pictogram:'🐂', from:[4,20], to:[5,20]},
+  {sign:'Gemeni', glyph:'♊', pictogram:'👯', from:[5,21], to:[6,20]},
+  {sign:'Rac', glyph:'♋', pictogram:'🦀', from:[6,21], to:[7,22]},
+  {sign:'Leu', glyph:'♌', pictogram:'🦁', from:[7,23], to:[8,22]},
+  {sign:'Fecioară', glyph:'♍', pictogram:'👩', from:[8,23], to:[9,22]},
+  {sign:'Balanță', glyph:'♎', pictogram:'⚖️', from:[9,23], to:[10,22]},
+  {sign:'Scorpion', glyph:'♏', pictogram:'🦂', from:[10,23], to:[11,21]},
+  {sign:'Săgetător', glyph:'♐', pictogram:'🏹', from:[11,22], to:[12,21]}
+];
+function sunSignFor(date){
+  const m = date.getMonth()+1, d = date.getDate();
+  for(const z of ZODIAC_RANGES){
+    const [fm,fd] = z.from, [tm,td] = z.to;
+    if(fm === tm){ if(m===fm && d>=fd && d<=td) return z; continue; }
+    if(m===fm && d>=fd) return z;
+    if(m===tm && d<=td) return z;
+  }
+  return ZODIAC_RANGES[0];
+}
+
 function renderSky(){
   const dayKey = todayKey();
 
@@ -2534,6 +2673,20 @@ function renderSky(){
 
   document.getElementById('sky-good-value').textContent = goodForPool[hashStr(dayKey+'good') % goodForPool.length];
   document.getElementById('sky-avoid-value').textContent = avoidPool[hashStr(dayKey+'avoid') % avoidPool.length];
+
+  const sunSign = sunSignFor(new Date());
+  const skyMap = document.getElementById('sky-map');
+  if(skyMap){
+    skyMap.innerHTML = `
+      <div class="sky-body">
+        <div class="sky-body-icon">☀️<span class="sky-body-sign">${sunSign.pictogram}</span></div>
+        <div class="sky-body-label">Soare în ${sunSign.sign}</div>
+      </div>
+      <div class="sky-body">
+        <div class="sky-body-icon">${moon.glyph}</div>
+        <div class="sky-body-label">${moon.name}</div>
+      </div>`;
+  }
 }
 
 function renderCalendar(){
@@ -2582,7 +2735,7 @@ async function tryFetchAIReading(tab, fresh){
     const response = await fetch(url);
     if(!response.ok) return null;
     const parsed = await response.json();
-    if(!parsed.head || !Array.isArray(parsed.bullets) || !Array.isArray(parsed.stats) || parsed.stats.length < 3) return null;
+    if(!parsed.intro || !parsed.areas || !parsed.scores) return null;
     return parsed;
   }catch(e){ return null; }
 }
@@ -2635,6 +2788,8 @@ async function renderReading(){
   const cardEl = document.querySelector('.card');
   const apiNote = document.getElementById('api-note');
 
+  startLoadingTimer();
+
   // ---------- "Ieri" is special: read-only, never generates, always pulls from yesterday's daily archive ----------
   if(currentTab === 'ieri'){
     const applyYesterday = async ()=>{
@@ -2654,6 +2809,7 @@ async function renderReading(){
         const timeStr = parsed.ts ? new Date(parsed.ts).toLocaleString('ro-RO', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'}) : '';
         note.textContent = `Citirea din arhivă, pentru ziua de ieri${timeStr ? ' · generată ' + timeStr : ''}`;
       } else {
+        stopLoadingTimer();
         const skel = document.getElementById('reading-skeleton');
         if(skel) skel.classList.add('hidden');
         readingEl.innerHTML = 'Nu a fost salvată nicio citire pentru ziua de ieri. Arhiva se completează pe măsură ce treci prin zile.';
@@ -2681,7 +2837,7 @@ async function renderReading(){
   const d = data[currentTab];
 
   const applyContent = async ()=>{
-    document.getElementById('card-title').textContent = d.title;
+    document.getElementById('card-title').textContent = personalGreetingFor(currentTab, d.title);
     document.getElementById('card-period').textContent = periodLabelFor(currentTab);
 
     let parsed = null;
@@ -2774,7 +2930,58 @@ function splitIntroHook(intro){
   return {hook: match[1], rest: match[3] || ''};
 }
 
+let loadingSecsInterval = null;
+function startLoadingTimer(){
+  const secsEl = document.getElementById('loading-secs');
+  if(!secsEl) return;
+  clearInterval(loadingSecsInterval);
+  let secs = 0;
+  secsEl.textContent = '0';
+  loadingSecsInterval = setInterval(()=>{
+    secs++;
+    secsEl.textContent = String(secs);
+  }, 1000);
+}
+function stopLoadingTimer(){
+  clearInterval(loadingSecsInterval);
+  loadingSecsInterval = null;
+}
+
+function renderTldr(scores){
+  const row = document.getElementById('tldr-row');
+  if(!row) return;
+  const labels = {
+    dragoste: {icon:'♥︎', good:'Zi bună pentru dragoste', bad:'Atenție în dragoste'},
+    finante:  {icon:'💰', good:'Zi bună pentru bani', bad:'Atenție la cheltuieli'},
+    cariera:  {icon:'⭐', good:'Zi bună pentru carieră', bad:'Atenție la muncă'},
+    familie:  {icon:'⌂', good:'Zi bună pentru familie', bad:'Atenție acasă'}
+  };
+  const entries = AREA_KEYS
+    .map(k => ({key:k, val: scores[k]}))
+    .filter(e => typeof e.val === 'number');
+  if(!entries.length){ row.style.display = 'none'; return; }
+
+  entries.sort((a,b)=>b.val-a.val);
+  const best = entries[0];
+  const worst = entries[entries.length-1];
+  const energie = scores.energie;
+
+  const bullets = [];
+  bullets.push(`<span>${labels[best.key].icon} ${labels[best.key].good}</span>`);
+  if(worst.key !== best.key){
+    bullets.push(`<span>${labels[worst.key].icon} ${labels[worst.key].bad}</span>`);
+  }
+  if(typeof energie === 'number'){
+    const eLabel = energie >= 8 ? 'Energie ridicată azi' : energie >= 5 ? 'Energie moderată azi' : 'Energie scăzută, ai grijă de tine';
+    bullets.push(`<span>✦ ${eLabel}</span>`);
+  }
+
+  row.innerHTML = bullets.join('');
+  row.style.display = '';
+}
+
 function renderParsedReading(parsed){
+  stopLoadingTimer();
   const skeleton = document.getElementById('reading-skeleton');
   if(skeleton) skeleton.classList.add('hidden');
 
@@ -2816,6 +3023,7 @@ function renderParsedReading(parsed){
     return 'Scăzută';
   }
 
+  const { note: astroNoteForScores } = getDailyAstroModifiers();
   AREA_KEYS.forEach(key=>{
     const area = (parsed.areas && parsed.areas[key]) || {text:'', tip:''};
     document.getElementById(`area-${key}-text`).textContent = area.text || '';
@@ -2824,12 +3032,26 @@ function renderParsedReading(parsed){
 
     const val = scores[key];
     const pct = (val === undefined || val === null) ? 0 : Math.max(0, Math.min(100, Math.round(val*10)));
-    document.getElementById(`ring-${key}`).innerHTML =
+    const ringWrap = document.getElementById(`ring-${key}`);
+    ringWrap.innerHTML =
       ringSvg(pct) + `<div class="ring-qual-label">${scoreQualLabel(pct)}</div>`;
+    ringWrap.style.cursor = 'pointer';
+    ringWrap.title = 'Atinge pentru a vedea de ce';
+    ringWrap.onclick = () => {
+      let expl = document.getElementById(`ring-explain-${key}`);
+      if(expl){ expl.remove(); return; }
+      expl = document.createElement('div');
+      expl.id = `ring-explain-${key}`;
+      expl.className = 'ring-explain';
+      expl.textContent = `De ce ${pct}%? ${astroNoteForScores || 'Calculat din poziția planetelor, faza lunii și tranzitele active azi.'}`;
+      document.querySelector(`#area-${key}-tip`).closest('.area-block').appendChild(expl);
+    };
   });
 
   document.getElementById('advice-text').textContent = parsed.advice || '';
   document.getElementById('question-text').textContent = parsed.question || '';
+
+  renderTldr(scores);
 
   requestAnimationFrame(()=>{
     document.querySelectorAll('.area-ring-wrap circle[data-target]').forEach(ring=>{
@@ -2893,7 +3115,8 @@ document.getElementById('extra-btn').addEventListener('click', (e)=>{
   btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
   const symbol = document.getElementById('symbol-wrap');
   symbol.classList.remove('shooting'); void symbol.offsetWidth; symbol.classList.add('shooting');
-  renderExtra();
+  triggerExtraBurst();
+  setTimeout(renderExtra, 450);
 
   btn.dataset.cooling = '1';
   const originalText = btn.textContent;
@@ -3274,27 +3497,7 @@ if(musicBtn){
   });
 }
 
-// ---------- try to start ambient sound automatically on page load ----------
-(function autoStartAmbient(){
-  if(!musicBtn) return;
-  startAmbient();
-  musicBtn.textContent = '⏸';
-  musicBtn.classList.add('on');
-
-  // most browsers block audio until the user has interacted with the page at least once —
-  // if that happened, resume playback silently on the first tap/click/key anywhere
-  const resumeOnInteraction = ()=>{
-    if(ambientCtx && ambientCtx.state === 'suspended'){
-      ambientCtx.resume();
-    }
-    document.removeEventListener('click', resumeOnInteraction);
-    document.removeEventListener('touchstart', resumeOnInteraction);
-    document.removeEventListener('keydown', resumeOnInteraction);
-  };
-  document.addEventListener('click', resumeOnInteraction);
-  document.addEventListener('touchstart', resumeOnInteraction);
-  document.addEventListener('keydown', resumeOnInteraction);
-})();
+// ---------- sound stays OFF by default; it only starts when the user taps the button ----------
 
 // ---------- archive: past readings, browsable in place ----------
 const RO_LUNI_ARCHIVE = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
@@ -3304,49 +3507,6 @@ function formatArchiveDate(dayKey){
   const parts = dayKey.split('-').map(Number);
   if(parts.length < 3) return dayKey;
   return `${parts[2]} ${RO_LUNI_ARCHIVE[parts[1]-1] || ''} ${parts[0]}`;
-}
-
-async function loadArchive(){
-  const inner = document.getElementById('archive-panel-inner');
-  inner.innerHTML = '<div class="archive-loading">Se încarcă arhiva…</div>';
-  try{
-    const res = await fetch(`/.netlify/functions/get-reading?tab=${currentTab}&list=1`);
-    if(!res.ok) throw new Error('archive fetch failed');
-    const data = await res.json();
-    const items = (data.items || []).filter(it => it.date !== todayKey());
-    if(!items.length){
-      inner.innerHTML = '<div class="archive-empty">Nu există încă citiri anterioare salvate pentru această perioadă.</div>';
-      return;
-    }
-    inner.innerHTML = items.map((it, idx)=>`
-      <div class="archive-item" data-idx="${idx}">
-        <div class="archive-date">${formatArchiveDate(it.date)}</div>
-        <div class="archive-preview">${it.intro || ''}</div>
-        <div class="archive-keep">${it.keepThought ? '❝ ' + it.keepThought : ''}</div>
-      </div>
-    `).join('');
-    inner.querySelectorAll('.archive-item').forEach(el=>{
-      el.addEventListener('click', ()=> el.classList.toggle('expanded'));
-    });
-  }catch(e){
-    inner.innerHTML = '<div class="archive-empty">Arhiva nu a putut fi încărcată acum. Încearcă din nou puțin mai târziu.</div>';
-  }
-}
-
-const archiveBtn = document.getElementById('archive-btn');
-const archivePanel = document.getElementById('archive-panel');
-if(archiveBtn){
-  archiveBtn.addEventListener('click', ()=>{
-    const isOpen = archivePanel.style.display !== 'none';
-    if(isOpen){
-      archivePanel.style.display = 'none';
-      archiveBtn.textContent = 'Vezi arhiva';
-    } else {
-      archivePanel.style.display = '';
-      archiveBtn.textContent = 'Ascunde arhiva';
-      loadArchive();
-    }
-  });
 }
 
 // ---------- "Gânduri de păstrat" personal collection, stored in real localStorage ----------
@@ -3481,6 +3641,26 @@ function resetRevealCard(){
   populatePromptStarField();
 }
 
+function triggerExtraBurst(){
+  const burst = document.getElementById('extra-burst');
+  if(!burst) return;
+  const glyphs = ['✦','✧','★','✶'];
+  const count = 18;
+  for(let i=0; i<count; i++){
+    const el = document.createElement('span');
+    el.className = 'star-particle';
+    el.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 50 + Math.random()*70;
+    el.style.setProperty('--sx', `${Math.cos(angle)*dist}px`);
+    el.style.setProperty('--sy', `${Math.sin(angle)*dist}px`);
+    el.style.animationDelay = `${Math.random()*0.15}s`;
+    el.style.fontSize = `${8 + Math.random()*8}px`;
+    burst.appendChild(el);
+  }
+  setTimeout(()=>{ burst.innerHTML = ''; }, 1200);
+}
+
 function triggerStarBurst(){
   const burst = document.getElementById('star-burst');
   if(!burst) return;
@@ -3591,12 +3771,25 @@ if(listenBtn && 'speechSynthesis' in window){
   listenBtn.addEventListener('click', ()=>{
     if(speechState === 'idle'){
       const text = lastReadingText || document.getElementById('reading-text').textContent;
-      if(!text) return;
+      if(!text){
+        showToast('Citirea nu s-a încărcat încă, mai așteaptă puțin.');
+        return;
+      }
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'ro-RO';
       utterance.rate = 0.95;
+
+      // pick the best available Romanian voice explicitly, if the browser has one —
+      // otherwise it silently falls back to whatever default voice is installed
+      const voices = window.speechSynthesis.getVoices();
+      const roVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ro'));
+      if(roVoice) utterance.voice = roVoice;
+
       utterance.onend = () => setListenState('idle');
-      utterance.onerror = () => setListenState('idle');
+      utterance.onerror = () => {
+        setListenState('idle');
+        showToast('Nu am putut reda vocea acum. Încearcă din nou.');
+      };
       window.speechSynthesis.speak(utterance);
       setListenState('playing');
     } else if(speechState === 'playing'){
@@ -3893,6 +4086,18 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/service-worker.js')
       .then(()=>{ if(typeof setNotifBtnState === 'function') setNotifBtnState(); })
       .catch(()=>{ /* not critical if it fails */ });
+  });
+}
+
+// ---------- WOW moment on load: entrance flash + an immediate shooting star ----------
+setTimeout(()=>{
+  const flash = document.getElementById('entrance-flash');
+  if(flash) flash.remove();
+}, 1400);
+if(!document.body.classList.contains('light') && !prefersReducedMotion){
+  shootingStars.push({
+    x: canvas.width*0.35, y: -10,
+    vx: 3.4, vy: 2.3, life: 1
   });
 }
 
