@@ -4,7 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0a0d">
-<title>Săgetător — Horoscop</title>
+<title>Săgetător · Horoscop</title>
+<meta name="description" content="Horoscop zilnic pentru Săgetător, generat live pe baza tranzitelor astrologice reale. Compatibilitate cu toate zodiile, calendar astral, arhivă și interpretări actualizate în fiecare zi — by Sagittarius Decoded.">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0b0a0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Săgetător">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap');
 
@@ -84,6 +92,15 @@ body{
   0%,100%{box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent);}
   50%{box-shadow:0 0 0 8px color-mix(in srgb, var(--gold) 10%, transparent);}
 }
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
 @keyframes shimmer{
   0%{background-position:-200% 0;}
   100%{background-position:200% 0;}
@@ -91,6 +108,15 @@ body{
 .reveal{opacity:0; animation:fadeSlideIn .7s ease forwards;}
 .reveal-section{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
 .reveal-section.in-view{opacity:1; transform:translateY(0);}
+
+.eyebrow-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:19px;
+  color:var(--ink-soft);
+  margin:0 0 6px;
+}
+.top-brand-gold{color:var(--gold); font-weight:500;}
 
 .topline{
   position:relative;
@@ -102,20 +128,31 @@ body{
   justify-content:space-between;
   align-items:center;
 }
-.theme-toggle{
+.theme-toggle-icon{
   background:none;
   border:1px solid var(--line);
-  color:var(--ink-soft);
-  font-family:'Montserrat',sans-serif;
-  font-size:9.5px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  padding:8px 14px;
+  color:var(--gold);
+  width:34px; height:34px;
+  border-radius:50%;
+  font-size:15px;
+  line-height:1;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   transition:all .25s ease;
+  flex-shrink:0;
 }
-.theme-toggle:hover{border-color:var(--gold); color:var(--gold);}
-.theme-toggle:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+.theme-toggle-icon:hover{border-color:var(--gold); box-shadow:0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);}
+.theme-toggle-icon:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+.live-note{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.06em;
+  color:var(--ink-soft);
+  opacity:.65;
+}
 
 .hero{
   position:relative;
@@ -127,11 +164,13 @@ body{
 }
 .eyebrow{
   font-family:'Montserrat',sans-serif;
-  font-size:21px;
-  letter-spacing:.32em;
+  font-weight:600;
+  font-size:38px;
+  letter-spacing:.12em;
   text-transform:uppercase;
   color:var(--gold);
-  margin-bottom:18px;
+  margin-bottom:4px;
+  line-height:1.1;
 }
 .wordmark{
   font-family:'Cormorant Garamond', serif;
@@ -157,6 +196,115 @@ body{
   margin-top:14px;
 }
 
+.hero-promise{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:16px;
+  color:var(--gold-bright);
+  margin-top:12px;
+}
+.streak-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:14px;
+  padding:6px 14px;
+  border:1px solid var(--gold);
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  letter-spacing:.04em;
+  color:var(--gold-bright);
+}
+.install-btn{
+  display:block;
+  margin:14px auto 0;
+  background:var(--gold);
+  color:#0b0a0d;
+  border:none;
+  font-family:'Montserrat',sans-serif;
+  font-weight:600;
+  font-size:11px;
+  letter-spacing:.05em;
+  padding:9px 18px;
+  cursor:pointer;
+  transition:background .2s ease;
+}
+.install-btn:hover{background:var(--gold-bright);}
+.install-hint{
+  max-width:280px;
+  margin:14px auto 0;
+  padding:10px 14px;
+  border:1px dashed var(--gold);
+  font-family:'Montserrat',sans-serif;
+  font-size:10.5px;
+  line-height:1.5;
+  color:var(--ink-soft);
+}
+
+.score-note{
+  font-family:'Montserrat',sans-serif;
+  font-size:10.5px;
+  line-height:1.5;
+  color:var(--ink-soft);
+  opacity:.7;
+  text-align:left;
+  margin:0 0 22px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--line-soft);
+}
+.feedback-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:4px;
+}
+.feedback-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  color:var(--ink-soft);
+}
+.feedback-btn{
+  background:none;
+  border:1px solid var(--line-soft);
+  border-radius:50%;
+  width:32px; height:32px;
+  font-size:14px;
+  cursor:pointer;
+  transition:border-color .2s ease, transform .2s ease;
+}
+.feedback-btn:hover{border-color:var(--gold); transform:scale(1.1);}
+.feedback-btn.picked{border-color:var(--gold); background:color-mix(in srgb, var(--gold) 12%, transparent);}
+
+.featured-event{
+  border:1px solid var(--gold);
+  padding:18px 20px;
+  margin-bottom:20px;
+  text-align:center;
+}
+.featured-event-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.featured-event-title{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:22px;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.featured-event-impact{
+  font-family:'Montserrat',sans-serif;
+  font-size:10.5px;
+  letter-spacing:.04em;
+  color:var(--ink-soft);
+}
+.featured-event-impact b{color:var(--gold-bright); font-weight:600;}
+
 .ornament{
   display:flex;
   align-items:center;
@@ -177,17 +325,118 @@ body{
   justify-content:center;
   margin:8px auto 10px;
   cursor:pointer;
+  position:relative;
+}
+.symbol-wrap::before{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width:340px; height:220px;
+  transform:translate(-50%,-50%);
+  background:
+    radial-gradient(ellipse at 35% 75%, rgba(255,178,90,0.35), transparent 55%),
+    radial-gradient(ellipse at 65% 30%, rgba(255,120,70,0.22), transparent 60%),
+    radial-gradient(ellipse at 50% 55%, rgba(190,110,150,0.14), transparent 65%);
+  filter:blur(18px);
+  z-index:-1;
+  opacity:.8;
+  animation:sunsetDrift 9s ease-in-out infinite;
+}
+body.light .symbol-wrap::before{
+  opacity:.35;
+}
+@keyframes sunsetDrift{
+  0%,100%{ opacity:.65; transform:translate(-50%,-50%) scale(1); }
+  50%{ opacity:.9; transform:translate(-50%,-50%) scale(1.06); }
 }
 .symbol-wrap svg{transition:filter .3s ease;}
 .symbol-wrap:hover svg{filter:drop-shadow(0 0 10px color-mix(in srgb, var(--gold) 55%, transparent));}
 .symbol-wrap.shooting svg{animation:shakeArrow .4s ease;}
 
+#arrow-group{
+  transform-box:fill-box;
+  transform-origin:0% 50%;
+}
+#arrow-group.flying{
+  animation:arrowFly 0.55s cubic-bezier(.2,.75,.25,1) forwards;
+}
+@keyframes arrowFly{
+  0%{ transform:translateX(0); opacity:1; }
+  15%{ transform:translateX(-10px); opacity:1; }
+  55%{ transform:translateX(225px); opacity:1; }
+  100%{ transform:translateX(365px); opacity:0; }
+}
+#bowline{
+  transform-box:fill-box;
+  transform-origin:center;
+}
+#bowline.recoil{
+  animation:bowRecoil 0.5s ease;
+}
+@keyframes bowRecoil{
+  0%{ transform:scaleX(1); }
+  20%{ transform:scaleX(0.93); }
+  55%{ transform:scaleX(1.03); }
+  100%{ transform:scaleX(1); }
+}
+.arrow-trail-wrap{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:visible;
+}
+.arrow-trail-spark{
+  position:absolute;
+  top:50%;
+  color:var(--gold-bright);
+  font-size:10px;
+  transform:translate(-50%,-50%);
+  animation:trailFade 0.6s ease-out forwards;
+}
+@keyframes trailFade{
+  0%{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+  100%{ opacity:0; transform:translate(-50%,-50%) scale(0.3); }
+}
+.arrow-dust-spark{
+  position:absolute;
+  border-radius:50%;
+  background:var(--gold-bright);
+  transform:translate(-50%,-50%);
+  animation:dustFade 1.9s ease-out forwards;
+}
+@keyframes dustFade{
+  0%{ opacity:0.9; transform:translate(-50%,-50%) translateY(0) scale(1); }
+  100%{ opacity:0; transform:translate(-50%,-50%) translateY(7px) scale(0.4); }
+}
+.release-flash{
+  position:absolute;
+  top:50%; left:54%;
+  width:10px; height:10px;
+  border-radius:50%;
+  background:var(--gold-bright);
+  transform:translate(-50%,-50%) scale(0);
+  pointer-events:none;
+  animation:releaseFlash 0.5s ease-out forwards;
+}
+@keyframes releaseFlash{
+  0%{ transform:translate(-50%,-50%) scale(0); opacity:1; box-shadow:0 0 0 0 color-mix(in srgb, var(--gold) 70%, transparent); }
+  100%{ transform:translate(-50%,-50%) scale(4); opacity:0; box-shadow:0 0 20px 10px color-mix(in srgb, var(--gold) 0%, transparent); }
+}
+
 nav.tabs{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  margin:22px 0 0;
+}
+.tabs-row{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:22px;
-  margin:22px 0 0;
+  gap:16px;
+  flex-wrap:wrap;
+  row-gap:8px;
 }
 nav.tabs button{
   background:none;
@@ -219,9 +468,19 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   padding:44px 38px;
   position:relative;
   text-align:center;
+  margin-bottom:22px;
 }
 .card::before{content:"";position:absolute;top:-1px;left:-1px;width:14px;height:14px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
 .card::after{content:"";position:absolute;bottom:-1px;right:-1px;width:14px;height:14px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
+.card-primary{border-color:var(--gold); border-width:1.5px;}
+.card-secondary{padding:32px 30px; border-color:var(--line-soft);}
+.card-secondary::before, .card-secondary::after{border-color:color-mix(in srgb, var(--gold) 55%, transparent); width:10px; height:10px;}
+.card-secondary .universe-block,
+.card-secondary .question-block{margin-bottom:0;}
+.card-secondary .energy-block{margin-bottom:20px;}
+.card-secondary .return-note{margin-bottom:0;}
+.card-secondary .archive-callout{margin-top:0;}
+.card-secondary .extra-panel.open{margin-bottom:0;}
 
 .card-head h2{
   font-family:'Montserrat',sans-serif;
@@ -239,18 +498,51 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   margin-bottom:26px;
 }
 
+.reading-skeleton{margin:0 0 16px;}
+.reading-skeleton.hidden{display:none;}
+.skel-line, .skel-block{
+  background:linear-gradient(90deg, var(--line-soft) 25%, color-mix(in srgb, var(--gold) 18%, transparent) 50%, var(--line-soft) 75%);
+  background-size:200% 100%;
+  animation:skelShimmer 1.6s ease-in-out infinite;
+  border-radius:2px;
+}
+.skel-line{height:12px; margin-bottom:8px;}
+.skel-w90{width:90%;}
+.skel-w75{width:75%;}
+.skel-w60{width:60%; margin-bottom:20px;}
+.skel-block{height:52px; margin-bottom:14px;}
+@keyframes skelShimmer{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
+
 .reading{
   font-family:'Cormorant Garamond',serif;
-  font-size:30px;
-  font-weight:500;
-  line-height:1.3;
+  font-size:15.5px;
+  font-style:italic;
+  font-weight:400;
+  line-height:1.55;
   color:var(--ink);
-  margin:0 0 18px;
+  margin:0 0 16px;
   opacity:1;
   transform:translateY(0);
   transition:opacity .3s ease, transform .3s ease;
 }
 .reading.swap{opacity:0; transform:translateY(6px);}
+.reading-hook{
+  display:block;
+  font-size:24px;
+  font-weight:600;
+  font-style:normal;
+  color:var(--gold-bright);
+  line-height:1.3;
+  margin-bottom:8px;
+}
+.reading-rest{
+  display:block;
+  font-size:14px;
+  color:var(--ink-soft);
+}
 .reading strong{color:var(--gold); font-weight:500; font-style:italic;}
 
 .reading-bullets{
@@ -279,7 +571,132 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   font-size:13px;
 }
 
+.area-block{
+  text-align:left;
+  margin:0 0 26px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--line-soft);
+}
+.area-block:last-of-type{border-bottom:none;}
+.area-head{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+}
+.area-icon{font-size:15px; color:#c4c8ce; font-variant-emoji:text;}
+body.light .area-icon{color:#8a8f96;}
+.area-name{
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  flex:1;
+}
+.area-ring-wrap{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.area-ring-wrap svg{overflow:visible;}
+.area-ring-wrap circle[data-target]{
+  transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.ring-qual-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:8.5px;
+  letter-spacing:.04em;
+  color:var(--ink-soft);
+  max-width:52px;
+  line-height:1.25;
+  text-align:left;
+}
+.area-ring-num{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:13px;
+  fill:var(--gold);
+}
+.area-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;
+  line-height:1.6;
+  color:var(--ink);
+  margin:0 0 10px;
+}
+.area-tip{
+  font-family:'Montserrat',sans-serif;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--ink-soft);
+  margin:0;
+  padding-left:20px;
+  position:relative;
+}
+.area-tip::before{
+  content:"→";
+  position:absolute;
+  left:0;
+  color:var(--gold);
+}
+
+.mini-block{
+  text-align:left;
+  margin:0 0 26px;
+}
+.mini-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.mini-text{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:16px;
+  line-height:1.6;
+  color:var(--ink-soft);
+  margin:0;
+}
+.affirmation-block{
+  border:1px solid var(--line-soft);
+  padding:18px 20px;
+  text-align:center;
+}
+.affirmation-text{
+  color:var(--gold-bright);
+  font-size:17px;
+}
+
+.question-block{
+  text-align:center;
+  margin:0 0 26px;
+  padding:18px 10px 0;
+}
+.question-text{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:17px;
+  line-height:1.5;
+  color:var(--ink);
+  margin:0;
+}
+
 .energy-block{margin:0 0 30px;}
+.weekly-stat{
+  text-align:center;
+  padding:12px 16px;
+  border:1px solid var(--line-soft);
+  margin:0 0 24px;
+  font-family:'Montserrat',sans-serif;
+  font-size:11.5px;
+  color:var(--ink-soft);
+}
+.weekly-stat b{color:var(--gold-bright); font-weight:600;}
 .energy-label{
   display:flex;
   justify-content:space-between;
@@ -304,11 +721,144 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   transition:width 1.4s cubic-bezier(.2,.8,.2,1);
 }
 
+.card-reveal-wrap{
+  margin:0 0 30px;
+}
+.reveal-card{
+  position:relative;
+  min-height:110px;
+  border:1px solid var(--gold);
+  background:var(--card);
+  padding:20px 22px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  cursor:pointer;
+}
+.card-front-glyph{
+  position:relative;
+  z-index:1;
+  font-size:22px;
+  color:var(--gold);
+  margin-bottom:10px;
+  animation:cardGlow 2.2s ease-in-out infinite;
+}
+@keyframes cardGlow{
+  0%,100%{opacity:.5; transform:scale(1);}
+  50%{opacity:1; transform:scale(1.15);}
+}
+.card-front-text{
+  position:relative;
+  z-index:1;
+  font-family:'Montserrat',sans-serif;
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.reveal-prompt{
+  position:relative;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.prompt-star-field{
+  position:absolute;
+  inset:-30px -40px;
+  pointer-events:none;
+  overflow:visible;
+  z-index:0;
+}
+.prompt-twinkle{
+  position:absolute;
+  color:var(--gold-bright);
+  pointer-events:none;
+  animation:promptTwinkle 2.4s ease-in-out infinite;
+}
+@keyframes promptTwinkle{
+  0%,100%{ opacity:0; transform:scale(0.6); }
+  50%{ opacity:1; transform:scale(1.15); }
+}
+.reveal-prompt.hidden{
+  opacity:0;
+  transform:scale(.9);
+  position:absolute;
+  pointer-events:none;
+}
+.reveal-content{
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .5s ease, transform .5s ease;
+  position:absolute;
+  pointer-events:none;
+}
+.save-thought-btn{
+  display:block;
+  margin:10px auto 0;
+  background:none;
+  border:1px solid var(--gold);
+  color:var(--gold);
+  font-family:'Montserrat',sans-serif;
+  font-size:10px;
+  letter-spacing:.06em;
+  padding:5px 12px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.save-thought-btn:hover{background:var(--gold); color:#0b0a0d;}
+.save-thought-btn.saved{border-color:var(--ink-soft); color:var(--ink-soft); cursor:default;}
+.save-thought-btn.saved:hover{background:none; color:var(--ink-soft);}
+.reveal-content.shown{
+  opacity:1;
+  transform:translateY(0);
+  position:relative;
+  pointer-events:auto;
+}
+.star-burst{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:2;
+}
+.star-particle{
+  position:absolute;
+  top:50%; left:50%;
+  width:5px; height:5px;
+  color:var(--gold-bright);
+  font-size:9px;
+  line-height:1;
+  transform:translate(-50%,-50%);
+  animation:starParticle .8s ease-out forwards;
+}
+@keyframes starParticle{
+  0%{ opacity:1; transform:translate(-50%,-50%) scale(0.4) translate(0,0); }
+  100%{ opacity:0; transform:translate(-50%,-50%) scale(1.1) translate(var(--sx), var(--sy)); }
+}
+
 .universe-block{
   margin:0 0 30px;
   padding:20px 22px;
   border:1px solid var(--line-soft);
   background:var(--card);
+  position:relative;
+  overflow:hidden;
+  animation:universeGlow 6s ease-in-out infinite;
+}
+@keyframes universeGlow{
+  0%,100%{ box-shadow:0 0 0 0 transparent; border-color:var(--line-soft); }
+  50%{ box-shadow:0 0 22px -6px color-mix(in srgb, var(--gold) 30%, transparent); border-color:color-mix(in srgb, var(--gold) 40%, var(--line-soft)); }
+}
+.universe-pulse{
+  position:absolute;
+  top:14px; right:18px;
+  font-size:12px;
+  color:var(--gold);
+  animation:starPulse 3.2s ease-in-out infinite;
+}
+@keyframes starPulse{
+  0%,100%{ opacity:.35; transform:scale(1); }
+  50%{ opacity:1; transform:scale(1.3); }
 }
 .universe-label{
   font-family:'Montserrat',sans-serif;
@@ -400,8 +950,10 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   font-family:'Montserrat',sans-serif;
   font-size:9.5px;
   letter-spacing:.08em;
+  line-height:1.6;
   color:var(--ink-soft);
   opacity:.75;
+  margin-bottom:4px;
 }
 .api-note{
   font-family:'Montserrat',sans-serif;
@@ -414,6 +966,7 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
 .btn-row{
   display:flex;
   gap:14px;
+  flex-wrap:wrap;
   justify-content:center;
   margin-top:28px;
   flex-wrap:wrap;
@@ -431,7 +984,100 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   transition:all .25s ease;
 }
 .share-btn:hover{border-color:var(--gold); color:var(--gold);}
+#listen-icon{color:var(--gold); font-size:10px; margin-right:2px;}
+.share-btn:hover #listen-icon{color:var(--gold-bright);}
 .share-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+.return-note{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  text-align:center;
+  margin-top:8px;
+  opacity:.75;
+}
+
+.archive-callout{
+  margin:20px 0 0;
+  padding:14px 18px;
+  border:1px dashed var(--gold);
+  text-align:center;
+}
+.archive-callout-text{
+  font-family:'Montserrat',sans-serif;
+  font-size:12px;
+  color:var(--ink-soft);
+}
+.archive-btn{
+  background:none;
+  border:none;
+  font-family:'Montserrat',sans-serif;
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:.04em;
+  color:var(--gold);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+  padding:0;
+  transition:color .2s ease;
+}
+.archive-btn:hover{color:var(--gold-bright);}
+.archive-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+.archive-panel{
+  margin-top:16px;
+  border:1px solid var(--line-soft);
+  text-align:left;
+  max-height:360px;
+  overflow-y:auto;
+}
+.archive-panel-inner{padding:6px;}
+.archive-loading, .archive-empty{
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;
+  color:var(--ink-soft);
+  text-align:center;
+  padding:16px;
+}
+.archive-item{
+  border-bottom:1px solid var(--line-soft);
+  padding:12px 10px;
+  cursor:pointer;
+}
+.archive-item:last-child{border-bottom:none;}
+.archive-item:hover{background:var(--card);}
+.archive-date{
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:4px;
+}
+.archive-preview{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:14px;
+  line-height:1.5;
+  color:var(--ink-soft);
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.archive-item.expanded .archive-preview{
+  -webkit-line-clamp:unset;
+}
+.archive-item.expanded .archive-keep{
+  display:block;
+  margin-top:8px;
+  font-size:13px;
+  color:var(--gold);
+  font-style:italic;
+}
+.archive-keep{display:none;}
 
 .extra-divider{
   display:flex; align-items:center; gap:12px; margin:34px 0 16px;
@@ -450,11 +1096,12 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
 .extra-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 .extra-btn.pulse{animation:shakeArrow .4s ease;}
 .extra-panel{max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .35s ease, margin .4s ease;}
-.extra-panel.open{max-height:220px; opacity:1; margin-top:18px;}
+.extra-panel.open{max-height:1400px; opacity:1; margin-top:18px;}
 .extra-label{font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;}
 .extra-text{
   font-style:italic; font-size:17px; line-height:1.6; color:var(--ink-soft); margin:0;
-  padding:16px; border:1px solid var(--line-soft);
+  padding:16px; border:1px solid var(--gold);
+  background-color:rgba(150,145,135,0.2);
 }
 .extra-text strong{color:var(--gold); font-weight:500;}
 
@@ -468,6 +1115,15 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   text-transform:uppercase;
   color:var(--gold);
   margin-bottom:22px;
+}
+.brief-title-sub{
+  text-align:center;
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.06em;
+  color:var(--ink-soft);
+  opacity:.65;
+  margin:-16px 0 22px;
 }
 .brief-sub{
   text-align:center;
@@ -496,8 +1152,45 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
   color:var(--ink);
   grid-column:2;
 }
-.trait.sky-score .name{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; letter-spacing:0; text-transform:none; color:var(--gold);}
 .trait .desc{grid-column:2; font-size:14px; color:var(--ink-soft); font-style:italic; margin-top:3px;}
+
+.featured-compat{
+  border:1px solid var(--gold);
+  padding:14px 20px;
+  margin:0 0 16px;
+  text-align:center;
+  cursor:pointer;
+}
+.featured-compat-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:6px;
+}
+.featured-compat-value{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:22px;
+  color:var(--ink);
+}
+.featured-compat-value span{color:var(--gold-bright); font-weight:500;}
+.featured-compat-highlight{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:13.5px;
+  color:var(--ink-soft);
+  margin-top:8px;
+}
+.featured-compat-cta{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-top:10px;
+}
 
 .compat{display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
 .compat-btn{
@@ -511,6 +1204,8 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
 }
 .compat-btn:hover{border-color:var(--gold-bright); color:var(--gold-bright); box-shadow:0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);}
 .compat-btn.active{background:var(--gold); border-color:var(--gold); color:#0b0a0d;}
+body.light .compat-btn{background-color:rgba(150,145,135,0.2); border-color:var(--gold); color:var(--gold);}
+body.light .compat-btn.active{background:var(--gold); color:#f3ede1;}
 .compat-btn:focus-visible{outline:1px solid #b5541f; outline-offset:3px;}
 .compat-btn::selection, .compat-btn *::selection{background:#b5541f; color:#0b0a0d;}
 .compat-detail{
@@ -523,13 +1218,16 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
 }
 .compat-pct span{color:var(--gold); font-weight:600;}
 .compat-desc{font-style:italic; font-size:14px; line-height:1.55; margin-bottom:16px;}
-.compat-stars{display:flex; flex-direction:column; gap:8px; max-width:260px; margin:0 auto;}
-.compat-stars > div{
-  display:flex; justify-content:space-between; align-items:center;
-  font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:.04em;
+.compat-fields{display:flex; flex-direction:column; gap:12px; max-width:320px; margin:0 auto; text-align:left;}
+.compat-fields > div{
+  font-family:'Montserrat',sans-serif;
 }
-.compat-stars span{color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; font-size:9.5px;}
-.compat-stars b{color:var(--gold); font-size:13px; letter-spacing:1px;}
+.compat-fields span{
+  display:block; color:var(--gold); text-transform:uppercase; letter-spacing:.1em; font-size:9.5px; margin-bottom:3px;
+}
+.compat-fields p{
+  margin:0; color:var(--ink-soft); font-size:13px; line-height:1.5; font-style:italic; font-family:'Cormorant Garamond',serif;
+}
 .compat-astro{
   margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft);
   font-family:'Montserrat',sans-serif; font-size:10.5px; letter-spacing:.03em;
@@ -548,9 +1246,25 @@ nav.tabs button:focus-visible{outline:1px solid var(--gold); outline-offset:3px;
 .tl-date{font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
 .tl-desc{font-size:13.5px; color:var(--ink-soft); font-style:italic; line-height:1.5;}
 
+.closing-cta{
+  text-align:center;
+  max-width:420px;
+  margin:36px auto 0;
+  padding:0 20px;
+}
+.closing-cta-text{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:16px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  margin:0 0 8px;
+}
+.closing-cta-gold{color:var(--gold); font-weight:500;}
+
 footer{
   text-align:center;
-  margin-top:70px;
+  margin-top:24px;
   font-family:'Montserrat',sans-serif;
   font-size:9.5px;
   letter-spacing:.2em;
@@ -558,6 +1272,8 @@ footer{
   color:var(--ink-soft);
   opacity:.6;
 }
+footer div{margin-bottom:6px;}
+footer div:last-child{margin-bottom:0;}
 
 .toast{
   position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
@@ -572,21 +1288,25 @@ footer{
   .frame::before, .frame::after, .frame-corner-bl, .frame-corner-br{width:12px;height:12px;}
 
   .topline{padding:22px 18px 0;}
+  .eyebrow-sub{font-size:14px; margin:0 0 4px;}
+  .live-note{font-size:7.5px; max-width:200px; line-height:1.3;}
   .hero{padding:14px 18px 0;}
   .stage{padding:26px 18px 70px;}
 
-  .eyebrow{font-size:16px; margin-bottom:12px;}
+  .eyebrow{font-size:24px; letter-spacing:.08em; margin-bottom:2px;}
   .wordmark{font-size:clamp(42px,15vw,60px);}
   .dates{font-size:9.5px; letter-spacing:.16em;}
 
   .ornament{margin:20px auto;}
   .symbol-wrap svg{width:170px; height:auto;}
 
-  nav.tabs{gap:14px; flex-wrap:wrap; row-gap:10px;}
+  nav.tabs{gap:8px;}
+  .tabs-row{gap:12px; row-gap:8px;}
   nav.tabs button{font-size:12px; padding:8px 4px; min-height:32px;}
 
   .card{padding:30px 20px;}
-  .reading{font-size:24px;}
+  .reading{font-size:15.5px;}
+  .reading-hook{font-size:20px;}
   .reading-bullets{max-width:none;}
   .reading-bullets li{font-size:14.5px;}
 
@@ -604,14 +1324,19 @@ footer{
 
   .tl-item{grid-template-columns:80px 1fr; gap:10px;}
 
-  .stat-row#stat-row{gap:6px;}
-  .gauge svg{width:52px; height:52px;}
+  .area-ring-wrap svg{width:38px; height:38px;}
+  .area-ring-num{font-size:11px;}
+  .area-icon{font-size:13px;}
+  .score-label{font-size:7px;}
+  .area-text{font-size:15.5px;}
+  .area-tip{font-size:12px;}
 }
 
 @media (max-width:380px){
   .wordmark{font-size:38px;}
   .card{padding:26px 16px;}
-  .reading{font-size:21px;}
+  .reading{font-size:15px;}
+  .reading-hook{font-size:19px;}
 }
 @media (prefers-reduced-motion: reduce){
   * {animation:none !important; transition:none !important;}
@@ -625,19 +1350,29 @@ footer{
 <div class="frame-corner-bl"></div>
 <div class="frame-corner-br"></div>
 
-<div class="topline" style="justify-content:flex-end;">
-  <button class="theme-toggle" id="theme-btn">☾ Mod luminos</button>
+<div class="topline" style="justify-content:space-between;">
+  <div class="live-note">✦ Actualizat în timp real după tranzitele astrale</div>
+  <div style="display:flex; gap:8px;">
+    <button class="theme-toggle-icon" id="music-btn" title="Ambient cosmic" aria-label="Pornește sau oprește muzica ambientală">♫</button>
+    <button class="theme-toggle-icon" id="theme-btn" title="Comută tema" aria-label="Comută între mod nocturn și mod luminos">☾</button>
+  </div>
 </div>
 
 <div class="hero">
   <div class="eyebrow reveal" style="animation-delay:.05s">Horoscop</div>
+  <div class="eyebrow-sub reveal" style="animation-delay:.08s">de <span class="top-brand-gold">✨️Sagittarius Decoded✨️</span></div>
   <h1 class="wordmark reveal" style="animation-delay:.12s">Săgetător</h1>
-  <div class="dates reveal" style="animation-delay:.22s">22 Noiembrie — 21 Decembrie</div>
+  <div class="dates reveal" style="animation-delay:.22s">22 Noiembrie – 21 Decembrie</div>
+  <div class="hero-promise reveal" style="animation-delay:.28s">Mai mult decât un horoscop.<br>O direcție pentru ziua ta.</div>
+  <div class="streak-badge reveal" id="streak-badge" style="animation-delay:.32s; display:none;"></div>
+  <button class="install-btn" id="install-btn" style="display:none;">📲 Adaugă pe ecranul principal</button>
+  <button class="install-btn" id="notif-btn" style="display:none; background:none; border:1px solid var(--gold); color:var(--gold); margin-top:8px;">🔔 Amintește-mi zilnic</button>
 
   <div class="ornament reveal" style="animation-delay:.3s"><span>✦</span></div>
 
   <div class="symbol-wrap" id="symbol-wrap" title="Atinge pentru a trage din nou">
-    <svg width="240" height="150" viewBox="0 0 240 150" fill="none" id="bow-svg">
+    <div class="arrow-trail-wrap" id="arrow-trail-wrap"></div>
+    <svg width="380" height="240" viewBox="-20 -25 400 250" fill="none" id="bow-svg">
       <defs>
         <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="var(--gold-bright)"/>
@@ -647,119 +1382,276 @@ footer{
           <stop offset="0%" stop-color="var(--gold-bright)"/>
           <stop offset="100%" stop-color="var(--gold)"/>
         </radialGradient>
+        <!-- limb gradient: lit edge (top-left) fading to shadowed edge (bottom-right) -->
+        <linearGradient id="limbShade" x1="0.1" y1="0.1" x2="0.85" y2="0.9">
+          <stop offset="0%" stop-color="var(--gold-bright)"/>
+          <stop offset="45%" stop-color="var(--gold)"/>
+          <stop offset="100%" stop-color="#6d5324"/>
+        </linearGradient>
+        <linearGradient id="arrowShade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--gold-bright)"/>
+          <stop offset="100%" stop-color="var(--gold)"/>
+        </linearGradient>
+        <radialGradient id="groundShadow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#000000" stop-opacity="0.38"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="pieceShadow" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="3" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.45"/>
+        </filter>
+        <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="2.2" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
       </defs>
 
-      <g id="bowline" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <!-- outer faceted limb -->
-        <path d="M48,14 C8,32 -4,58 24,75 C-4,92 8,118 48,136"
-              stroke="url(#goldGrad)" stroke-width="1.6"
-              stroke-dasharray="270" stroke-dashoffset="270">
-          <animate attributeName="stroke-dashoffset" from="270" to="0" dur="1.3s" fill="freeze"/>
-        </path>
-        <!-- inner bright highlight, slightly offset for a faceted metal look -->
-        <path d="M50,19 C20,34 10,57 31,75 C10,93 20,116 50,131"
-              stroke="var(--gold-bright)" stroke-width="0.6" opacity="0.65"
-              stroke-dasharray="230" stroke-dashoffset="230">
-          <animate attributeName="stroke-dashoffset" from="230" to="0" dur="1.3s" begin="0.15s" fill="freeze"/>
-        </path>
+      <!-- everything bow-related, shifted left -->
+      <g transform="translate(-30,0)">
+        <!-- ambient ground shadow, grounding the whole illustration -->
+        <ellipse cx="180" cy="205" rx="150" ry="16" fill="url(#groundShadow)"/>
 
-        <!-- taut string -->
-        <line x1="48" y1="14" x2="130" y2="75" stroke="var(--ink-soft)" stroke-width="0.8" opacity="0.5"
-              stroke-dasharray="103" stroke-dashoffset="103">
-          <animate attributeName="stroke-dashoffset" from="103" to="0" dur="0.7s" begin="1.15s" fill="freeze"/>
-        </line>
-        <line x1="48" y1="136" x2="130" y2="75" stroke="var(--ink-soft)" stroke-width="0.8" opacity="0.5"
-              stroke-dasharray="103" stroke-dashoffset="103">
-          <animate attributeName="stroke-dashoffset" from="103" to="0" dur="0.7s" begin="1.15s" fill="freeze"/>
-        </line>
+        <g id="bowline" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#pieceShadow)">
+          <!-- cast shadow layer, offset slightly behind the limb -->
+          <path d="M250,-8 C328,26 346,78 270,100 C346,122 328,174 250,208"
+                stroke="#000000" stroke-width="5.5" opacity="0.25" transform="translate(2,4)"/>
+          <!-- main limb: lit-to-shadow gradient for a rounded, dimensional look -->
+          <path d="M250,-8 C328,26 346,78 270,100 C346,122 328,174 250,208"
+                stroke="url(#limbShade)" stroke-width="4.5"
+                stroke-dasharray="440" stroke-dashoffset="440">
+            <animate attributeName="stroke-dashoffset" from="440" to="0" dur="1.3s" fill="freeze"/>
+          </path>
+          <!-- thin bright reflection line along the inner edge -->
+          <path d="M250,-4 C320,28 338,78 267,98"
+                stroke="var(--gold-bright)" stroke-width="0.8" opacity="0.75"
+                stroke-dasharray="180" stroke-dashoffset="180">
+            <animate attributeName="stroke-dashoffset" from="180" to="0" dur="1.1s" begin="0.2s" fill="freeze"/>
+          </path>
 
-        <!-- arrow shaft -->
-        <line x1="130" y1="75" x2="212" y2="75" stroke="var(--gold)" stroke-width="1.3"
-              stroke-dasharray="82" stroke-dashoffset="82">
-          <animate attributeName="stroke-dashoffset" from="82" to="0" dur="0.5s" begin="1.55s" fill="freeze"/>
-        </line>
+          <!-- taut string, with a faint shadow twin for depth -->
+          <line x1="250" y1="-8" x2="144" y2="100" stroke="#000000" stroke-width="1.2" opacity="0.15" transform="translate(1,2)"/>
+          <line x1="250" y1="-8" x2="144" y2="100" stroke="var(--ink-soft)" stroke-width="1" opacity="0.6"
+                stroke-dasharray="152" stroke-dashoffset="152">
+            <animate attributeName="stroke-dashoffset" from="152" to="0" dur="0.7s" begin="1.15s" fill="freeze"/>
+          </line>
+          <line x1="250" y1="208" x2="144" y2="100" stroke="#000000" stroke-width="1.2" opacity="0.15" transform="translate(1,-2)"/>
+          <line x1="250" y1="208" x2="144" y2="100" stroke="var(--ink-soft)" stroke-width="1" opacity="0.6"
+                stroke-dasharray="152" stroke-dashoffset="152">
+            <animate attributeName="stroke-dashoffset" from="152" to="0" dur="0.7s" begin="1.15s" fill="freeze"/>
+          </line>
+        </g>
+
+        <!-- gems: top tip, bottom tip, grip — faceted with light/shadow halves -->
+        <g opacity="0">
+          <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.35s" fill="freeze"/>
+          <g filter="url(#softGlow)">
+            <path d="M250,-15 L256,-8 L250,-8 Z" fill="var(--gold-bright)"/>
+            <path d="M250,-8 L256,-8 L250,-1 Z" fill="var(--gold)"/>
+            <path d="M250,-15 L250,-1 L244,-8 Z" fill="#8a6a2e"/>
+            <path d="M250,201 L256,208 L250,208 Z" fill="var(--gold-bright)"/>
+            <path d="M250,208 L256,208 L250,215 Z" fill="var(--gold)"/>
+            <path d="M250,201 L250,215 L244,208 Z" fill="#8a6a2e"/>
+            <path d="M270,91 L279,100 L270,100 Z" fill="var(--gold-bright)"/>
+            <path d="M270,100 L279,100 L270,109 Z" fill="var(--gold)"/>
+            <path d="M270,91 L270,109 L261,100 Z" fill="#8a6a2e"/>
+          </g>
+        </g>
+
+        <!-- twinkling sparkles -->
+        <g fill="var(--gold-bright)">
+          <path d="M250,-22 L251.8,-17 L257,-15 L251.8,-13 L250,-8 L248.2,-13 L243,-15 L248.2,-17 Z" opacity="0">
+            <animate attributeName="opacity" values="0;1;0.3;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.6s" begin="2.2s" repeatCount="indefinite"/>
+          </path>
+          <path d="M358,80 L359.4,83.6 L363,85 L359.4,86.4 L358,90 L356.6,86.4 L353,85 L356.6,83.6 Z" opacity="0">
+            <animate attributeName="opacity" values="0;1;0.2;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.2s" begin="2.35s" repeatCount="indefinite"/>
+          </path>
+          <path d="M330,45 L331.1,47.7 L333.8,48.8 L331.1,49.9 L330,52.6 L328.9,49.9 L326.2,48.8 L328.9,47.7 Z" opacity="0">
+            <animate attributeName="opacity" values="0;1;0.3;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="3s" begin="2.5s" repeatCount="indefinite"/>
+          </path>
+          <path d="M250,222 L251.1,224.7 L253.8,225.8 L251.1,226.9 L250,229.6 L248.9,226.9 L246.2,225.8 L248.9,224.7 Z" opacity="0">
+            <animate attributeName="opacity" values="0;1;0.2;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.8s" begin="2.65s" repeatCount="indefinite"/>
+          </path>
+        </g>
       </g>
 
-      <!-- fletching flourish -->
-      <g opacity="0">
-        <animate attributeName="opacity" from="0" to="1" dur="0.35s" begin="1.9s" fill="freeze"/>
-        <path d="M136,75 C144,68 152,66 158,68 C150,71 144,73 136,75 Z" fill="url(#goldGrad)" opacity="0.85"/>
-        <path d="M136,75 C144,82 152,84 158,82 C150,79 144,77 136,75 Z" fill="var(--gold)" opacity="0.7"/>
-      </g>
+      <!-- arrow: shaft + fletching + arrowhead, grouped so it can fly as one unit -->
+      <g id="arrow-group" filter="url(#pieceShadow)">
+        <!-- shaft shadow -->
+        <line x1="-6" y1="102.5" x2="340" y2="102.5" stroke="#000000" stroke-width="4" opacity="0.2"/>
+        <!-- shaft: thicker and lighter -->
+        <line x1="-6" y1="100" x2="340" y2="100" stroke="var(--gold-bright)" stroke-width="4"
+              stroke-dasharray="346" stroke-dashoffset="346">
+          <animate attributeName="stroke-dashoffset" from="346" to="0" dur="0.5s" begin="1.55s" fill="freeze"/>
+        </line>
 
-      <!-- arrowhead -->
-      <path d="M209,67 L230,75 L209,83 L216,75 Z" fill="url(#goldGrad)" opacity="0">
-        <animate attributeName="opacity" from="0" to="1" dur="0.25s" begin="2s" fill="freeze"/>
-      </path>
+        <!-- bold X-shaped fletching, original size, pointing back toward the tail -->
+        <g opacity="0" id="fletching-group" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round">
+          <animate attributeName="opacity" from="0" to="1" dur="0.35s" begin="1.9s" fill="freeze"/>
+          <line x1="46" y1="100" x2="20" y2="80"/>
+          <line x1="46" y1="100" x2="20" y2="120"/>
+          <line x1="34" y1="100" x2="12" y2="86"/>
+          <line x1="34" y1="100" x2="12" y2="114"/>
+        </g>
 
-      <!-- gems: top tip, bottom tip, grip -->
-      <g fill="url(#gemGrad)" opacity="0">
-        <animate attributeName="opacity" from="0" to="1" dur="0.4s" begin="1.35s" fill="freeze"/>
-        <path d="M48,9 L52,14 L48,19 L44,14 Z"/>
-        <path d="M48,131 L52,136 L48,141 L44,136 Z"/>
-        <path d="M24,70 L29,75 L24,80 L19,75 Z"/>
-      </g>
-
-      <!-- twinkling sparkles -->
-      <g fill="var(--gold-bright)">
-        <path d="M48,4 L49.4,7.6 L53,9 L49.4,10.4 L48,14 L46.6,10.4 L43,9 L46.6,7.6 Z" opacity="0">
-          <animate attributeName="opacity" values="0;1;0.3;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.6s" begin="2.2s" repeatCount="indefinite"/>
-        </path>
-        <path d="M226,62 L227,64.6 L229.6,65.6 L227,66.6 L226,69.2 L225,66.6 L222.4,65.6 L225,64.6 Z" opacity="0">
-          <animate attributeName="opacity" values="0;1;0.2;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.2s" begin="2.35s" repeatCount="indefinite"/>
-        </path>
-        <path d="M14,40 L14.8,42 L16.8,42.8 L14.8,43.6 L14,45.6 L13.2,43.6 L11.2,42.8 L13.2,42 Z" opacity="0">
-          <animate attributeName="opacity" values="0;1;0.3;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="3s" begin="2.5s" repeatCount="indefinite"/>
-        </path>
-        <path d="M20,108 L20.8,110 L22.8,110.8 L20.8,111.6 L20,113.6 L19.2,111.6 L17.2,110.8 L19.2,110 Z" opacity="0">
-          <animate attributeName="opacity" values="0;1;0.2;1;0" keyTimes="0;0.2;0.5;0.7;1" dur="2.8s" begin="2.65s" repeatCount="indefinite"/>
-        </path>
+        <!-- arrowhead: faceted with a lit half and a shadowed half -->
+        <g opacity="0" id="arrowhead-path">
+          <animate attributeName="opacity" from="0" to="1" dur="0.25s" begin="2s" fill="freeze"/>
+          <path d="M334,86 L361,100 L334,100 Z" fill="var(--gold-bright)"/>
+          <path d="M334,100 L361,100 L334,114 Z" fill="#8a6a2e"/>
+          <path d="M334,86 L343,100 L334,114 Z" fill="url(#goldGrad)"/>
+        </g>
       </g>
     </svg>
   </div>
 
   <nav class="tabs reveal" style="animation-delay:.4s">
-    <button data-tab="zi" class="active">Zilnic</button>
-    <button data-tab="sapt">Săptămânal</button>
-    <button data-tab="luna">Lunar</button>
+    <div class="tabs-row">
+      <button data-tab="ieri">Ieri</button>
+      <button data-tab="zi" class="active">Zilnic</button>
+      <button data-tab="maine">Mâine</button>
+    </div>
+    <div class="tabs-row">
+      <button data-tab="sapt">Săptămânal</button>
+      <button data-tab="luna">Lunar</button>
+    </div>
   </nav>
 </div>
 
 <div class="stage">
 
-  <div class="card reveal" style="animation-delay:.5s">
+  <div class="card card-primary reveal" style="animation-delay:.5s">
     <div class="card-head">
-      <h2 id="card-title">Citirea zilei</h2>
+      <h2 id="card-title">Horoscopul zilei</h2>
     </div>
     <div class="card-period" id="card-period"></div>
 
+    <div class="reading-skeleton" id="reading-skeleton">
+      <div class="skel-line skel-w90"></div>
+      <div class="skel-line skel-w75"></div>
+      <div class="skel-line skel-w60"></div>
+      <div class="skel-block"></div>
+      <div class="skel-block"></div>
+    </div>
+
     <p class="reading" id="reading-text"></p>
-    <ul class="reading-bullets" id="reading-bullets"></ul>
 
-    <div class="stat-row" id="stat-row"></div>
+    <div class="area-block">
+      <div class="area-head">
+        <span class="area-icon">♥︎</span>
+        <span class="area-name">Dragoste și relații</span>
+        <div class="area-ring-wrap" id="ring-dragoste"></div>
+      </div>
+      <p class="area-text" id="area-dragoste-text"></p>
+      <p class="area-tip" id="area-dragoste-tip"></p>
+    </div>
+    <div class="area-block">
+      <div class="area-head">
+        <span class="area-icon">◆</span>
+        <span class="area-name">Finanțe</span>
+        <div class="area-ring-wrap" id="ring-finante"></div>
+      </div>
+      <p class="area-text" id="area-finante-text"></p>
+      <p class="area-tip" id="area-finante-tip"></p>
+    </div>
+    <div class="area-block">
+      <div class="area-head">
+        <span class="area-icon">✦</span>
+        <span class="area-name">Carieră</span>
+        <div class="area-ring-wrap" id="ring-cariera"></div>
+      </div>
+      <p class="area-text" id="area-cariera-text"></p>
+      <p class="area-tip" id="area-cariera-tip"></p>
+    </div>
+    <div class="area-block">
+      <div class="area-head">
+        <span class="area-icon">⌂</span>
+        <span class="area-name">Familie</span>
+        <div class="area-ring-wrap" id="ring-familie"></div>
+      </div>
+      <p class="area-text" id="area-familie-text"></p>
+      <p class="area-tip" id="area-familie-tip"></p>
+    </div>
 
+    <div class="score-note">Procentele de lângă fiecare secțiune arată intensitatea astrologică a zilei pentru acea zonă a vieții, calculată din poziția planetelor, faza lunii și tranzitele active azi.</div>
+
+    <div class="feedback-row" id="feedback-row">
+      <span class="feedback-label">A fost utilă citirea?</span>
+      <button class="feedback-btn" id="feedback-up" title="Da">👍</button>
+      <button class="feedback-btn" id="feedback-down" title="Nu">👎</button>
+    </div>
+  </div>
+
+  <div class="card card-secondary reveal">
+    <div class="card-reveal-wrap" id="keep-thought-block" style="display:none;">
+      <div class="reveal-card" id="reveal-card">
+        <div class="star-burst" id="star-burst"></div>
+        <div class="reveal-prompt" id="reveal-prompt">
+          <div class="prompt-star-field" id="prompt-star-field"></div>
+          <span class="card-front-glyph">✦</span>
+          <div class="card-front-text">Atinge pentru gândul zilei</div>
+        </div>
+        <div class="reveal-content" id="reveal-content">
+          <div class="universe-label">Gând de păstrat</div>
+          <p class="mini-text affirmation-text" id="keep-thought-text"></p>
+          <button class="save-thought-btn" id="save-thought-btn">☆ Salvează</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="universe-block">
+      <span class="universe-pulse">✦</span>
+      <div class="universe-label">Sfatul zilei</div>
+      <p class="universe-text" id="advice-text"></p>
+    </div>
+
+    <div class="question-block">
+      <p class="question-text" id="question-text"></p>
+    </div>
+  </div>
+
+  <div class="card card-secondary reveal">
     <div class="energy-block">
       <div class="energy-label">
-        <span>Energie folosită azi</span>
+        <span>Energie astrală</span>
         <span id="energy-pct">0%</span>
       </div>
       <div class="energy-track"><i id="energy-fill" style="width:0%"></i></div>
     </div>
 
-    <div class="universe-block">
-      <div class="universe-label">Mesajul Universului</div>
-      <p class="universe-text" id="universe-text"></p>
-    </div>
+    <div class="weekly-stat" id="weekly-stat" style="display:none;"></div>
 
     <div class="pinned-note" id="pinned-note"></div>
     <div class="api-note" id="api-note"></div>
+    <div class="return-note">✦ Toate secțiunile se actualizează mâine,<br>la o citire nouă și completă.</div>
+  </div>
+
+  <div class="card card-secondary reveal">
+    <div class="archive-callout" id="archive-callout">
+      <div class="archive-callout-text">Ai ratat ultimele zile? <button class="archive-btn" id="archive-btn">Vezi arhiva</button></div>
+    </div>
+    <div class="archive-panel" id="archive-panel" style="display:none;">
+      <div class="archive-panel-inner" id="archive-panel-inner">
+        <div class="archive-loading">Se încarcă arhiva…</div>
+      </div>
+    </div>
+
+    <div class="archive-callout" id="saved-callout" style="display:none;">
+      <div class="archive-callout-text">Gânduri salvate <button class="archive-btn" id="saved-btn">Vezi colecția</button></div>
+    </div>
+    <div class="archive-panel" id="saved-panel" style="display:none;">
+      <div class="archive-panel-inner" id="saved-panel-inner"></div>
+    </div>
 
     <div class="btn-row">
-      <button class="share-btn" id="share-btn">Trimite citirea</button>
+      <button class="share-btn" id="share-btn">Trimite unui prieten</button>
+      <button class="share-btn" id="listen-btn"><span id="listen-icon">▶</span> Ascultă</button>
+      <button class="share-btn" id="share-image-btn">🖼 Distribuie ca imagine</button>
     </div>
 
     <div class="extra-divider"><span>sau, pentru distracție</span></div>
-    <button class="extra-btn" id="extra-btn">Trage o săgeată — mesaj extra</button>
+    <button class="extra-btn" id="extra-btn">🏹 Oracolul Săgetătorului</button>
     <div class="extra-panel" id="extra-panel">
       <div class="extra-label">Mesaj suplimentar, nu înlocuiește citirea oficială de mai sus</div>
       <p class="extra-text" id="extra-text"></p>
@@ -768,23 +1660,19 @@ footer{
 
   <div class="briefs">
 
-    <section class="reveal-section">
+    <section class="reveal-section card card-secondary">
       <div class="brief-title">Cerul de azi</div>
+        <div class="brief-title-sub">Influențele astrale ale zilei</div>
       <div class="traits">
-        <div class="trait sky-score"><span class="glyph">✦</span><div class="name" id="sky-score-value">—</div><div class="desc">Scor astrologic al zilei</div></div>
         <div class="trait"><span class="glyph" id="sky-moon-glyph">☾</span><div class="name" id="sky-moon-value">—</div><div class="desc">Faza lunii, azi</div></div>
         <div class="trait"><span class="glyph">✓</span><div class="name">Bun pentru</div><div class="desc" id="sky-good-value">—</div></div>
         <div class="trait"><span class="glyph">✗</span><div class="name">De evitat</div><div class="desc" id="sky-avoid-value">—</div></div>
       </div>
     </section>
 
-    <section class="reveal-section">
-      <div class="brief-title">Astăzi, pe scurt</div>
-      <div class="stat-row" id="lucky-row" style="text-align:center;"></div>
-    </section>
-
-    <section class="reveal-section">
+    <section class="reveal-section card card-primary">
       <div class="brief-title">Compatibilitate</div>
+      <div class="featured-compat" id="featured-compat"></div>
       <div class="brief-sub">Atinge un semn</div>
       <div class="compat" id="compat-list">
         <button class="compat-btn" data-sign="berbec">♈︎ Berbec</button>
@@ -803,15 +1691,25 @@ footer{
       <div class="compat-detail" id="compat-detail"></div>
     </section>
 
-    <section class="reveal-section">
+    <section class="reveal-section card card-primary">
       <div class="brief-title" id="calendar-title">Cerul lunii</div>
       <div class="brief-sub">Evenimente ale lunii pentru Săgetător</div>
+      <div class="featured-event" id="featured-event"></div>
       <div class="timeline" id="calendar-timeline"></div>
     </section>
 
   </div>
 
-  <footer>Element Foc &nbsp;·&nbsp; Planeta Jupiter &nbsp;·&nbsp; Piatra Turcoaz</footer>
+  <div class="closing-cta">
+    <p class="closing-cta-text">Dacă această citire ți-a fost utilă, continuăm și mâine.</p>
+    <p class="closing-cta-text">Pe TikTok găsești zilnic interpretări și explicații care nu încap într-o singură pagină. Te aștept pe <span class="closing-cta-gold">✨️Sagittarius Decoded✨️</span>.</p>
+  </div>
+
+  <footer>
+    <div>Element: Foc</div>
+    <div>Planeta: Jupiter</div>
+    <div>Piatra: Turcoaz</div>
+  </footer>
 
 </div>
 
@@ -859,32 +1757,143 @@ function resize(){
   stars = Array.from({length:count},()=>({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
-    r:Math.random()*1.3+0.2,
-    a:Math.random()*0.6+0.15,
-    tw:Math.random()*0.015+0.003,
+    r:Math.random()*2.1+0.5,
+    a:Math.random()*0.5+0.4,
+    tw:Math.random() < 0.25 ? (Math.random()*0.05+0.03) : (Math.random()*0.02+0.006),
     dir:Math.random()>0.5?1:-1
   }));
+
+  const dustCount = Math.floor((canvas.width*canvas.height)/16000);
+  dustMotes = Array.from({length:dustCount},()=>({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2.4+1,
+    a:Math.random()*0.4+0.35,
+    vy:-(Math.random()*0.22+0.06),
+    wobble:Math.random()*Math.PI*2,
+    wobbleSpeed:Math.random()*0.015+0.006
+  }));
+
+  clouds = Array.from({length:5},(_,i)=>({
+    x:Math.random()*canvas.width,
+    y:canvas.height*(0.06+i*0.07) + Math.random()*50,
+    w:170+Math.random()*130,
+    h:30+Math.random()*18,
+    vx:0.18+Math.random()*0.14,
+    a:0.16+Math.random()*0.1
+  }));
 }
+let dustMotes = [];
+let clouds = [];
 let shootingStars = [];
+let sunAngle = 0;
 function maybeSpawnShootingStar(){
   if(Math.random() < 0.022 && shootingStars.length < 5){
     const startX = Math.random()*canvas.width*0.75;
     shootingStars.push({
       x:startX, y: -10,
-      vx: 5 + Math.random()*3,
-      vy: 3 + Math.random()*2,
+      vx: 3 + Math.random()*2,
+      vy: 2 + Math.random()*1.3,
       life: 1
     });
+  }
+}
+function drawDustMotes(){
+  dustMotes.forEach(d=>{
+    d.wobble += d.wobbleSpeed;
+    d.y += d.vy;
+    const wobbleX = Math.sin(d.wobble)*8;
+    if(d.y < -10){ d.y = canvas.height+10; d.x = Math.random()*canvas.width; }
+    ctx.globalAlpha = d.a;
+    ctx.fillStyle = 'rgb(216,168,96)';
+    ctx.beginPath();
+    ctx.arc(d.x+wobbleX, d.y, d.r, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawClouds(){
+  const isLight = document.body.classList.contains('light');
+  const cloudFill = isLight ? '180,150,110' : '230,215,190';
+  clouds.forEach(c=>{
+    c.x += c.vx;
+    if(c.x - c.w > canvas.width) c.x = -c.w;
+    ctx.fillStyle = `rgba(${cloudFill},${c.a})`;
+    // a puffy cloud made of several overlapping lobes, clearly readable as a cloud
+    const lobes = [
+      {dx:-0.32, dy:0.15, r:0.32},
+      {dx:-0.05, dy:-0.05, r:0.42},
+      {dx:0.28, dy:0.12, r:0.34},
+      {dx:0.5, dy:0.22, r:0.24},
+      {dx:-0.5, dy:0.24, r:0.22}
+    ];
+    lobes.forEach(l=>{
+      ctx.beginPath();
+      ctx.ellipse(c.x + l.dx*c.w, c.y + l.dy*c.h, l.r*c.w, l.r*c.h*0.85, 0, 0, Math.PI*2);
+      ctx.fill();
+    });
+    // flat-ish base for a classic cloud silhouette
+    ctx.beginPath();
+    ctx.ellipse(c.x, c.y + c.h*0.32, c.w*0.55, c.h*0.32, 0, 0, Math.PI*2);
+    ctx.fill();
+  });
+}
+
+function drawSunRays(){
+  const sunX = canvas.width/2;
+  const sunY = canvas.height*0.1;
+  sunAngle += 0.0009;
+
+  const glow = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 280);
+  glow.addColorStop(0, 'rgba(200,110,40,0.4)');
+  glow.addColorStop(0.5, 'rgba(200,110,40,0.14)');
+  glow.addColorStop(1, 'rgba(200,110,40,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 280, 0, Math.PI*2);
+  ctx.fill();
+
+  // solid sun disc, for a clear visual anchor
+  ctx.fillStyle = 'rgba(198,106,36,0.55)';
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 30, 0, Math.PI*2);
+  ctx.fill();
+
+  const rayCount = 14;
+  for(let i=0;i<rayCount;i++){
+    const angle = sunAngle + (i / rayCount) * Math.PI * 2;
+    const shimmer = 0.28 + 0.18 * Math.sin(sunAngle*40 + i*1.7);
+    const r1 = 40, r2 = 360;
+    const x1 = sunX + Math.cos(angle)*r1, y1 = sunY + Math.sin(angle)*r1;
+    const x2 = sunX + Math.cos(angle)*r2, y2 = sunY + Math.sin(angle)*r2;
+    const grad = ctx.createLinearGradient(x1,y1,x2,y2);
+    grad.addColorStop(0, `rgba(198,106,36,${shimmer})`);
+    grad.addColorStop(1, 'rgba(198,106,36,0)');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
   }
 }
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const isLight = document.body.classList.contains('light');
-  const starColor = isLight ? '36,31,19' : '246,241,230';
-  ctx.fillStyle = `rgb(${starColor})`;
+
+  if(isLight){
+    drawClouds();
+    drawSunRays();
+    drawDustMotes();
+    if(!prefersReducedMotion) requestAnimationFrame(draw);
+    return;
+  }
+
+  ctx.fillStyle = 'rgb(246,241,230)';
   for(const s of stars){
     s.a += s.tw*s.dir;
-    if(s.a>0.8||s.a<0.1) s.dir*=-1;
+    if(s.a>0.95||s.a<0.04) s.dir*=-1;
     ctx.globalAlpha = s.a;
     ctx.beginPath();
     ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
@@ -895,8 +1904,8 @@ function draw(){
   maybeSpawnShootingStar();
   shootingStars.forEach(s=>{
     const grad = ctx.createLinearGradient(s.x, s.y, s.x - s.vx*8, s.y - s.vy*8);
-    grad.addColorStop(0, `rgba(${isLight?'194,90,36':'227,169,74'},${s.life})`);
-    grad.addColorStop(1, `rgba(${isLight?'194,90,36':'227,169,74'},0)`);
+    grad.addColorStop(0, `rgba(227,169,74,${s.life})`);
+    grad.addColorStop(1, 'rgba(227,169,74,0)');
     ctx.strokeStyle = grad;
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -907,8 +1916,10 @@ function draw(){
   });
   shootingStars = shootingStars.filter(s=>s.life>0 && s.y < canvas.height+20);
 
-  requestAnimationFrame(draw);
+  if(!prefersReducedMotion) requestAnimationFrame(draw);
 }
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 window.addEventListener('resize',resize);
 resize();
 draw();
@@ -918,15 +1929,83 @@ const themeBtn = document.getElementById('theme-btn');
 themeBtn.addEventListener('click', ()=>{
   document.body.classList.toggle('light');
   const isLight = document.body.classList.contains('light');
-  themeBtn.textContent = isLight ? '☀ Mod nocturn' : '☾ Mod luminos';
+  themeBtn.textContent = isLight ? '☀' : '☾';
+  if(typeof crossfadeAmbientTheme === 'function') crossfadeAmbientTheme();
 });
 
-document.getElementById('symbol-wrap').addEventListener('click', ()=>{
-  const svg = document.getElementById('bow-svg');
-  const fresh = svg.cloneNode(true);
-  svg.parentNode.replaceChild(fresh, svg);
-  fresh.id = 'bow-svg';
-});
+function spawnArrowTrail(){
+  const wrap = document.getElementById('arrow-trail-wrap');
+  if(!wrap) return;
+  const glyphs = ['✦','✧','·'];
+  const dropCount = 9;
+  for(let i=0; i<dropCount; i++){
+    const el = document.createElement('span');
+    el.className = 'arrow-trail-spark';
+    el.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    const startPct = 41; // roughly the arrow's starting x position, as % of wrap width
+    const endPct = 95;
+    const pct = startPct + (endPct-startPct) * (i/(dropCount-1));
+    el.style.left = pct + '%';
+    el.style.top = (49 + (Math.random()*6-3)) + '%';
+    el.style.animationDelay = (i*0.045) + 's';
+    el.style.fontSize = (7 + Math.random()*6) + 'px';
+    wrap.appendChild(el);
+    setTimeout(()=>el.remove(), 900);
+  }
+
+  // lingering stardust: many tiny dots left in the arrow's wake, fading slowly
+  const dustCount = 26;
+  for(let i=0; i<dustCount; i++){
+    const dust = document.createElement('span');
+    dust.className = 'arrow-dust-spark';
+    const startPct = 38;
+    const endPct = 96;
+    const pct = startPct + (endPct-startPct) * (i/(dustCount-1));
+    dust.style.left = (pct + (Math.random()*3-1.5)) + '%';
+    dust.style.top = (50 + (Math.random()*10-5)) + '%';
+    dust.style.animationDelay = (0.08 + i*0.02 + Math.random()*0.05) + 's';
+    const dsize = 1.5 + Math.random()*2.5;
+    dust.style.width = dsize + 'px';
+    dust.style.height = dsize + 'px';
+    wrap.appendChild(dust);
+    setTimeout(()=>dust.remove(), 2200);
+  }
+
+  const flash = document.createElement('div');
+  flash.className = 'release-flash';
+  wrap.appendChild(flash);
+  setTimeout(()=>flash.remove(), 600);
+}
+
+function playArrowShot(){
+  const arrowGroup = document.getElementById('arrow-group');
+  const bowline = document.getElementById('bowline');
+  if(!arrowGroup) return;
+
+  arrowGroup.classList.remove('flying');
+  void arrowGroup.getBoundingClientRect(); // force reflow so the animation can restart
+  arrowGroup.classList.add('flying');
+  if(bowline){
+    bowline.classList.remove('recoil');
+    void bowline.getBoundingClientRect();
+    bowline.classList.add('recoil');
+  }
+
+  setTimeout(spawnArrowTrail, 60);
+
+  // reset the arrow back to its resting, nocked position after the flight finishes
+  setTimeout(()=>{
+    arrowGroup.classList.remove('flying');
+  }, 600);
+}
+
+document.getElementById('symbol-wrap').addEventListener('click', playArrowShot);
+
+// let the bow come alive on its own every so often, without needing a tap
+// (skipped entirely if the user prefers reduced motion — manual tap still works)
+if(!prefersReducedMotion){
+  setInterval(playArrowShot, 4200);
+}
 
 // ---------- toast ----------
 let toastTimer;
@@ -939,66 +2018,147 @@ function showToast(msg){
 }
 
 // ---------- content pools ----------
+const keepThoughtPool = [
+  "Uneori, cel mai curajos pas este să renunți la ceea ce nu îți mai servește.",
+  "Nu ai nevoie de un plan perfect, ai nevoie de un pas sincer, făcut azi.",
+  "Liniștea pe care o cauți nu vine din control, ci din acceptare.",
+  "Progresul tău nu se măsoară în viteză, ci în consecvență.",
+  "Ceea ce ceri cu convingere, universul găsește o cale să-ți aducă.",
+  "Nu ai întârziat la nimic. Drumul tău are propriul lui ceas."
+];
+
 const data = {
   zi: {
-    title: "Citirea zilei",
+    title: "Horoscopul zilei",
     entries: [
-      {head:"Astăzi ai șansa să schimbi direcția unei situații.",
-       bullets:["Dragoste: spune ce simți, fără ocolișuri.","Finanțe: evită cumpărăturile impulsive.","Carieră: apare o oportunitate neașteptată."]},
-      {head:"O idee bruscă îți schimbă planul zilei.",
-       bullets:["Dragoste: ascultă mai mult decât vorbești.","Finanțe: verifică un abonament sau o factură.","Carieră: propune ideea, nu o ține doar pentru tine."]},
-      {head:"Cineva îți pune la încercare răbdarea azi.",
-       bullets:["Dragoste: nu răspunde pe moment, la cald.","Finanțe: amână o decizie financiară majoră.","Carieră: alege calmul în locul disputei."]},
-      {head:"O conversație sinceră deblochează ceva important.",
-       bullets:["Dragoste: spune ce ai evitat să spui.","Finanțe: o veste bună despre un venit.","Carieră: cineva îți remarcă efortul."]},
-      {head:"Energia ta atrage atenția celor din jur azi.",
-       bullets:["Dragoste: farmecul tău e la cote maxime.","Finanțe: bun moment pentru o negociere.","Carieră: prezintă-te, nu te ascunde."]},
-      {head:"Jupiter îți șoptește să riști puțin mai mult.",
-       bullets:["Dragoste: fă primul pas, o dată.","Finanțe: o investiție mică merită atenție.","Carieră: cere ce ți se cuvine."]},
-      {head:"E o zi bună pentru a spune nu unui lucru vechi.",
-       bullets:["Dragoste: pune o limită sănătoasă.","Finanțe: refuză o cheltuială de moment.","Carieră: renunță la o sarcină care nu-ți aparține."]}
-    ],
-    stats:[["Energie",[62,95]],["Dragoste",[45,90]],["Carieră",[50,92]]]
+      { intro:"Ziua de azi te provoacă să alegi între ceea ce este confortabil și ceea ce te ajută cu adevărat să evoluezi. Ai acumulat destulă experiență ca să faci diferența dintre lucrurile care doar îți consumă energia și cele care îți schimbă direcția în bine. Nu te lăsa influențat de ritmul altora, progresul tău vine din consecvență, nu din comparație.",
+        areas:{
+          dragoste:{text:"Relațiile se întăresc când lași deoparte nevoia de a avea dreptate și alegi să înțelegi perspectiva celuilalt.", tip:"Exprimă-ți aprecierea față de persoana dragă, azi."},
+          finante:{text:"E o zi bună pentru planificare, poți identifica o modalitate de a-ți optimiza bugetul.", tip:"Notează un obiectiv financiar pentru următoarele trei luni."},
+          cariera:{text:"Poți demonstra că gestionezi responsabilități importante cu calm.", tip:"Prioritizează activitatea cu cel mai mare impact azi."},
+          familie:{text:"Răbdarea și disponibilitatea de a asculta fac diferența acasă.", tip:"Petrece timp de calitate cu cei dragi, fără grabă."}
+        },
+        lesson:"Adevărata încredere nu apare când toate merg perfect, ci atunci când continui să înaintezi în incertitudine.",
+        advice:"Investește-ți timpul în ceea ce construiește viitorul pe care ți-l dorești.",
+        affirmation:"Îmi folosesc curajul și claritatea pentru a crea oportunități care mă apropie de cea mai bună versiune a mea.",
+        scores:{dragoste:9, finante:8.5, cariera:9, familie:8.5, energie:9},
+        question:"Ce alegere poți face azi pentru a investi mai mult în viitorul tău decât în confortul de moment?"
+      },
+      { intro:"O idee bruscă îți schimbă planul zilei, iar asta nu e neapărat rău. Uneori cele mai bune direcții vin din ce nu ai plănuit. Ai nevoie de puțină flexibilitate azi, fără să-ți pierzi din vedere prioritățile reale. Lasă-te surprins, dar rămâi ancorat în ce contează.",
+        areas:{
+          dragoste:{text:"Ascultarea contează azi mai mult decât cuvintele tale.", tip:"Pune o întrebare și lasă spațiu pentru răspuns, fără să întrerupi."},
+          finante:{text:"O verificare atentă a cheltuielilor recurente îți poate aduce o mică economie.", tip:"Verifică un abonament sau o factură pe care ai amânat-o."},
+          cariera:{text:"O idee la care ai ezitat poate fi primită mai bine decât te aștepți.", tip:"Propune ideea azi, chiar dacă nu e perfectă."},
+          familie:{text:"Cineva din familie are nevoie de timpul tău, chiar dacă nu cere direct.", tip:"Sună sau vizitează pe cineva la care te-ai gândit recent."}
+        },
+        lesson:"Nu tot ce e neplanificat e greșit, uneori e doar o direcție pe care n-ai luat-o încă în calcul.",
+        advice:"Lasă-te surprins de ziua de azi, măcar o dată.",
+        affirmation:"Sunt deschis la ce e neașteptat, pentru că acolo apar deseori cele mai bune direcții.",
+        scores:{dragoste:8, finante:8.5, cariera:9, familie:8, energie:8.5},
+        question:"Ce ar putea ieși bine azi, dacă ai lăsa loc pentru neprevăzut?"
+      }
+    ]
   },
   sapt: {
     title: "Săptămâna aceasta",
     entries: [
-      {head:"Săptămâna te împinge spre o decizie amânată.",
-       bullets:["Dragoste: o discuție clarifică tot.","Finanțe: nu semna nimic în grabă vinerea.","Carieră: o inițiativă îți aduce vizibilitate."]},
-      {head:"Relațiile trec printr-o etapă de reașezare.",
-       bullets:["Dragoste: spune ce simți, nu presupune.","Finanțe: cheltuieli mici, dar dese — atenție.","Carieră: cere feedback direct, nu ghici."]},
-      {head:"O oportunitate de la job cere inițiativă.",
-       bullets:["Dragoste: fă loc pentru celălalt în program.","Finanțe: o veste financiară bună se conturează.","Carieră: ridică mâna primul, nu ultimul."]},
-      {head:"O călătorie scurtă îți resetează perspectiva.",
-       bullets:["Dragoste: ieșiți din rutina obișnuită.","Finanțe: bugetează din timp, nu improviza.","Carieră: o idee venită din drum prinde contur."]},
-      {head:"Ai tendința să promiți prea mult săptămâna asta.",
-       bullets:["Dragoste: alege calitatea timpului, nu cantitatea.","Finanțe: trei priorități, nu zece.","Carieră: spune nu unei sarcini în plus."]}
-    ],
-    stats:[["Focus",[55,88]],["Social",[60,94]],["Bani",[40,85]]]
+      { intro:"Săptămâna aceasta te împinge spre o decizie amânată. Ai suficiente informații ca să alegi, ce-ți lipsește e curajul de a o face acum, nu mai multe date. Amânarea are un cost mai mare decât pare, mai ales când o simți deja.",
+        areas:{
+          dragoste:{text:"O discuție sinceră poate clarifica ce ai lăsat nespus.", tip:"Alege un moment liniștit și spune ce simți, direct."},
+          finante:{text:"Nu semna nimic în grabă, mai ales spre finalul săptămânii.", tip:"Lasă o decizie financiară importantă pe mâine, nu azi."},
+          cariera:{text:"O inițiativă de-a ta poate aduce vizibilitate reală.", tip:"Ridică mâna pentru un proiect nou, chiar dacă nu ești sigur 100%."},
+          familie:{text:"Găsește timp pentru un apel sau o vizită, chiar dacă săptămâna e plină.", tip:"Rezervă cel puțin o oră pentru cineva drag."}
+        },
+        lesson:"Amânarea nu elimină decizia, doar o mută mai târziu, cu mai puțină energie disponibilă.",
+        advice:"Alege trei priorități pentru săptămâna asta, nu zece.",
+        affirmation:"Am curajul să decid, chiar și atunci când nu am toate răspunsurile.",
+        scores:{dragoste:8, finante:8, cariera:8.5, familie:8, energie:8.5},
+        question:"Ce decizie amâni de prea mult timp, deși știi deja răspunsul?"
+      },
+      { intro:"Relațiile trec printr-o etapă de reașezare săptămâna asta. Nu e nimic stricat, doar se recalibrează echilibrul dintre ce oferi și ce primești. Claritatea, nu presupunerile, va face diferența.",
+        areas:{
+          dragoste:{text:"Spune ce simți, în loc să presupui ce simte celălalt.", tip:"Pornește o conversație cu o întrebare, nu cu o acuzație."},
+          finante:{text:"Cheltuielile mici, dar dese, merită atenție săptămâna asta.", tip:"Urmărește-ți cheltuielile zilnice timp de șapte zile."},
+          cariera:{text:"Cere feedback direct, în loc să ghicești ce cred ceilalți despre munca ta.", tip:"Întreabă concret ce ai putea face mai bine."},
+          familie:{text:"O neînțelegere veche se poate rezolva acum, dacă ești dispus să deschizi subiectul.", tip:"Fii tu primul care menționează subiectul evitat."}
+        },
+        lesson:"Claritatea previne conflictul mai bine decât orice diplomație tăcută.",
+        advice:"Pune întrebarea care te macină, chiar dacă răspunsul te sperie puțin.",
+        affirmation:"Aleg claritatea în locul presupunerilor, în toate relațiile mele.",
+        scores:{dragoste:8.5, finante:7.5, cariera:8, familie:8, energie:8},
+        question:"Ce presupunere faci despre cineva drag, pe care n-ai verificat-o niciodată?"
+      }
+    ]
   },
   luna: {
     title: "Luna aceasta",
     entries: [
-      {head:"Luna deschide un capitol de creștere reală.",
-       bullets:["Dragoste: o relație capătă profunzime nouă.","Finanțe: un venit suplimentar prinde contur.","Carieră: studiul sau formarea dă roade."]},
-      {head:"Jupiter îți amplifică tot ce pui în mișcare acum.",
-       bullets:["Dragoste: ce construiești acum durează.","Finanțe: extinde, dar cu cap.","Carieră: expansiunea vine cu responsabilitate."]},
-      {head:"O relație importantă cere onestitate profundă.",
-       bullets:["Dragoste: adevărul, chiar dacă doare puțin.","Finanțe: transparență în cheltuieli comune.","Carieră: o conversație dificilă nu mai poate fi amânată."]},
-      {head:"Cariera ta primește un test de răbdare luna asta.",
-       bullets:["Dragoste: susținerea partenerului contează.","Finanțe: rezultatele vin spre final de lună.","Carieră: constanța bate graba."]},
-      {head:"E o lună potrivită să reînveți ceva ce credeai știut.",
-       bullets:["Dragoste: privește relația cu ochi noi.","Finanțe: revizuiește un obicei financiar vechi.","Carieră: o abilitate veche merită actualizată."]}
-    ],
-    stats:[["Creștere",[70,97]],["Stabilitate",[35,75]],["Noroc",[60,96]]]
+      { intro:"Luna aceasta deschide un capitol de creștere reală. Nu e vorba de schimbări spectaculoase, ci de o acumulare constantă care, peste timp, se vede clar. Răbdarea ta va fi testată, dar rezultatele merită așteptarea.",
+        areas:{
+          dragoste:{text:"O relație capătă profunzime nouă luna asta.", tip:"Alege o conversație mai profundă în locul uneia superficiale."},
+          finante:{text:"Un venit suplimentar sau o oportunitate financiară prinde contur.", tip:"Explorează o sursă de venit pe care ai amânat-o."},
+          cariera:{text:"Studiul sau formarea continuă începe să dea roade vizibile.", tip:"Continuă ce ai început, chiar dacă progresul pare lent."},
+          familie:{text:"Legăturile de familie se consolidează prin gesturi mici, repetate.", tip:"Sună constant, nu doar atunci când ai nevoie de ceva."}
+        },
+        lesson:"Creșterea reală vine încet, nu brusc, și tocmai de-aia durează.",
+        advice:"Investește constant luna asta, nu doar la final, când vezi rezultatele.",
+        affirmation:"Am răbdarea să construiesc ceva care durează, nu doar ceva care impresionează rapid.",
+        scores:{dragoste:8.5, finante:8.5, cariera:9, familie:8.5, energie:8.5},
+        question:"Ce construiești acum, încet, care va conta cu adevărat peste un an?"
+      },
+      { intro:"Jupiter îți amplifică tot ce pui în mișcare luna asta, atât ce construiești, cât și ce neglijezi. E momentul să fii selectiv cu unde îți investești energia, pentru că orice alegi acum va crește.",
+        areas:{
+          dragoste:{text:"Ce construiești acum în relație durează mai mult decât crezi.", tip:"Fii intenționat cu timpul pe care îl dedici relației."},
+          finante:{text:"Poți extinde ceva ce funcționează deja, dar cu strategie, nu impuls.", tip:"Fă un plan înainte să extinzi o cheltuială sau o investiție."},
+          cariera:{text:"Expansiunea profesională vine cu responsabilitate în plus.", tip:"Acceptă mai mult doar dacă poți susține calitatea."},
+          familie:{text:"Un proiect comun de familie prinde avânt luna asta.", tip:"Propune o activitate sau un plan comun cu cei dragi."}
+        },
+        lesson:"Ce amplifici acum, bun sau rău, se va vedea limpede în timp.",
+        advice:"Alege cu grijă ce hrănești luna asta, pentru că va crește.",
+        affirmation:"Îmi aleg cu intenție prioritățile, știind că ele cresc odată cu timpul investit.",
+        scores:{dragoste:8, finante:8.5, cariera:8.5, familie:8, energie:8.5},
+        question:"Ce hrănești constant în viața ta, și chiar vrei să crească?"
+      }
+    ]
+  },
+  maine: {
+    title: "Ziua de mâine",
+    entries: [
+      { intro:"Ziua de mâine te provoacă să alegi între ceea ce este confortabil și ceea ce te ajută cu adevărat să evoluezi. Ai acumulat destulă experiență ca să faci diferența dintre lucrurile care doar îți consumă energia și cele care îți schimbă direcția în bine. Nu te lăsa influențat de ritmul altora, progresul tău vine din consecvență, nu din comparație.",
+        areas:{
+          dragoste:{text:"Relațiile se întăresc când lași deoparte nevoia de a avea dreptate și alegi să înțelegi perspectiva celuilalt.", tip:"Exprimă-ți aprecierea față de persoana dragă, mâine."},
+          finante:{text:"E o zi bună pentru planificare, poți identifica o modalitate de a-ți optimiza bugetul.", tip:"Notează un obiectiv financiar pentru următoarele trei luni."},
+          cariera:{text:"Poți demonstra că gestionezi responsabilități importante cu calm.", tip:"Prioritizează activitatea cu cel mai mare impact mâine."},
+          familie:{text:"Răbdarea și disponibilitatea de a asculta fac diferența acasă.", tip:"Petrece timp de calitate cu cei dragi, fără grabă."}
+        },
+        lesson:"Adevărata încredere nu apare când toate merg perfect, ci atunci când continui să înaintezi în incertitudine.",
+        advice:"Pregătește-ți mâine de azi, un pas mic acum ușurează ziua care vine.",
+        affirmation:"Îmi folosesc curajul și claritatea pentru a crea oportunități care mă apropie de cea mai bună versiune a mea.",
+        scores:{dragoste:9, finante:8.5, cariera:9, familie:8.5, energie:9},
+        question:"Ce ai putea pregăti azi, ca ziua de mâine să fie mai ușoară?"
+      },
+      { intro:"O idee bruscă îți va schimba planul, mâine, iar asta nu e neapărat rău. Uneori cele mai bune direcții vin din ce nu ai plănuit. Ai nevoie de puțină flexibilitate, fără să-ți pierzi din vedere prioritățile reale. Lasă-te surprins, dar rămâi ancorat în ce contează.",
+        areas:{
+          dragoste:{text:"Ascultarea va conta mâine mai mult decât cuvintele tale.", tip:"Pregătește-te să pui o întrebare și să lași spațiu pentru răspuns."},
+          finante:{text:"O verificare atentă a cheltuielilor recurente îți poate aduce o mică economie.", tip:"Verifică din timp un abonament sau o factură."},
+          cariera:{text:"O idee la care ai ezitat poate fi primită mai bine decât te aștepți.", tip:"Pregătește ideea azi, ca s-o poți propune mâine."},
+          familie:{text:"Cineva din familie va avea nevoie de timpul tău, chiar dacă nu cere direct.", tip:"Gândește-te la cineva pe care ai putea să-l suni mâine."}
+        },
+        lesson:"Nu tot ce e neplanificat e greșit, uneori e doar o direcție pe care n-ai luat-o încă în calcul.",
+        advice:"Lasă-te surprins de ziua care vine, măcar o dată.",
+        affirmation:"Sunt deschis la ce e neașteptat, pentru că acolo apar deseori cele mai bune direcții.",
+        scores:{dragoste:8, finante:8.5, cariera:9, familie:8, energie:8.5},
+        question:"Ce ar putea ieși bine mâine, dacă ai lăsa loc pentru neprevăzut?"
+      }
+    ]
   }
 };
 
 const universePool = [
-  "Nu tot ce e greu acum e greșit — unele lucruri se coc încet, ca vinul.",
+  "Nu tot ce e greu acum e greșit, unele lucruri se coc încet, ca vinul.",
   "Ai voie să nu știi încă răspunsul. Claritatea vine, nu o forța.",
   "Ceea ce ceri cu convingere, universul găsește o cale să-ți aducă.",
-  "Odihna nu e o pauză din drum — e parte din drum.",
+  "Odihna nu e o pauză din drum, e parte din drum.",
   "Persoana potrivită nu îți cere să fii mai mic ca să încapă lângă tine.",
   "Azi nu trebuie să ai toate răspunsurile. E suficient un singur pas corect.",
   "Ce simți acum e informație, nu adevăr absolut. Lasă-i timp.",
@@ -1017,15 +2177,15 @@ const elementBase = {
 
 const zodiacData = {
   berbec:    {element:'foc',    offset:{pct:+3, comm:-1, challenges:+1}, note:"amândoi conduceți drumul, cine cedează primul câștigă, de fapt."},
-  taur:      {element:'pamant', offset:{pct:-1}, note:"tu cauți mișcare, el caută stabilitate, se poate găsi un mijloc azi."},
+  taur:      {element:'pamant', offset:{pct:-1}, note:"tu cauți mișcare, el caută stabilitate, dar se poate găsi un mijloc bun azi."},
   gemeni:    {element:'aer',    offset:{pct:+2, friends:+1, comm:+1}, note:"conversația curge ușor, dar rămâneți amândoi puțin superficiali azi."},
   rac:       {element:'apa',    offset:{pct:-2, love:+1, friends:-1}, note:"emoția lui e mai profundă decât libertatea ta, echilibrul cere efort azi."},
   leu:       {element:'foc',    offset:{pct:+5, love:+1, friends:+1}, note:"cea mai naturală alianță de foc, vă hrăniți reciproc încrederea."},
-  fecioara:  {element:'pamant', offset:{pct:-4, comm:0, challenges:+1}, note:"detaliile lui vs. spontaneitatea ta, atenție la critici azi."},
-  balanta:   {element:'aer',    offset:{pct:+1, friends:+1, comm:+1}, note:"focul și aerul se hrănesc reciproc, farmecul ei, curajul tău."},
+  fecioara:  {element:'pamant', offset:{pct:-4, comm:0, challenges:+1}, note:"detaliile lui contrastează cu spontaneitatea ta, așa că fii atent la critici azi."},
+  balanta:   {element:'aer',    offset:{pct:+1, friends:+1, comm:+1}, note:"focul și aerul se hrănesc reciproc: farmecul ei se îmbină bine cu curajul tău."},
   scorpion:  {element:'apa',    offset:{pct:0, love:+1, friends:-1, challenges:+1}, note:"atracție intensă, dar el cere mai multă profunzime decât oferi azi."},
-  sagetator: {element:'foc',    offset:{pct:+2, friends:+1}, note:"vă înțelegeți din priviri, și repetați amândoi aceleași greșeli."},
-  capricorn: {element:'pamant', offset:{pct:-1, love:-1, comm:-1}, note:"ambiția lui e rigidă, a ta e liberă, nevoie de răbdare azi."},
+  sagetator: {element:'foc',    offset:{pct:+2, friends:+1}, note:"vă înțelegeți din priviri, dar repetați amândoi aceleași greșeli."},
+  capricorn: {element:'pamant', offset:{pct:-1, love:-1, comm:-1}, note:"ambiția lui e rigidă, a ta e liberă, așa că ai nevoie de răbdare azi."},
   varsator:  {element:'aer',    offset:{pct:+3, friends:+1, comm:+1}, note:"două spirite libere, niciunul nu vrea să fie „ținut în lesă\"."},
   pesti:     {element:'apa',    offset:{pct:+1, love:+1, comm:-1}, note:"el visează, tu explorezi, ritmuri diferite, dar compatibile azi."}
 };
@@ -1041,13 +2201,13 @@ function getDailyAstroModifiers(){
 
   if(moon.name === 'Lună Plină'){
     mod.apa += 6; mod.foc += 2;
-    notes.push(`Luna Plină de azi (${moon.glyph}) amplifică emoțiile, plus pentru semnele de Apă`);
+    notes.push(`azi e Lună Plină (${moon.glyph}), iar emoțiile sunt mai intense, mai ales pentru semnele de Apă`);
   } else if(moon.name === 'Lună Nouă'){
     mod.foc += 4;
-    notes.push(`Luna Nouă de azi (${moon.glyph}) favorizează începuturile, plus pentru semnele de Foc`);
+    notes.push(`azi e Lună Nouă (${moon.glyph}), un moment bun pentru începuturi, mai ales pentru semnele de Foc`);
   } else if(moon.name === 'Primul pătrar' || moon.name === 'Ultimul pătrar'){
     mod.aer += 3;
-    notes.push(`Faza lunară de azi (${moon.glyph}) ascute comunicarea, plus pentru semnele de Aer`);
+    notes.push(`faza lunară de azi (${moon.glyph}) ascute comunicarea, mai ales pentru semnele de Aer`);
   } else if(moon.name === 'Lună crescătoare'){
     mod.foc += 1;
   } else if(moon.name === 'Lună descrescătoare'){
@@ -1056,71 +2216,197 @@ function getDailyAstroModifiers(){
 
   if(mercuryRetro){
     mod.aer -= 4; mod.pamant -= 2;
-    notes.push('Mercur retrograd îngreunează comunicarea, mai ales cu semnele de Aer');
+    notes.push('Mercur e retrograd, ceea ce îngreunează puțin comunicarea, mai ales cu semnele de Aer');
   }
 
-  return {mod, note: notes.join(' · ')};
+  let note = '';
+  if(notes.length === 1){
+    note = notes[0].charAt(0).toUpperCase() + notes[0].slice(1) + '.';
+  } else if(notes.length === 2){
+    note = notes[0].charAt(0).toUpperCase() + notes[0].slice(1) + ', iar în plus ' + notes[1] + '.';
+  }
+
+  return {mod, note};
 }
 
 function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
 
-function renderCompat(){
+function energyLabelFromPct(pct){
+  if(pct >= 75) return 'Ridicată';
+  if(pct >= 55) return 'Moderată';
+  return 'Scăzută';
+}
+
+function computeLocalCompatFor(sign, dayKey, mod, note){
+  const z = zodiacData[sign];
+  if(!z) return null;
+  const base = elementBase[z.element];
+  const off = z.offset || {};
+  const elMod = mod[z.element] || 0;
+  const jitter = (hashStr(dayKey+sign+'j') % 5) - 2; // -2..+2
+
+  const pct = clamp(base.pct + (off.pct||0) + elMod + jitter, 32, 98);
+  const love = clamp(base.love + (off.love||0) + (elMod>0?1:0), 1, 5);
+  const friends = clamp(base.friends + (off.friends||0), 1, 5);
+  const sex = clamp(base.sex + (off.sex||0), 1, 5);
+  const comm = clamp(base.comm + (off.comm||0) + (elMod<0 && z.element==='aer' ? -1 : 0), 1, 5);
+  const challenges = clamp(base.challenges + (off.challenges||0), 1, 5);
+
+  return {
+    pct, love, friends, sex, comm, challenges,
+    desc: `Astăzi: ${z.note}`,
+    astro: note || 'Nicio influență astrologică majoră azi, doar afinitatea naturală de element.',
+    provocari: challenges >= 4 ? 'Posibile neînțelegeri dacă nu comunicați direct.' : 'Puține tensiuni de așteptat azi.',
+    comunicare: comm >= 4 ? 'Dialogul curge ușor astăzi.' : 'Comunicarea cere puțin mai multă răbdare azi.',
+    energie: energyLabelFromPct(pct),
+    sfat: 'Fii sincer în privința a ce ai nevoie azi, în relația asta.'
+  };
+}
+
+function renderCompatLocal(){
   const dayKey = todayKey();
   const {mod, note} = getDailyAstroModifiers();
 
   document.querySelectorAll('.compat-btn').forEach(btn=>{
     const sign = btn.dataset.sign;
-    const z = zodiacData[sign];
-    if(!z) return;
-    const base = elementBase[z.element];
-    const off = z.offset || {};
-    const elMod = mod[z.element] || 0;
-
-    // small daily jitter so it's not identical to yesterday even without a major transit
-    const jitter = (hashStr(dayKey+sign+'j') % 5) - 2; // -2..+2
-
-    const pct = clamp(base.pct + (off.pct||0) + elMod + jitter, 32, 98);
-    const love = clamp(base.love + (off.love||0) + (elMod>0?1:0), 1, 5);
-    const friends = clamp(base.friends + (off.friends||0), 1, 5);
-    const sex = clamp(base.sex + (off.sex||0), 1, 5);
-    const comm = clamp(base.comm + (off.comm||0) + (elMod<0 && z.element==='aer' ? -1 : 0), 1, 5);
-    const challenges = clamp(base.challenges + (off.challenges||0), 1, 5);
-
-    btn.dataset.pct = pct;
-    btn.dataset.love = love;
-    btn.dataset.friends = friends;
-    btn.dataset.sex = sex;
-    btn.dataset.comm = comm;
-    btn.dataset.challenges = challenges;
-    btn.dataset.desc = `Astăzi: ${z.note}`;
-    btn.dataset.astro = note || 'Nicio influență astrologică majoră azi — doar afinitatea naturală de element.';
+    const c = computeLocalCompatFor(sign, dayKey, mod, note);
+    if(!c) return;
+    btn.dataset.pct = c.pct;
+    btn.dataset.desc = c.desc;
+    btn.dataset.astro = c.astro;
+    btn.dataset.provocari = c.provocari;
+    btn.dataset.comunicare = c.comunicare;
+    btn.dataset.energie = c.energie;
+    btn.dataset.sfat = c.sfat;
   });
+  renderFeaturedCompat();
 }
 
-const luckyPool = {
-  numar: ["3","7","9","12","21"],
-  culoare: ["Turcoaz","Purpuriu","Auriu","Cărămiziu"],
-  cuvant: ["Îndrăzneală","Adevăr","Drum","Foc"]
+// maps our internal sign keys (data-sign attributes) to the keys the AI returns
+const AI_SIGN_KEYS = {
+  berbec:'Berbec', taur:'Taur', gemeni:'Gemeni', rac:'Rac', leu:'Leu',
+  fecioara:'Fecioara', balanta:'Balanta', scorpion:'Scorpion', sagetator:'Sagetator',
+  capricorn:'Capricorn', varsator:'Varsator', pesti:'Pesti'
 };
+
+async function renderCompat(){
+  // try the AI-generated compatibility from today's cached reading (same call the daily
+  // reading already uses, so this costs nothing extra — it's just reading the cache)
+  try{
+    const res = await fetch('/.netlify/functions/get-reading?tab=zi');
+    if(res.ok){
+      const data = await res.json();
+      if(data && data.compat){
+        applyCompatData(data.compat);
+        return;
+      }
+    }
+  }catch(e){ /* fall through */ }
+
+  // today's cache is stale (saved before compatibility existed) or unreachable —
+  // ask for one live, uncached generation so compatibility is still real and current,
+  // without touching the already-cached official reading
+  try{
+    const freshRes = await fetch('/.netlify/functions/get-reading?tab=zi&fresh=1');
+    if(freshRes.ok){
+      const freshData = await freshRes.json();
+      if(freshData && freshData.compat){
+        applyCompatData(freshData.compat);
+        return;
+      }
+    }
+  }catch(e){ /* fall through to local calculation */ }
+
+  renderCompatLocal();
+}
+
+function applyCompatData(compat){
+  const dayKey = todayKey();
+  const {mod, note} = getDailyAstroModifiers();
+
+  document.querySelectorAll('.compat-btn').forEach(btn=>{
+    const sign = btn.dataset.sign;
+    const aiKey = AI_SIGN_KEYS[sign];
+    const entry = aiKey && compat[aiKey];
+
+    if(entry){
+      btn.dataset.pct = entry.pct;
+      btn.dataset.desc = entry.msg;
+      btn.dataset.provocari = entry.provocari || 'Nu sunt tensiuni majore de așteptat azi.';
+      btn.dataset.comunicare = entry.comunicare || 'Dialogul curge firesc, fără efort.';
+      btn.dataset.energie = entry.energie || energyLabelFromPct(entry.pct);
+      btn.dataset.sfat = entry.sfat || 'Rămâi deschis și lasă ziua să curgă natural.';
+      btn.dataset.astro = 'Interpretare generată live, pe baza tranzitelor astrologice curente.';
+    } else {
+      // this specific sign was missing from the AI response — never leave it stale,
+      // compute its own live, date-based value instead
+      const c = computeLocalCompatFor(sign, dayKey, mod, note);
+      if(!c) return;
+      btn.dataset.pct = c.pct;
+      btn.dataset.desc = c.desc;
+      btn.dataset.provocari = c.provocari;
+      btn.dataset.comunicare = c.comunicare;
+      btn.dataset.energie = c.energie;
+      btn.dataset.sfat = c.sfat;
+      btn.dataset.astro = c.astro;
+    }
+  });
+  renderFeaturedCompat();
+}
+
+function renderFeaturedCompat(){
+  const featuredEl = document.getElementById('featured-compat');
+  if(!featuredEl) return;
+  const buttons = Array.from(document.querySelectorAll('.compat-btn'));
+  if(!buttons.length) return;
+  let best = buttons[0];
+  buttons.forEach(btn=>{
+    if(Number(btn.dataset.pct||0) > Number(best.dataset.pct||0)) best = btn;
+  });
+  const signLabel = best.textContent.trim();
+  const highlight = best.dataset.comunicare || best.dataset.desc || '';
+  featuredEl.innerHTML = `
+    <div class="featured-compat-label">Compatibilitatea zilei</div>
+    <div class="featured-compat-value">${signLabel} <span>${best.dataset.pct}%</span></div>
+    ${highlight ? `<div class="featured-compat-highlight">${highlight}</div>` : ''}
+    <div class="featured-compat-cta">Vezi de ce →</div>`;
+  featuredEl.onclick = () => best.click();
+}
 
 // real July 2026 astrological events, framed for Sagittarius
 const calendarEvents = [
-  {date:"7 iul", desc:"Neptun intră retrograd — bun moment să verifici ce planuri sunt reale și ce sunt doar iluzii frumoase."},
-  {date:"9 iul", desc:"Venus schimbă semnul — relațiile cer mai multă onestitate concretă, nu doar gesturi mari."},
-  {date:"14 iul", desc:"Lună Nouă în Rac — un ciclu nou legat de casă și siguranță emoțională, chiar dacă instinctul tău e să pleci în altă parte."},
-  {date:"22 iul", desc:"Soarele intră în Leu — se activează zona ta de aventură, filosofie și expansiune. Perioadă bună pentru a îndrăzni."},
-  {date:"23 iul", desc:"Mercur redevine direct după retrogradarea din Rac — comunicarea și proiectele amânate încep să avanseze."},
-  {date:"26 iul", desc:"Saturn intră retrograd — o lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
-  {date:"29 iul", desc:"Lună Plină în Vărsător, în aspect favorabil cu Jupiter — una dintre cele mai norocoase zile ale anului pentru noi direcții."}
+  {month:7, day:22, icon:"☉", title:"Soarele intră în Leu", impact:"mare", desc:"Soarele intră în Leu. Se activează zona ta de aventură, filosofie și expansiune, o perioadă bună pentru a îndrăzni."},
+  {month:7, day:23, icon:"☿", title:"Mercur devine direct", impact:"mare", desc:"Mercur redevine direct după retrogradarea din Rac, comunicarea și proiectele amânate încep să avanseze."},
+  {month:7, day:26, icon:"♄", title:"Saturn intră retrograd", impact:"mare", desc:"Saturn intră retrograd, o lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
+  {month:7, day:29, icon:"🌕", title:"Lună Plină în Vărsător", impact:"foarte mare", desc:"Lună Plină în Vărsător, în aspect favorabil cu Jupiter, una dintre cele mai norocoase zile ale anului pentru noi direcții."},
+  {month:8, day:3,  icon:"⚷", title:"Chiron intră retrograd", impact:"moderat", desc:"Chiron intră retrograd în Taur, un ciclu bun pentru introspecție și vindecare, în valuri, nu dintr-o dată."},
+  {month:8, day:12, icon:"☀", title:"Eclipsă parțială de Soare", impact:"foarte mare", desc:"Eclipsă parțială de Soare, un moment intens pentru începuturi, chiar dacă rezultatele nu se văd imediat."},
+  {month:8, day:22, icon:"☉", title:"Soarele intră în Fecioară", impact:"mare", desc:"Soarele intră în Fecioară, cu accent pe ordine, sănătate și detalii practice, în contrast cu avântul lunii precedente."},
+  {month:8, day:28, icon:"🌘", title:"Eclipsă parțială de Lună", impact:"foarte mare", desc:"Eclipsă parțială de Lună, o închidere de ciclu emoțională, bună pentru a lăsa în urmă ce nu mai servește."}
 ];
+const RO_LUNI_SCURT = ["ian","feb","mar","apr","mai","iun","iul","aug","sep","oct","nov","dec"];
 
 function randRange([a,b], seed){
   const r = seed !== undefined ? seed : Math.random();
   return Math.floor(r*(b-a+1))+a;
 }
+function dateKeyInBucharest(date){
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Bucharest',
+    year: 'numeric', month: 'numeric', day: 'numeric'
+  }).formatToParts(date);
+  const map = {};
+  parts.forEach(p => map[p.type] = p.value);
+  return `${map.year}-${map.month}-${map.day}`;
+}
 function todayKey(){
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+  return dateKeyInBucharest(new Date());
+}
+function yesterdayKey(){
+  const [y, m, day] = todayKey().split('-').map(Number);
+  const d = new Date(Date.UTC(y, m-1, day));
+  d.setUTCDate(d.getUTCDate()-1);
+  return `${d.getUTCFullYear()}-${d.getUTCMonth()+1}-${d.getUTCDate()}`;
 }
 
 // ---------- Romanian date labels ----------
@@ -1128,7 +2414,9 @@ const RO_ZILE = ["duminică","luni","marți","miercuri","joi","vineri","sâmbăt
 const RO_LUNI = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
 
 function formatDayLabel(d){
-  return `${RO_ZILE[d.getDay()]}, ${d.getDate()} ${RO_LUNI[d.getMonth()]} ${d.getFullYear()}`;
+  const zi = RO_ZILE[d.getDay()];
+  const ziCapitalizat = zi.charAt(0).toUpperCase() + zi.slice(1);
+  return `${ziCapitalizat}, ${d.getDate()} ${RO_LUNI[d.getMonth()]} ${d.getFullYear()}`;
 }
 function startOfWeek(d){
   const day = d.getDay(); // 0 = duminică
@@ -1144,7 +2432,7 @@ function formatWeekLabel(d){
   const sameMonth = mon.getMonth() === sun.getMonth();
   const monStr = `${mon.getDate()} ${sameMonth ? '' : RO_LUNI[mon.getMonth()]}`.trim();
   const sunStr = `${sun.getDate()} ${RO_LUNI[sun.getMonth()]} ${sun.getFullYear()}`;
-  return `${monStr} — ${sunStr}`;
+  return `${monStr} – ${sunStr}`;
 }
 function formatMonthLabel(d){
   return `${RO_LUNI[d.getMonth()]} ${d.getFullYear()}`;
@@ -1152,7 +2440,17 @@ function formatMonthLabel(d){
 function periodLabelFor(tab){
   const now = new Date();
   if(tab === 'zi') return formatDayLabel(now);
-  if(tab === 'sapt') return `săptămâna ${formatWeekLabel(now)}`;
+  if(tab === 'ieri'){
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate()-1);
+    return formatDayLabel(yesterday);
+  }
+  if(tab === 'maine'){
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate()+1);
+    return formatDayLabel(tomorrow);
+  }
+  if(tab === 'sapt') return `Săptămâna ${formatWeekLabel(now)}`;
   if(tab === 'luna') return formatMonthLabel(now).replace(/^./, c=>c.toUpperCase());
   return '';
 }
@@ -1180,19 +2478,6 @@ function renderStats(container, statDefs, seedBase){
       bar.style.width = bar.dataset.target + '%';
     });
   });
-}
-
-function renderLucky(){
-  const row = document.getElementById('lucky-row');
-  const key = todayKey();
-  const n = luckyPool.numar[hashStr(key+'n') % luckyPool.numar.length];
-  const c = luckyPool.culoare[hashStr(key+'c') % luckyPool.culoare.length];
-  const w = luckyPool.cuvant[hashStr(key+'w') % luckyPool.cuvant.length];
-  row.innerHTML = `
-    <div class="stat"><div class="label">Număr</div><div class="value">${n}</div></div>
-    <div class="stat"><div class="label">Culoare</div><div class="value">${c}</div></div>
-    <div class="stat"><div class="label">Cuvânt cheie</div><div class="value">${w}</div></div>
-  `;
 }
 
 // ---------- moon phase (real astronomical approximation) ----------
@@ -1233,8 +2518,6 @@ const avoidPool = [
 
 function renderSky(){
   const dayKey = todayKey();
-  const score = 58 + (hashStr(dayKey+'score') % 41); // 58–98
-  document.getElementById('sky-score-value').textContent = `${score}/100`;
 
   const moon = getMoonPhase(new Date());
   document.getElementById('sky-moon-glyph').textContent = moon.glyph;
@@ -1246,17 +2529,41 @@ function renderSky(){
 
 function renderCalendar(){
   const wrap = document.getElementById('calendar-timeline');
+  const featuredEl = document.getElementById('featured-event');
   const now = new Date();
   const todayNum = now.getDate();
-  document.getElementById('calendar-title').textContent = `Cerul lunii ${formatMonthLabel(now)}`;
-  wrap.innerHTML = calendarEvents.map(ev=>{
-    const dayNum = parseInt(ev.date);
-    const isToday = now.getMonth()===6 && now.getFullYear()===2026 && dayNum===todayNum;
+  const todayMonth = now.getMonth() + 1; // 1-12, matches calendarEvents.month
+  const todayKeyNum = todayMonth * 100 + todayNum;
+
+  document.getElementById('calendar-title').textContent = `Ce urmează pe cer`;
+
+  const upcoming = calendarEvents
+    .filter(ev => (ev.month * 100 + ev.day) >= todayKeyNum)
+    .sort((a, b) => (a.month*100+a.day) - (b.month*100+b.day))
+    .slice(0, 5);
+
+  if(upcoming.length){
+    const featured = upcoming[0];
+    const isToday = featured.month === todayMonth && featured.day === todayNum;
+    const RO_LUNI_FULL_EV = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+    const featuredDateLabel = isToday ? 'azi' : `${featured.day} ${RO_LUNI_FULL_EV[featured.month-1]} 2026`;
+    featuredEl.innerHTML = `
+      <div class="featured-event-label">Eveniment major: ${featuredDateLabel}</div>
+      <div class="featured-event-title">${featured.icon} ${featured.title}</div>
+      <div class="featured-event-impact">Impact: <b>${featured.impact}</b></div>`;
+  } else {
+    featuredEl.innerHTML = '';
+  }
+
+  const rest = upcoming.slice(1);
+  wrap.innerHTML = rest.length ? rest.map(ev=>{
+    const isToday = ev.month === todayMonth && ev.day === todayNum;
+    const dateLabel = `${ev.day} ${RO_LUNI_SCURT[ev.month-1]}`;
     return `<div class="tl-item${isToday?' today':''}">
-      <div class="tl-date">${ev.date}${isToday?' · azi':''}</div>
+      <div class="tl-date">${ev.icon||''} ${dateLabel}${isToday?' · azi':''}</div>
       <div class="tl-desc">${ev.desc}</div>
     </div>`;
-  }).join('');
+  }).join('') : (upcoming.length ? '' : `<div class="tl-item"><div class="tl-desc">Evenimentele astrologice curate se actualizează periodic, revino curând pentru cele care urmează.</div></div>`);
 }
 
 // ---------- live reading via Claude API, with offline fallback ----------
@@ -1306,23 +2613,69 @@ async function setStoredIndex(tabKey, dayKey, idx, ts){
 }
 
 let lastReadingText = '';
+let lastParsedReading = null;
 
 // ---------- official reading: one fixed result per day / week / month ----------
+const AREA_KEYS = ['dragoste','finante','cariera','familie'];
+const SCORE_LABELS = {dragoste:'Dragoste', finante:'Finanțe', cariera:'Carieră', familie:'Familie', energie:'Energie'};
+const SCORE_ICONS = {dragoste:'♥', finante:'◆', cariera:'✦', familie:'⌂', energie:'☼'};
+
 async function renderReading(){
-  const d = data[currentTab];
   const dayKey = todayKey();
   const readingEl = document.getElementById('reading-text');
-  const bulletsEl = document.getElementById('reading-bullets');
-  const universeEl = document.getElementById('universe-text');
   const cardEl = document.querySelector('.card');
   const apiNote = document.getElementById('api-note');
+
+  // ---------- "Ieri" is special: read-only, never generates, always pulls from yesterday's daily archive ----------
+  if(currentTab === 'ieri'){
+    const applyYesterday = async ()=>{
+      document.getElementById('card-title').textContent = 'Ziua de ieri';
+      document.getElementById('card-period').textContent = periodLabelFor('ieri');
+      apiNote.textContent = '';
+
+      let parsed = null;
+      try{
+        const res = await fetch(`/.netlify/functions/get-reading?tab=zi&date=${yesterdayKey()}`);
+        if(res.ok) parsed = await res.json();
+      }catch(e){ /* network/backend unavailable */ }
+
+      if(parsed && parsed.intro){
+        renderParsedReading(parsed);
+        const note = document.getElementById('pinned-note');
+        const timeStr = parsed.ts ? new Date(parsed.ts).toLocaleString('ro-RO', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'}) : '';
+        note.textContent = `Citirea din arhivă, pentru ziua de ieri${timeStr ? ' · generată ' + timeStr : ''}`;
+      } else {
+        const skel = document.getElementById('reading-skeleton');
+        if(skel) skel.classList.add('hidden');
+        readingEl.innerHTML = 'Nu a fost salvată nicio citire pentru ziua de ieri. Arhiva se completează pe măsură ce treci prin zile.';
+        document.querySelectorAll('.area-block').forEach(el=>{
+          el.querySelectorAll('.area-text, .area-tip').forEach(p=>p.textContent = '');
+        });
+        document.getElementById('advice-text').textContent = '';
+        document.getElementById('question-text').textContent = '';
+        const keepBlock = document.getElementById('keep-thought-block');
+        if(keepBlock) keepBlock.style.display = 'none';
+        document.querySelectorAll('.area-ring-wrap').forEach(el=>el.innerHTML='');
+        document.getElementById('pinned-note').textContent = '';
+      }
+
+      readingEl.classList.remove('swap');
+      cardEl.classList.add('flash');
+      setTimeout(()=>cardEl.classList.remove('flash'), 500);
+    };
+
+    readingEl.classList.add('swap');
+    setTimeout(applyYesterday, 180);
+    return;
+  }
+
+  const d = data[currentTab];
 
   const applyContent = async ()=>{
     document.getElementById('card-title').textContent = d.title;
     document.getElementById('card-period').textContent = periodLabelFor(currentTab);
 
-    let head = null, bullets = null, universe = null;
-    let statsPairs = null;
+    let parsed = null;
     let generatedAt = null;
     apiNote.textContent = '';
 
@@ -1330,27 +2683,24 @@ async function renderReading(){
     try{
       const cached = await window.storage.get(`ai-reading:${currentTab}:${dayKey}`);
       if(cached && cached.value){
-        const parsed = JSON.parse(cached.value);
-        head = parsed.head; bullets = parsed.bullets; universe = parsed.universe;
-        statsPairs = parsed.stats.map(s=>[s.label, s.value]);
+        parsed = JSON.parse(cached.value);
         generatedAt = parsed.ts;
       }
     }catch(e){ /* nothing cached yet */ }
 
     // 2. otherwise generate it once, live, and lock it in for the rest of the period
-    if(!head){
+    if(!parsed){
       const ai = await tryFetchAIReading(currentTab);
-      if(ai){
+      if(ai && ai.intro){
         ai.ts = Date.now();
-        head = ai.head; bullets = ai.bullets; universe = ai.universe;
-        statsPairs = ai.stats.map(s=>[s.label, s.value]);
+        parsed = ai;
         generatedAt = ai.ts;
         try{ await window.storage.set(`ai-reading:${currentTab}:${dayKey}`, JSON.stringify(ai)); }catch(e){}
       }
     }
 
     // 3. offline fallback — deterministic pick (same input → same output), not random
-    if(!head){
+    if(!parsed){
       let stored = await getStoredIndex(currentTab, dayKey);
       let idx;
       if(stored && Number.isInteger(stored.idx) && stored.idx < d.entries.length){
@@ -1361,27 +2711,41 @@ async function renderReading(){
         generatedAt = Date.now();
         await setStoredIndex(currentTab, dayKey, idx, generatedAt);
       }
-      const entry = d.entries[idx];
-      head = entry.head;
-      bullets = entry.bullets;
-      universe = universePool[hashStr(currentTab+dayKey+'u') % universePool.length];
-      statsPairs = d.stats.map(([label, range])=>{
-        const seed = (hashStr(currentTab+dayKey+idx+label) % 1000) / 1000;
-        return [label, randRange(range, seed)];
-      });
-      apiNote.textContent = 'Citire locală — fără conexiune la generatorul live';
+      parsed = d.entries[idx];
+      if(!parsed.keepThought){
+        parsed = Object.assign({}, parsed, {
+          keepThought: keepThoughtPool[hashStr(currentTab+dayKey+'k') % keepThoughtPool.length]
+        });
+      }
+      apiNote.textContent = 'Citire locală, fără conexiune la generatorul live';
     }
 
-    readingEl.innerHTML = head;
-    bulletsEl.innerHTML = (bullets || []).map(b => `<li>${b}</li>`).join('');
-    universeEl.textContent = universe || '';
-    lastReadingText = readingEl.textContent + ' ' + (bullets || []).join(' ');
+function relativeTimeAgo(ts){
+  if(!ts) return '';
+  const diffMs = Date.now() - ts;
+  const mins = Math.floor(diffMs/60000);
+  if(mins < 1) return 'chiar acum';
+  if(mins < 60) return `acum ${mins} minut${mins===1?'':'e'}`;
+  const hours = Math.floor(mins/60);
+  if(hours < 24) return `acum ${hours} or${hours===1?'ă':'e'}`;
+  const days = Math.floor(hours/24);
+  return `acum ${days} zi${days===1?'':'le'}`;
+}
 
-    renderStatsDirect(document.getElementById('stat-row'), statsPairs);
+    renderParsedReading(parsed);
 
     const note = document.getElementById('pinned-note');
-    const timeStr = generatedAt ? new Date(generatedAt).toLocaleString('ro-RO', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'}) : '';
-    note.textContent = `Citirea oficială pentru ${currentTab === 'zi' ? 'ziua' : currentTab === 'sapt' ? 'săptămâna' : 'luna'} curentă${timeStr ? ' · actualizat ' + timeStr : ''}`;
+    const RO_LUNI_FULL = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+    let dateLine = '';
+    if(generatedAt){
+      const d = new Date(generatedAt);
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      dateLine = `Actualizat ${d.getDate()} ${RO_LUNI_FULL[d.getMonth()]} ${d.getFullYear()}, ora ${hh}:${mm}`;
+    }
+    const relStr = generatedAt ? relativeTimeAgo(generatedAt) : '';
+    const periodWord = currentTab === 'zi' ? 'ziua curentă' : currentTab === 'maine' ? 'ziua de mâine' : currentTab === 'sapt' ? 'săptămâna curentă' : 'luna curentă';
+    note.innerHTML = `Citirea oficială pentru ${periodWord}${dateLine ? '<br>' + dateLine + (relStr ? ' · ' + relStr : '') : ''}`;
 
     readingEl.classList.remove('swap');
     cardEl.classList.add('flash');
@@ -1391,6 +2755,82 @@ async function renderReading(){
   // crossfade: fade out, swap content, fade in
   readingEl.classList.add('swap');
   setTimeout(applyContent, 180);
+}
+
+// ---------- shared rendering: fills intro/areas/scores/advice/question/keepThought, used by both the normal flow and "Ieri" ----------
+function splitIntroHook(intro){
+  if(!intro) return {hook:'', rest:''};
+  const match = intro.match(/^(.+?[.!?])(\s+)(.*)$/s);
+  if(!match) return {hook: intro, rest: ''};
+  return {hook: match[1], rest: match[3] || ''};
+}
+
+function renderParsedReading(parsed){
+  const skeleton = document.getElementById('reading-skeleton');
+  if(skeleton) skeleton.classList.add('hidden');
+
+  const readingEl = document.getElementById('reading-text');
+  const {hook, rest} = splitIntroHook(parsed.intro);
+  readingEl.innerHTML = rest
+    ? `<span class="reading-hook">${hook}</span><span class="reading-rest">${rest}</span>`
+    : `<span class="reading-hook">${hook}</span>`;
+  let shareParts = [parsed.intro];
+
+  const keepBlock = document.getElementById('keep-thought-block');
+  if(parsed.keepThought){
+    document.getElementById('keep-thought-text').textContent = parsed.keepThought;
+    keepBlock.style.display = '';
+    resetRevealCard();
+    shareParts.push(parsed.keepThought);
+  } else {
+    keepBlock.style.display = 'none';
+  }
+
+  const scores = parsed.scores || {};
+  const R = 15, C = 2 * Math.PI * R;
+
+  function ringSvg(pct){
+    const offset = C - (pct/100)*C;
+    return `<svg width="38" height="38" viewBox="0 0 38 38" overflow="visible">
+      <circle cx="19" cy="19" r="${R}" fill="none" stroke="var(--line-soft)" stroke-width="2.5"/>
+      <circle cx="19" cy="19" r="${R}" fill="none" stroke="url(#goldGrad)" stroke-width="2.5"
+        stroke-linecap="round" transform="rotate(-90 19 19)"
+        stroke-dasharray="${C}" stroke-dashoffset="${C}" data-target="${offset}"/>
+      <text x="19" y="23" text-anchor="middle" class="area-ring-num">${pct}</text>
+    </svg>`;
+  }
+
+  function scoreQualLabel(pct){
+    if(pct >= 80) return 'Foarte bună';
+    if(pct >= 65) return 'Ridicată';
+    if(pct >= 45) return 'Moderată';
+    return 'Scăzută';
+  }
+
+  AREA_KEYS.forEach(key=>{
+    const area = (parsed.areas && parsed.areas[key]) || {text:'', tip:''};
+    document.getElementById(`area-${key}-text`).textContent = area.text || '';
+    document.getElementById(`area-${key}-tip`).textContent = area.tip || '';
+    if(area.text) shareParts.push(area.text);
+
+    const val = scores[key];
+    const pct = (val === undefined || val === null) ? 0 : Math.max(0, Math.min(100, Math.round(val*10)));
+    document.getElementById(`ring-${key}`).innerHTML =
+      ringSvg(pct) + `<div class="ring-qual-label">${scoreQualLabel(pct)}</div>`;
+  });
+
+  document.getElementById('advice-text').textContent = parsed.advice || '';
+  document.getElementById('question-text').textContent = parsed.question || '';
+
+  requestAnimationFrame(()=>{
+    document.querySelectorAll('.area-ring-wrap circle[data-target]').forEach(ring=>{
+      ring.style.strokeDashoffset = ring.dataset.target;
+    });
+  });
+
+  lastReadingText = shareParts.join(' ');
+  lastParsedReading = parsed;
+  if(typeof initFeedbackButtons === 'function') initFeedbackButtons();
 }
 
 // ---------- extra bonus message: separate from the official reading, freshly random every time ----------
@@ -1404,10 +2844,10 @@ async function renderExtra(){
 
   let bonus = null;
   const ai = await tryFetchAIReading(currentTab, true);
-  if(ai) bonus = ai.head;
+  if(ai) bonus = ai.intro;
   if(!bonus){
     const idx = Math.floor(Math.random()*d.entries.length);
-    bonus = d.entries[idx].head;
+    bonus = d.entries[idx].intro;
   }
   textEl.innerHTML = bonus;
 }
@@ -1418,16 +2858,52 @@ document.querySelectorAll('nav.tabs button').forEach(btn=>{
     btn.classList.add('active');
     currentTab = btn.dataset.tab;
     document.getElementById('extra-panel').classList.remove('open');
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if(typeof setListenState === 'function') setListenState('idle');
+    const archP = document.getElementById('archive-panel');
+    const archB = document.getElementById('archive-btn');
+    if(archP){ archP.style.display = 'none'; }
+    if(archB){ archB.textContent = 'Vezi arhiva'; }
+
+    const isIeri = currentTab === 'ieri';
+    const extraDivider = document.querySelector('.extra-divider');
+    const extraBtn = document.getElementById('extra-btn');
+    const archCallout = document.getElementById('archive-callout');
+    if(extraDivider) extraDivider.style.display = isIeri ? 'none' : '';
+    if(extraBtn) extraBtn.style.display = isIeri ? 'none' : '';
+    if(archCallout) archCallout.style.display = isIeri ? 'none' : '';
+
     renderReading();
   });
 });
 
 document.getElementById('extra-btn').addEventListener('click', (e)=>{
   const btn = e.currentTarget;
+  if(btn.dataset.cooling === '1') return;
+
   btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
   const symbol = document.getElementById('symbol-wrap');
   symbol.classList.remove('shooting'); void symbol.offsetWidth; symbol.classList.add('shooting');
   renderExtra();
+
+  btn.dataset.cooling = '1';
+  const originalText = btn.textContent;
+  let secondsLeft = 10;
+  btn.style.opacity = '0.5';
+  btn.style.cursor = 'not-allowed';
+  btn.textContent = 'Așteaptă ' + secondsLeft + 's...';
+  const cdInterval = setInterval(()=>{
+    secondsLeft -= 1;
+    if(secondsLeft <= 0){
+      clearInterval(cdInterval);
+      btn.dataset.cooling = '0';
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      btn.textContent = originalText;
+    } else {
+      btn.textContent = 'Așteaptă ' + secondsLeft + 's...';
+    }
+  }, 1000);
 });
 
 // ---------- scroll reveal ----------
@@ -1441,8 +2917,60 @@ const revealObserver = new IntersectionObserver((entries)=>{
 }, {threshold:0.15});
 document.querySelectorAll('.reveal-section').forEach(el=>revealObserver.observe(el));
 
+function buildShareText(){
+  const p = lastParsedReading;
+  if(!p) return `Horoscop Săgetător: ${lastReadingText}`;
+
+  const refDate = new Date();
+  if(currentTab === 'ieri') refDate.setDate(refDate.getDate()-1);
+  if(currentTab === 'maine') refDate.setDate(refDate.getDate()+1);
+  const dateStr = `${refDate.getDate()} ${['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie'][refDate.getMonth()]} ${refDate.getFullYear()}`;
+
+  const s = p.scores || {};
+  const pctOf = (val)=> (val === undefined || val === null) ? null : Math.max(0, Math.min(100, Math.round(val*10)));
+
+  const areaMeta = [
+    ['dragoste', '♥︎ Dragoste și relații'],
+    ['finante',  '◆ Finanțe'],
+    ['cariera',  '✦ Carieră'],
+    ['familie',  '⌂ Familie']
+  ];
+
+  let lines = [];
+  lines.push(`✨ ${dateStr} ✨`);
+  lines.push(`🏹 Săgetător 🏹`);
+  lines.push('');
+  lines.push(p.intro || '');
+  lines.push('');
+
+  if(p.keepThought){
+    lines.push('❝ Gând de păstrat');
+    lines.push(p.keepThought);
+    lines.push('');
+  }
+
+  areaMeta.forEach(([key, label])=>{
+    const area = (p.areas && p.areas[key]) || {};
+    if(!area.text) return;
+    const pct = pctOf(s[key]);
+    lines.push(pct === null ? label : `${label} (${pct}%)`);
+    lines.push(area.text);
+    if(area.tip) lines.push(`→ ${area.tip}`);
+    lines.push('');
+  });
+
+  if(p.advice){ lines.push('🔸️Sfatul zilei'); lines.push(p.advice); lines.push(''); }
+  if(p.question){ lines.push('🔸️Moment de reflecție'); lines.push(p.question); lines.push(''); }
+
+  lines.push('Ți-a plăcut această interpretare? ');
+  lines.push('Descoperă mai multe pe Tik Tok:');
+  lines.push('✨️Sagittarius Decoded✨️.');
+
+  return lines.join('\n');
+}
+
 document.getElementById('share-btn').addEventListener('click', async ()=>{
-  const shareText = `Horoscop Săgetător: ${lastReadingText}`;
+  const shareText = buildShareText();
   if(navigator.share){
     try{ await navigator.share({title:'Horoscop Săgetător', text: shareText}); return; }
     catch(e){ /* user cancelled or share failed — fall through to copy */ }
@@ -1462,18 +2990,13 @@ document.getElementById('share-btn').addEventListener('click', async ()=>{
     ta.select();
     const ok = document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast(ok ? 'Copiat în clipboard ✦' : 'Nu am putut copia — selectează textul manual');
+    showToast(ok ? 'Copiat în clipboard ✦' : 'Nu am putut copia, selectează textul manual');
   }catch(e){
-    showToast('Nu am putut copia — selectează textul manual');
+    showToast('Nu am putut copia, selectează textul manual');
   }
 });
 
 // ---------- compatibility detail toggle ----------
-function starsFor(n){
-  const full = '★'.repeat(n);
-  const empty = '☆'.repeat(5 - n);
-  return full + empty;
-}
 document.querySelectorAll('.compat-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const detail = document.getElementById('compat-detail');
@@ -1486,14 +3009,13 @@ document.querySelectorAll('.compat-btn').forEach(btn=>{
       btn.classList.add('active');
       const d = btn.dataset;
       detail.innerHTML = `
-        <div class="compat-pct">Compatibilitate: <span>${d.pct}%</span></div>
+        <div class="compat-pct">Compatibilitate azi: <span>${d.pct}%</span></div>
         <div class="compat-desc">${d.desc}</div>
-        <div class="compat-stars">
-          <div><span>Iubire</span><b>${starsFor(+d.love)}</b></div>
-          <div><span>Prieteni</span><b>${starsFor(+d.friends)}</b></div>
-          <div><span>Sex</span><b>${starsFor(+d.sex)}</b></div>
-          <div><span>Comunicare</span><b>${starsFor(+d.comm)}</b></div>
-          <div><span>Provocări</span><b>${starsFor(+d.challenges)}</b></div>
+        <div class="compat-fields">
+          <div><span>Provocări</span><p>${d.provocari}</p></div>
+          <div><span>Comunicare</span><p>${d.comunicare}</p></div>
+          <div><span>Nivel energie</span><p>${d.energie}</p></div>
+          <div><span>Sfat</span><p>${d.sfat}</p></div>
         </div>
         <div class="compat-astro">${d.astro}</div>`;
       detail.classList.add('open');
@@ -1510,8 +3032,858 @@ function renderEnergyBar(){
   document.getElementById('energy-fill').style.width = `${pct}%`;
 }
 
+// ---------- ambient nature soundscapes: day & night, fully synthesized ----------
+let ambientCtx = null;
+let ambientPlaying = false;
+let dayGraph = null;
+let nightGraph = null;
+let ambientTimers = [];
+
+function ensureAmbientCtx(){
+  if(!ambientCtx){
+    try{ ambientCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e){ ambientCtx = null; }
+  }
+  return ambientCtx;
+}
+
+function makeNoiseBuffer(ctx, seconds){
+  const bufferSize = ctx.sampleRate * seconds;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for(let i=0;i<bufferSize;i++){ data[i] = Math.random()*2 - 1; }
+  return buffer;
+}
+
+function currentAmbientMode(){
+  return document.body.classList.contains('light') ? 'day' : 'night';
+}
+
+// ---------- DAY: sunrise swell + soft breeze + birds + leaves ----------
+function buildDayGraph(ctx){
+  const masterGain = ctx.createGain();
+  masterGain.gain.value = 0.0001;
+  masterGain.connect(ctx.destination);
+
+  const nodes = [];
+
+  // continuous soft forest breeze — single filtered noise source, no detuned oscillators (avoids any "buzz")
+  const breeze = ctx.createBufferSource();
+  breeze.buffer = makeNoiseBuffer(ctx, 6);
+  breeze.loop = true;
+  const breezeFilter = ctx.createBiquadFilter();
+  breezeFilter.type = 'bandpass';
+  breezeFilter.frequency.value = 1100;
+  breezeFilter.Q.value = 0.5;
+  const breezeLfo = ctx.createOscillator();
+  breezeLfo.frequency.value = 0.07;
+  const breezeLfoGain = ctx.createGain();
+  breezeLfoGain.gain.value = 0.09;
+  const breezeGain = ctx.createGain();
+  breezeGain.gain.value = 0.16;
+  breezeLfo.connect(breezeLfoGain);
+  breezeLfoGain.connect(breezeGain.gain);
+  breeze.connect(breezeFilter);
+  breezeFilter.connect(breezeGain);
+  breezeGain.connect(masterGain);
+  breeze.start(); breezeLfo.start();
+  nodes.push(breeze, breezeLfo, breezeFilter, breezeGain, breezeLfoGain);
+
+  // rustling leaves, soft and occasional
+  let leafTimer;
+  function playLeaf(){
+    if(!ambientPlaying || currentAmbientMode() !== 'day'){ leafTimer = setTimeout(playLeaf, 3000); return; }
+    const now = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = makeNoiseBuffer(ctx, 0.5);
+    const filt = ctx.createBiquadFilter();
+    filt.type = 'bandpass';
+    filt.frequency.value = 3200 + Math.random()*1400;
+    filt.Q.value = 1.1;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.linearRampToValueAtTime(0.08, now+0.08);
+    g.gain.exponentialRampToValueAtTime(0.0001, now+0.45);
+    src.connect(filt); filt.connect(g); g.connect(masterGain);
+    src.start(now); src.stop(now+0.5);
+    leafTimer = setTimeout(playLeaf, 4000 + Math.random()*5000);
+  }
+  leafTimer = setTimeout(playLeaf, 2500);
+  ambientTimers.push(()=>clearTimeout(leafTimer));
+
+  // bird chirps
+  let birdTimer;
+  function playBird(){
+    if(!ambientPlaying || currentAmbientMode() !== 'day'){ birdTimer = setTimeout(playBird, 3000); return; }
+    const now = ctx.currentTime;
+    const tweetCount = 2 + Math.floor(Math.random()*2);
+    let t = now;
+    for(let i=0;i<tweetCount;i++){
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      const startFreq = 3200 + Math.random()*800;
+      const endFreq = startFreq + (Math.random()>0.5 ? 600 : -400);
+      osc.frequency.setValueAtTime(startFreq, t);
+      osc.frequency.linearRampToValueAtTime(endFreq, t+0.09);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(0.42, t+0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t+0.12);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(t); osc.stop(t+0.15);
+      t += 0.12 + Math.random()*0.06;
+    }
+    birdTimer = setTimeout(playBird, 3500 + Math.random()*5000);
+  }
+  birdTimer = setTimeout(playBird, 1500);
+  ambientTimers.push(()=>clearTimeout(birdTimer));
+
+  return { masterGain, nodes };
+}
+
+// ---------- NIGHT: calming sleep bed (warm continuous texture) + soft, rare crickets ----------
+function buildNightGraph(ctx){
+  const masterGain = ctx.createGain();
+  masterGain.gain.value = 0.0001;
+  masterGain.connect(ctx.destination);
+
+  const nodes = [];
+
+  // warm, low, continuous "sleep" bed — filtered noise, no beating oscillators, very soothing
+  const sleepBed = ctx.createBufferSource();
+  sleepBed.buffer = makeNoiseBuffer(ctx, 6);
+  sleepBed.loop = true;
+  const sleepFilter = ctx.createBiquadFilter();
+  sleepFilter.type = 'lowpass';
+  sleepFilter.frequency.value = 420;
+  const sleepLfo = ctx.createOscillator();
+  sleepLfo.frequency.value = 0.045;
+  const sleepLfoGain = ctx.createGain();
+  sleepLfoGain.gain.value = 0.06;
+  const sleepGain = ctx.createGain();
+  sleepGain.gain.value = 0.22;
+  sleepLfo.connect(sleepLfoGain);
+  sleepLfoGain.connect(sleepGain.gain);
+  sleepBed.connect(sleepFilter);
+  sleepFilter.connect(sleepGain);
+  sleepGain.connect(masterGain);
+  sleepBed.start(); sleepLfo.start();
+  nodes.push(sleepBed, sleepLfo, sleepFilter, sleepGain, sleepLfoGain);
+
+  // soft, rare crickets — a gentle nature touch, not attention-grabbing
+  let cricketTimer;
+  function playCricket(){
+    if(!ambientPlaying || currentAmbientMode() !== 'night'){ cricketTimer = setTimeout(playCricket, 3000); return; }
+    const now = ctx.currentTime;
+    const pulseCount = 3 + Math.floor(Math.random()*3);
+    const freq = 4200 + Math.random()*300;
+    let t = now;
+    for(let i=0;i<pulseCount;i++){
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.linearRampToValueAtTime(0.16, t+0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t+0.04);
+      osc.connect(gain); gain.connect(masterGain);
+      osc.start(t); osc.stop(t+0.05);
+      t += 0.06;
+    }
+    cricketTimer = setTimeout(playCricket, 4500 + Math.random()*5500);
+  }
+  cricketTimer = setTimeout(playCricket, 3000);
+  ambientTimers.push(()=>clearTimeout(cricketTimer));
+
+  return { masterGain, nodes };
+}
+
+function startAmbient(){
+  const ctx = ensureAmbientCtx();
+  if(!ctx) return;
+  if(ctx.state === 'suspended') ctx.resume();
+
+  dayGraph = buildDayGraph(ctx);
+  nightGraph = buildNightGraph(ctx);
+  ambientPlaying = true;
+
+  const mode = currentAmbientMode();
+  const activeGraph = mode === 'day' ? dayGraph : nightGraph;
+  const idleGraph = mode === 'day' ? nightGraph : dayGraph;
+  activeGraph.masterGain.gain.exponentialRampToValueAtTime(0.85, ctx.currentTime + 4);
+  idleGraph.masterGain.gain.value = 0.0001;
+}
+
+function crossfadeAmbientTheme(){
+  if(!ambientPlaying || !dayGraph || !nightGraph || !ambientCtx) return;
+  const ctx = ambientCtx;
+  const mode = currentAmbientMode();
+  const activeGraph = mode === 'day' ? dayGraph : nightGraph;
+  const idleGraph = mode === 'day' ? nightGraph : dayGraph;
+  const now = ctx.currentTime;
+  activeGraph.masterGain.gain.cancelScheduledValues(now);
+  idleGraph.masterGain.gain.cancelScheduledValues(now);
+  activeGraph.masterGain.gain.setValueAtTime(Math.max(activeGraph.masterGain.gain.value, 0.0001), now);
+  idleGraph.masterGain.gain.setValueAtTime(Math.max(idleGraph.masterGain.gain.value, 0.0001), now);
+  activeGraph.masterGain.gain.exponentialRampToValueAtTime(0.85, now + 2.5);
+  idleGraph.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+}
+
+function stopAmbient(){
+  ambientPlaying = false;
+  ambientTimers.forEach(clearFn=>clearFn());
+  ambientTimers = [];
+  if(ambientCtx && (dayGraph || nightGraph)){
+    const now = ambientCtx.currentTime;
+    [dayGraph, nightGraph].forEach(g=>{
+      if(!g) return;
+      g.masterGain.gain.cancelScheduledValues(now);
+      g.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+    });
+    setTimeout(()=>{
+      [dayGraph, nightGraph].forEach(g=>{
+        if(!g) return;
+        g.nodes.forEach(n=>{ try{ n.stop && n.stop(); }catch(e){} try{ n.disconnect(); }catch(e){} });
+      });
+      dayGraph = null; nightGraph = null;
+    }, 1600);
+  }
+}
+
+const musicBtn = document.getElementById('music-btn');
+if(musicBtn){
+  musicBtn.addEventListener('click', ()=>{
+    if(ambientPlaying){
+      stopAmbient();
+      musicBtn.textContent = '♫';
+      musicBtn.classList.remove('on');
+    } else {
+      startAmbient();
+      musicBtn.textContent = '⏸';
+      musicBtn.classList.add('on');
+    }
+  });
+}
+
+// ---------- try to start ambient sound automatically on page load ----------
+(function autoStartAmbient(){
+  if(!musicBtn) return;
+  startAmbient();
+  musicBtn.textContent = '⏸';
+  musicBtn.classList.add('on');
+
+  // most browsers block audio until the user has interacted with the page at least once —
+  // if that happened, resume playback silently on the first tap/click/key anywhere
+  const resumeOnInteraction = ()=>{
+    if(ambientCtx && ambientCtx.state === 'suspended'){
+      ambientCtx.resume();
+    }
+    document.removeEventListener('click', resumeOnInteraction);
+    document.removeEventListener('touchstart', resumeOnInteraction);
+    document.removeEventListener('keydown', resumeOnInteraction);
+  };
+  document.addEventListener('click', resumeOnInteraction);
+  document.addEventListener('touchstart', resumeOnInteraction);
+  document.addEventListener('keydown', resumeOnInteraction);
+})();
+
+// ---------- archive: past readings, browsable in place ----------
+const RO_LUNI_ARCHIVE = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+let archiveLoaded = false;
+
+function formatArchiveDate(dayKey){
+  const parts = dayKey.split('-').map(Number);
+  if(parts.length < 3) return dayKey;
+  return `${parts[2]} ${RO_LUNI_ARCHIVE[parts[1]-1] || ''} ${parts[0]}`;
+}
+
+async function loadArchive(){
+  const inner = document.getElementById('archive-panel-inner');
+  inner.innerHTML = '<div class="archive-loading">Se încarcă arhiva…</div>';
+  try{
+    const res = await fetch(`/.netlify/functions/get-reading?tab=${currentTab}&list=1`);
+    if(!res.ok) throw new Error('archive fetch failed');
+    const data = await res.json();
+    const items = (data.items || []).filter(it => it.date !== todayKey());
+    if(!items.length){
+      inner.innerHTML = '<div class="archive-empty">Nu există încă citiri anterioare salvate pentru această perioadă.</div>';
+      return;
+    }
+    inner.innerHTML = items.map((it, idx)=>`
+      <div class="archive-item" data-idx="${idx}">
+        <div class="archive-date">${formatArchiveDate(it.date)}</div>
+        <div class="archive-preview">${it.intro || ''}</div>
+        <div class="archive-keep">${it.keepThought ? '❝ ' + it.keepThought : ''}</div>
+      </div>
+    `).join('');
+    inner.querySelectorAll('.archive-item').forEach(el=>{
+      el.addEventListener('click', ()=> el.classList.toggle('expanded'));
+    });
+  }catch(e){
+    inner.innerHTML = '<div class="archive-empty">Arhiva nu a putut fi încărcată acum. Încearcă din nou puțin mai târziu.</div>';
+  }
+}
+
+const archiveBtn = document.getElementById('archive-btn');
+const archivePanel = document.getElementById('archive-panel');
+if(archiveBtn){
+  archiveBtn.addEventListener('click', ()=>{
+    const isOpen = archivePanel.style.display !== 'none';
+    if(isOpen){
+      archivePanel.style.display = 'none';
+      archiveBtn.textContent = 'Vezi arhiva';
+    } else {
+      archivePanel.style.display = '';
+      archiveBtn.textContent = 'Ascunde arhiva';
+      loadArchive();
+    }
+  });
+}
+
+// ---------- "Gânduri de păstrat" personal collection, stored in real localStorage ----------
+function getSavedThoughts(){
+  try{
+    const raw = localStorage.getItem('sagetator_saved_thoughts');
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function setSavedThoughts(list){
+  try{ localStorage.setItem('sagetator_saved_thoughts', JSON.stringify(list)); }catch(e){}
+}
+function refreshSavedCallout(){
+  const callout = document.getElementById('saved-callout');
+  if(!callout) return;
+  const list = getSavedThoughts();
+  const textEl = callout.querySelector('.archive-callout-text');
+  if(textEl){
+    textEl.innerHTML = list.length
+      ? `Ai ${list.length} gând${list.length===1?'':'uri'} salvat${list.length===1?'':'e'} <button class="archive-btn" id="saved-btn">Vezi colecția</button>`
+      : `Salvează gânduri care îți plac <button class="archive-btn" id="saved-btn">Vezi colecția</button>`;
+  }
+  callout.style.display = '';
+  wireSavedBtn();
+}
+function wireSavedBtn(){
+  const savedBtn = document.getElementById('saved-btn');
+  const savedPanel = document.getElementById('saved-panel');
+  if(!savedBtn || !savedPanel) return;
+  savedBtn.onclick = () => {
+    const isOpen = savedPanel.style.display !== 'none';
+    if(isOpen){
+      savedPanel.style.display = 'none';
+      savedBtn.textContent = 'Vezi colecția';
+    } else {
+      renderSavedPanel();
+      savedPanel.style.display = '';
+      savedBtn.textContent = 'Ascunde colecția';
+    }
+  };
+}
+function renderSavedPanel(){
+  const inner = document.getElementById('saved-panel-inner');
+  if(!inner) return;
+  const list = getSavedThoughts();
+  if(!list.length){
+    inner.innerHTML = '<div class="archive-empty">Nu ai salvat încă niciun gând. Atinge cardul „Gând de păstrat" și apasă „Salvează".</div>';
+    return;
+  }
+  inner.innerHTML = list.slice().reverse().map((item, idx)=>`
+    <div class="archive-item">
+      <div class="archive-date">${item.date}</div>
+      <div class="archive-preview">❝ ${item.text}</div>
+    </div>
+  `).join('');
+}
+refreshSavedCallout();
+
+// ---------- personal stat: average energy over the last 7 archived days ----------
+async function renderWeeklyStat(){
+  const el = document.getElementById('weekly-stat');
+  if(!el) return;
+  try{
+    const res = await fetch('/.netlify/functions/get-reading?tab=zi&list=1');
+    if(!res.ok) return;
+    const data = await res.json();
+    const items = (data.items || []).filter(it => it.scores && typeof it.scores.energie === 'number');
+    if(items.length < 2){ el.style.display = 'none'; return; } // not enough history yet to be meaningful
+
+    const recent = items.slice(0, 7);
+    const avg = recent.reduce((sum, it) => sum + it.scores.energie, 0) / recent.length;
+    const avgPct = Math.round(avg * 10);
+    el.innerHTML = `Energia ta medie din ultimele ${recent.length} zile: <b>${avgPct}%</b>`;
+    el.style.display = '';
+  }catch(e){ el.style.display = 'none'; }
+}
+renderWeeklyStat();
+
+const saveThoughtBtn = document.getElementById('save-thought-btn');
+if(saveThoughtBtn){
+  saveThoughtBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const text = document.getElementById('keep-thought-text').textContent;
+    if(!text) return;
+    const list = getSavedThoughts();
+    if(list.some(item => item.text === text)){
+      saveThoughtBtn.textContent = '✓ Deja salvat';
+      saveThoughtBtn.classList.add('saved');
+      return;
+    }
+    list.push({ date: todayKey(), text });
+    setSavedThoughts(list);
+    saveThoughtBtn.textContent = '✓ Salvat';
+    saveThoughtBtn.classList.add('saved');
+    refreshSavedCallout();
+  });
+}
+
+function populatePromptStarField(){
+  const field = document.getElementById('prompt-star-field');
+  if(!field) return;
+  field.innerHTML = '';
+  const glyphs = ['✦','✧','·','✦','·'];
+  const starCount = 42;
+  for(let i=0; i<starCount; i++){
+    const el = document.createElement('span');
+    el.className = 'prompt-twinkle';
+    el.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    // gaussian-ish concentration toward the center via averaging two random values
+    const rx = ((Math.random()+Math.random())/2 - 0.5) * 2; // roughly -1..1, weighted toward 0
+    const ry = ((Math.random()+Math.random())/2 - 0.5) * 2;
+    el.style.left = `calc(50% + ${rx * 90}px)`;
+    el.style.top = `calc(50% + ${ry * 60}px)`;
+    el.style.fontSize = (3 + Math.random()*3) + 'px';
+    el.style.animationDuration = (1.6 + Math.random()*2) + 's';
+    el.style.animationDelay = (Math.random()*2.4) + 's';
+    field.appendChild(el);
+  }
+}
+
+function resetRevealCard(){
+  const prompt = document.getElementById('reveal-prompt');
+  const content = document.getElementById('reveal-content');
+  const burst = document.getElementById('star-burst');
+  if(prompt) prompt.classList.remove('hidden');
+  if(content) content.classList.remove('shown');
+  if(burst) burst.innerHTML = '';
+  const card = document.getElementById('reveal-card');
+  if(card) card.dataset.revealed = '0';
+  const saveBtn = document.getElementById('save-thought-btn');
+  if(saveBtn){ saveBtn.textContent = '☆ Salvează'; saveBtn.classList.remove('saved'); }
+  populatePromptStarField();
+}
+
+function triggerStarBurst(){
+  const burst = document.getElementById('star-burst');
+  if(!burst) return;
+  const glyphs = ['✦','✧','★','✶'];
+  const count = 22;
+  for(let i=0; i<count; i++){
+    const el = document.createElement('span');
+    el.className = 'star-particle';
+    el.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 60 + Math.random()*90;
+    el.style.setProperty('--sx', `${Math.cos(angle)*dist}px`);
+    el.style.setProperty('--sy', `${Math.sin(angle)*dist}px`);
+    el.style.animationDelay = `${Math.random()*0.15}s`;
+    el.style.fontSize = `${8 + Math.random()*8}px`;
+    burst.appendChild(el);
+  }
+  setTimeout(()=>{ burst.innerHTML = ''; }, 1200);
+}
+
+const revealCardEl = document.getElementById('reveal-card');
+if(revealCardEl){
+  revealCardEl.addEventListener('click', ()=>{
+    if(revealCardEl.dataset.revealed === '1') return;
+    revealCardEl.dataset.revealed = '1';
+
+    triggerStarBurst();
+
+    const prompt = document.getElementById('reveal-prompt');
+    const content = document.getElementById('reveal-content');
+    if(prompt) prompt.classList.add('hidden');
+    setTimeout(()=>{
+      if(content) content.classList.add('shown');
+    }, 350);
+  });
+}
+
+// ---------- "Focul tău": consecutive-day visit streak, using real localStorage ----------
+function updateStreak(){
+  const badge = document.getElementById('streak-badge');
+  if(!badge) return;
+  let data = { count: 0, last: '' };
+  try{
+    const raw = localStorage.getItem('sagetator_streak');
+    if(raw) data = JSON.parse(raw);
+  }catch(e){ /* localStorage unavailable, e.g. private mode — degrade quietly */ }
+
+  const today = todayKey();
+  if(data.last === today){
+    // already counted today, just show it
+  } else {
+    const y = yesterdayKey();
+    data.count = (data.last === y) ? (data.count||0) + 1 : 1;
+    data.last = today;
+    try{ localStorage.setItem('sagetator_streak', JSON.stringify(data)); }catch(e){}
+  }
+
+  if(data.count >= 2){
+    badge.textContent = `🔥 Focul tău: ${data.count} zile la rând`;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+// ---------- quick per-day feedback (👍/👎), local only for now ----------
+function initFeedbackButtons(){
+  const up = document.getElementById('feedback-up');
+  const down = document.getElementById('feedback-down');
+  const row = document.getElementById('feedback-row');
+  if(!up || !down || !row) return;
+
+  const feedbackKey = `sagetator_feedback_${currentTab}_${todayKey()}`;
+  let already = null;
+  try{ already = localStorage.getItem(feedbackKey); }catch(e){}
+
+  function applyPicked(choice){
+    up.classList.toggle('picked', choice === 'up');
+    down.classList.toggle('picked', choice === 'down');
+  }
+
+  if(already){ applyPicked(already); }
+
+  function vote(choice){
+    try{ localStorage.setItem(feedbackKey, choice); }catch(e){}
+    applyPicked(choice);
+    showToast(choice === 'up' ? 'Mulțumim! ✦' : 'Mulțumim pentru sinceritate ✦');
+  }
+
+  up.onclick = () => vote('up');
+  down.onclick = () => vote('down');
+}
+
+// ---------- "Ascultă citirea": native browser text-to-speech, no external API ----------
+// states: idle ("▶ Ascultă") -> playing ("⏸ Pauză") -> paused ("↻ Reia") -> back to playing, or idle again once finished
+let speechState = 'idle';
+const listenBtn = document.getElementById('listen-btn');
+const listenIcon = document.getElementById('listen-icon');
+
+function setListenState(state){
+  speechState = state;
+  if(!listenIcon || !listenBtn) return;
+  if(state === 'idle'){ listenIcon.textContent = '▶'; listenBtn.lastChild.textContent = ' Ascultă'; }
+  if(state === 'playing'){ listenIcon.textContent = '⏸'; listenBtn.lastChild.textContent = ' Pauză'; }
+  if(state === 'paused'){ listenIcon.textContent = '↻'; listenBtn.lastChild.textContent = ' Reia'; }
+}
+
+if(listenBtn && 'speechSynthesis' in window){
+  listenBtn.addEventListener('click', ()=>{
+    if(speechState === 'idle'){
+      const text = lastReadingText || document.getElementById('reading-text').textContent;
+      if(!text) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ro-RO';
+      utterance.rate = 0.95;
+      utterance.onend = () => setListenState('idle');
+      utterance.onerror = () => setListenState('idle');
+      window.speechSynthesis.speak(utterance);
+      setListenState('playing');
+    } else if(speechState === 'playing'){
+      window.speechSynthesis.pause();
+      setListenState('paused');
+    } else if(speechState === 'paused'){
+      window.speechSynthesis.resume();
+      setListenState('playing');
+    }
+  });
+} else if(listenBtn){
+  listenBtn.style.display = 'none';
+}
+
+// ---------- shareable image card: draws the day's reading onto a canvas, ready to post ----------
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+  const words = text.split(' ');
+  let line = '';
+  let curY = y;
+  for(let i=0;i<words.length;i++){
+    const testLine = line + words[i] + ' ';
+    if(ctx.measureText(testLine).width > maxWidth && line !== ''){
+      ctx.fillText(line.trim(), x, curY);
+      line = words[i] + ' ';
+      curY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line.trim(), x, curY);
+  return curY + lineHeight;
+}
+
+async function generateShareImageCard(){
+  try{ await document.fonts.load('italic 40px "Cormorant Garamond"'); }catch(e){}
+  try{ await document.fonts.load('600 20px "Montserrat"'); }catch(e){}
+
+  const W = 1080, H = 1350;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+
+  const isLight = document.body.classList.contains('light');
+  const bg = isLight ? '#f3ede1' : '#0b0a0d';
+  const ink = isLight ? '#1c1712' : '#f1ece1';
+  const inkSoft = isLight ? '#6b5f4a' : '#b3a996';
+  const gold = isLight ? '#9c7936' : '#cda86a';
+  const goldBright = isLight ? '#b5924f' : '#ecd49a';
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,W,H);
+
+  ctx.strokeStyle = gold;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(40, 40, W-80, H-80);
+
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = gold;
+  ctx.font = '600 26px Montserrat, sans-serif';
+  ctx.fillText('H O R O S C O P', W/2, 150);
+
+  ctx.fillStyle = inkSoft;
+  ctx.font = 'italic 26px "Cormorant Garamond", serif';
+  ctx.fillText('de Sagittarius Decoded', W/2, 195);
+
+  ctx.fillStyle = ink;
+  ctx.font = 'italic 90px "Cormorant Garamond", serif';
+  ctx.fillText('Săgetător', W/2, 300);
+
+  const now = new Date();
+  const RO_LUNI = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+  ctx.fillStyle = inkSoft;
+  ctx.font = '18px Montserrat, sans-serif';
+  ctx.fillText(`${now.getDate()} ${RO_LUNI[now.getMonth()]} ${now.getFullYear()}`, W/2, 340);
+
+  ctx.strokeStyle = gold;
+  ctx.beginPath();
+  ctx.moveTo(W/2-100, 375); ctx.lineTo(W/2-25, 375); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(W/2+25, 375); ctx.lineTo(W/2+100, 375); ctx.stroke();
+  ctx.fillStyle = gold;
+  ctx.font = '20px serif';
+  ctx.fillText('✦', W/2, 382);
+
+  const parsed = lastParsedReading;
+  const introText = (parsed && parsed.intro) ? parsed.intro : (document.getElementById('reading-text').textContent || '');
+  ctx.fillStyle = ink;
+  ctx.font = 'italic 34px "Cormorant Garamond", serif';
+  let afterIntroY = wrapCanvasText(ctx, introText, W/2, 460, W-200, 46);
+
+  if(parsed && parsed.keepThought){
+    afterIntroY += 60;
+    ctx.fillStyle = gold;
+    ctx.font = '18px Montserrat, sans-serif';
+    ctx.fillText('G Â N D   D E   P Ă S T R A T', W/2, afterIntroY);
+    afterIntroY += 50;
+    ctx.fillStyle = goldBright;
+    ctx.font = 'italic 30px "Cormorant Garamond", serif';
+    wrapCanvasText(ctx, '❝ ' + parsed.keepThought, W/2, afterIntroY, W-260, 42);
+  }
+
+  ctx.fillStyle = inkSoft;
+  ctx.font = '18px Montserrat, sans-serif';
+  ctx.fillText('sagittarius-decoded.netlify.app', W/2, H-90);
+  ctx.fillStyle = gold;
+  ctx.font = 'italic 22px "Cormorant Garamond", serif';
+  ctx.fillText('✨️ Sagittarius Decoded ✨️', W/2, H-55);
+
+  return c;
+}
+
+const shareImageBtn = document.getElementById('share-image-btn');
+if(shareImageBtn){
+  shareImageBtn.addEventListener('click', async ()=>{
+    shareImageBtn.textContent = 'Se pregătește…';
+    try{
+      const canvas = await generateShareImageCard();
+      canvas.toBlob(async (blob)=>{
+        if(!blob){ shareImageBtn.textContent = '🖼 Distribuie ca imagine'; return; }
+        const file = new File([blob], 'horoscop-sagetator.png', { type: 'image/png' });
+
+        if(navigator.canShare && navigator.canShare({ files: [file] })){
+          try{
+            await navigator.share({ files: [file], title: 'Horoscop Săgetător' });
+            shareImageBtn.textContent = '🖼 Distribuie ca imagine';
+            return;
+          }catch(e){ /* user cancelled or share failed — fall back to download */ }
+        }
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'horoscop-sagetator.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url), 3000);
+        showToast('Imagine descărcată ✦');
+        shareImageBtn.textContent = '🖼 Distribuie ca imagine';
+      }, 'image/png');
+    }catch(e){
+      shareImageBtn.textContent = '🖼 Distribuie ca imagine';
+      showToast('Nu am putut genera imaginea acum');
+    }
+  });
+}
+
+// ---------- PWA: one-tap install where supported, simple instructions where not ----------
+let deferredInstallPrompt = null;
+const installBtn = document.getElementById('install-btn');
+
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if(installBtn) installBtn.style.display = '';
+});
+
+if(installBtn){
+  installBtn.addEventListener('click', async ()=>{
+    if(!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installBtn.style.display = 'none';
+  });
+}
+
+window.addEventListener('appinstalled', ()=>{
+  if(installBtn) installBtn.style.display = 'none';
+});
+
+// iOS Safari has no install-prompt API — show a one-line instruction instead, once, if not already installed
+(function showIosInstallHint(){
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+  if(!isIos || isStandalone) return;
+  try{ if(localStorage.getItem('sagetator_ios_hint_dismissed')) return; }catch(e){}
+
+  const hint = document.createElement('div');
+  hint.className = 'install-hint';
+  hint.innerHTML = 'Adaugă aplicația pe ecranul principal: atinge butonul de distribuire <b>⬆️</b> din Safari, apoi „Adaugă pe ecranul principal".';
+  hint.style.cursor = 'pointer';
+  hint.title = 'Atinge ca să ascunzi acest mesaj';
+  hint.addEventListener('click', ()=>{
+    hint.remove();
+    try{ localStorage.setItem('sagetator_ios_hint_dismissed', '1'); }catch(e){}
+  });
+  if(installBtn && installBtn.parentNode){
+    installBtn.parentNode.insertBefore(hint, installBtn.nextSibling);
+  }
+})();
+
+// ---------- push notifications: daily reminder, with a real cancel option ----------
+const VAPID_PUBLIC_KEY = 'BPtWYlN6Eww7RifA7jg0UtimtKXBwEqC1QBFq3O6fyF5i8yfGOZn5UdT3tilsiLclI-jA9WmmouMmXj9hyP_hgs';
+
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i){
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+async function setNotifBtnState(){
+  const notifBtn = document.getElementById('notif-btn');
+  if(!notifBtn) return;
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+    notifBtn.style.display = 'none';
+    return;
+  }
+  notifBtn.style.display = '';
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    const existingSub = await reg.pushManager.getSubscription();
+    if(existingSub){
+      notifBtn.textContent = '🔕 Oprește notificările';
+      notifBtn.dataset.state = 'subscribed';
+    } else {
+      notifBtn.textContent = '🔔 Amintește-mi zilnic';
+      notifBtn.dataset.state = 'unsubscribed';
+    }
+  }catch(e){ notifBtn.style.display = 'none'; }
+}
+
+async function subscribeToPush(){
+  const notifBtn = document.getElementById('notif-btn');
+  const permission = await Notification.requestPermission();
+  if(permission !== 'granted'){
+    showToast('Ai blocat notificările — le poți activa oricând din setările browserului.');
+    return;
+  }
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+    await fetch('/.netlify/functions/push-subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription: sub.toJSON() })
+    });
+    showToast('Te anunț zilnic când e gata citirea ✦');
+    setNotifBtnState();
+  }catch(e){
+    showToast('Nu am putut activa notificările acum.');
+  }
+}
+
+async function unsubscribeFromPush(){
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if(sub){
+      const endpoint = sub.endpoint;
+      await sub.unsubscribe();
+      await fetch('/.netlify/functions/push-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'unsubscribe', endpoint })
+      });
+    }
+    showToast('Notificările au fost oprite.');
+    setNotifBtnState();
+  }catch(e){
+    showToast('Nu am putut opri notificările acum.');
+  }
+}
+
+const notifBtn = document.getElementById('notif-btn');
+if(notifBtn){
+  notifBtn.addEventListener('click', ()=>{
+    if(notifBtn.dataset.state === 'subscribed'){
+      unsubscribeFromPush();
+    } else {
+      subscribeToPush();
+    }
+  });
+}
+
+// ---------- PWA: register the minimal service worker (installability only, no caching) ----------
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(()=>{ if(typeof setNotifBtnState === 'function') setNotifBtnState(); })
+      .catch(()=>{ /* not critical if it fails */ });
+  });
+}
+
+updateStreak();
+
 renderReading();
-renderLucky();
 renderCalendar();
 renderSky();
 renderCompat();
