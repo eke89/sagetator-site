@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0a0d">
 <title>Săgetător · Horoscop</title>
-<meta name="description" content="Horoscop zilnic pentru Săgetător, generat live pe baza tranzitelor astrologice reale. Compatibilitate cu toate zodiile, calendar astral, arhivă și interpretări actualizate în fiecare zi — by Sagittarius Decoded.">
+<meta name="description" content="Horoscop zilnic pentru Săgetător, generat live pe baza tranzitelor astrologice reale. Calendar astral, arhivă și interpretări actualizate în fiecare zi — by Sagittarius Decoded.">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0b0a0d">
@@ -1262,86 +1262,6 @@ body.light .area-icon{color:#8a8f96;}
 }
 .trait .desc{grid-column:2; font-size:14px; color:var(--ink-soft); font-style:italic; margin-top:3px;}
 
-.featured-compat{
-  border:1px solid var(--gold);
-  padding:14px 20px;
-  margin:0 0 16px;
-  text-align:center;
-  cursor:pointer;
-}
-.featured-compat-label{
-  font-family:'Montserrat',sans-serif;
-  font-size:9px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--gold);
-  margin-bottom:6px;
-}
-.featured-compat-value{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;
-  font-size:22px;
-  color:var(--ink);
-}
-.featured-compat-value span{color:var(--gold-bright); font-weight:500;}
-.featured-compat-highlight{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;
-  font-size:13.5px;
-  color:var(--ink-soft);
-  margin-top:8px;
-}
-.featured-compat-cta{
-  font-family:'Montserrat',sans-serif;
-  font-size:9px;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--gold);
-  margin-top:10px;
-}
-
-.compat{display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
-.compat-btn{
-  appearance:none; -webkit-appearance:none; -moz-appearance:none;
-  background-color:#0b0a0d; border:1px solid var(--gold); color:var(--gold);
-  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px;
-  font-variant-emoji:text;
-  padding:8px 18px; cursor:pointer; transition:all .25s ease;
-  -webkit-tap-highlight-color:transparent;
-  outline-color:#b5541f;
-}
-.compat-btn:hover{border-color:var(--gold-bright); color:var(--gold-bright); box-shadow:0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);}
-.compat-btn.active{background:var(--gold); border-color:var(--gold); color:#0b0a0d;}
-body.light .compat-btn{background-color:rgba(150,145,135,0.2); border-color:var(--gold); color:var(--gold);}
-body.light .compat-btn.active{background:var(--gold); color:#f3ede1;}
-.compat-btn:focus-visible{outline:1px solid #b5541f; outline-offset:3px;}
-.compat-btn::selection, .compat-btn *::selection{background:#b5541f; color:#0b0a0d;}
-.compat-detail{
-  max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .3s ease, margin .4s ease;
-  text-align:center; color:var(--ink-soft);
-}
-.compat-detail.open{max-height:420px; opacity:1; margin-top:18px;}
-.compat-pct{
-  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; color:var(--ink); margin-bottom:8px;
-}
-.compat-pct span{color:var(--gold); font-weight:600;}
-.compat-desc{font-style:italic; font-size:14px; line-height:1.55; margin-bottom:16px;}
-.compat-fields{display:flex; flex-direction:column; gap:12px; max-width:320px; margin:0 auto; text-align:left;}
-.compat-fields > div{
-  font-family:'Montserrat',sans-serif;
-}
-.compat-fields span{
-  display:block; color:var(--gold); text-transform:uppercase; letter-spacing:.1em; font-size:9.5px; margin-bottom:3px;
-}
-.compat-fields p{
-  margin:0; color:var(--ink-soft); font-size:13px; line-height:1.5; font-style:italic; font-family:'Cormorant Garamond',serif;
-}
-.compat-astro{
-  margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft);
-  font-family:'Montserrat',sans-serif; font-size:10.5px; letter-spacing:.03em;
-  color:var(--gold); line-height:1.6; font-style:normal;
-}
-
 .timeline{display:flex; flex-direction:column; gap:0;}
 .tl-item{
   display:grid; grid-template-columns:96px 1fr; gap:14px;
@@ -1426,9 +1346,6 @@ footer div:last-child{margin-bottom:0;}
 
   .briefs{margin-top:50px; gap:44px;}
   .brief-title{font-size:12px;}
-
-  .compat{gap:8px;}
-  .compat-btn{padding:10px 14px; font-size:14px; min-height:40px;}
 
   .tl-item{grid-template-columns:80px 1fr; gap:10px;}
 
@@ -1770,27 +1687,6 @@ footer div:last-child{margin-bottom:0;}
         <div class="trait"><span class="glyph">✓</span><div class="name">Bun pentru</div><div class="desc" id="sky-good-value">—</div></div>
         <div class="trait"><span class="glyph">✗</span><div class="name">De evitat</div><div class="desc" id="sky-avoid-value">—</div></div>
       </div>
-    </section>
-
-    <section class="reveal-section card card-primary">
-      <div class="brief-title">Compatibilitate</div>
-      <div class="featured-compat" id="featured-compat"></div>
-      <div class="brief-sub">Atinge un semn</div>
-      <div class="compat" id="compat-list">
-        <button class="compat-btn" data-sign="berbec">♈︎ Berbec</button>
-        <button class="compat-btn" data-sign="taur">♉︎ Taur</button>
-        <button class="compat-btn" data-sign="gemeni">♊︎ Gemeni</button>
-        <button class="compat-btn" data-sign="rac">♋︎ Rac</button>
-        <button class="compat-btn" data-sign="leu">♌︎ Leu</button>
-        <button class="compat-btn" data-sign="fecioara">♍︎ Fecioară</button>
-        <button class="compat-btn" data-sign="balanta">♎︎ Balanță</button>
-        <button class="compat-btn" data-sign="scorpion">♏︎ Scorpion</button>
-        <button class="compat-btn" data-sign="sagetator">♐︎ Săgetător</button>
-        <button class="compat-btn" data-sign="capricorn">♑︎ Capricorn</button>
-        <button class="compat-btn" data-sign="varsator">♒︎ Vărsător</button>
-        <button class="compat-btn" data-sign="pesti">♓︎ Pești</button>
-      </div>
-      <div class="compat-detail" id="compat-detail"></div>
     </section>
 
     <section class="reveal-section card card-primary">
@@ -2285,189 +2181,6 @@ const universePool = [
   "Nu ai întârziat la nimic. Drumul tău are propriul lui ceas."
 ];
 
-// ---------- compatibility, grounded in real astrological factors ----------
-// Săgetător is a Fire sign. Base affinity follows classical element theory:
-// Fire-Fire strongest, Fire-Air good (air feeds fire), Fire-Earth/Water harder.
-const elementBase = {
-  foc:     {pct:88, love:4, friends:4, sex:4, comm:3, challenges:2},
-  aer:     {pct:79, love:3, friends:4, sex:3, comm:4, challenges:2},
-  pamant:  {pct:59, love:3, friends:3, sex:3, comm:2, challenges:4},
-  apa:     {pct:54, love:4, friends:2, sex:3, comm:2, challenges:4}
-};
-
-const zodiacData = {
-  berbec:    {element:'foc',    offset:{pct:+3, comm:-1, challenges:+1}, note:"amândoi conduceți drumul, cine cedează primul câștigă, de fapt."},
-  taur:      {element:'pamant', offset:{pct:-1}, note:"tu cauți mișcare, el caută stabilitate, dar se poate găsi un mijloc bun azi."},
-  gemeni:    {element:'aer',    offset:{pct:+2, friends:+1, comm:+1}, note:"conversația curge ușor, dar rămâneți amândoi puțin superficiali azi."},
-  rac:       {element:'apa',    offset:{pct:-2, love:+1, friends:-1}, note:"emoția lui e mai profundă decât libertatea ta, echilibrul cere efort azi."},
-  leu:       {element:'foc',    offset:{pct:+5, love:+1, friends:+1}, note:"cea mai naturală alianță de foc, vă hrăniți reciproc încrederea."},
-  fecioara:  {element:'pamant', offset:{pct:-4, comm:0, challenges:+1}, note:"detaliile lui contrastează cu spontaneitatea ta, așa că fii atent la critici azi."},
-  balanta:   {element:'aer',    offset:{pct:+1, friends:+1, comm:+1}, note:"focul și aerul se hrănesc reciproc: farmecul ei se îmbină bine cu curajul tău."},
-  scorpion:  {element:'apa',    offset:{pct:0, love:+1, friends:-1, challenges:+1}, note:"atracție intensă, dar el cere mai multă profunzime decât oferi azi."},
-  sagetator: {element:'foc',    offset:{pct:+2, friends:+1}, note:"vă înțelegeți din priviri, dar repetați amândoi aceleași greșeli."},
-  capricorn: {element:'pamant', offset:{pct:-1, love:-1, comm:-1}, note:"ambiția lui e rigidă, a ta e liberă, așa că ai nevoie de răbdare azi."},
-  varsator:  {element:'aer',    offset:{pct:+3, friends:+1, comm:+1}, note:"două spirite libere, niciunul nu vrea să fie „ținut în lesă\"."},
-  pesti:     {element:'apa',    offset:{pct:+1, love:+1, comm:-1}, note:"el visează, tu explorezi, ritmuri diferite, dar compatibile azi."}
-};
-
-// today's real astrological influence: moon phase (already computed) + Mercury retrograde window
-function getDailyAstroModifiers(){
-  const moon = getMoonPhase(new Date());
-  const now = new Date();
-  const mercuryRetro = now >= new Date(2026,5,29) && now <= new Date(2026,6,23);
-
-  const mod = {foc:0, aer:0, pamant:0, apa:0};
-  const notes = [];
-
-  if(moon.name === 'Lună Plină'){
-    mod.apa += 6; mod.foc += 2;
-    notes.push(`azi e Lună Plină (${moon.glyph}), iar emoțiile sunt mai intense, mai ales pentru semnele de Apă`);
-  } else if(moon.name === 'Lună Nouă'){
-    mod.foc += 4;
-    notes.push(`azi e Lună Nouă (${moon.glyph}), un moment bun pentru începuturi, mai ales pentru semnele de Foc`);
-  } else if(moon.name === 'Primul pătrar' || moon.name === 'Ultimul pătrar'){
-    mod.aer += 3;
-    notes.push(`faza lunară de azi (${moon.glyph}) ascute comunicarea, mai ales pentru semnele de Aer`);
-  } else if(moon.name === 'Lună crescătoare'){
-    mod.foc += 1;
-  } else if(moon.name === 'Lună descrescătoare'){
-    mod.pamant += 1;
-  }
-
-  if(mercuryRetro){
-    mod.aer -= 4; mod.pamant -= 2;
-    notes.push('Mercur e retrograd, ceea ce îngreunează puțin comunicarea, mai ales cu semnele de Aer');
-  }
-
-  let note = '';
-  if(notes.length === 1){
-    note = notes[0].charAt(0).toUpperCase() + notes[0].slice(1) + '.';
-  } else if(notes.length === 2){
-    note = notes[0].charAt(0).toUpperCase() + notes[0].slice(1) + ', iar în plus ' + notes[1] + '.';
-  }
-
-  return {mod, note};
-}
-
-function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
-
-function energyLabelFromPct(pct){
-  if(pct >= 75) return 'Ridicată';
-  if(pct >= 55) return 'Moderată';
-  return 'Scăzută';
-}
-
-function computeLocalCompatFor(sign, dayKey, mod, note){
-  const z = zodiacData[sign];
-  if(!z) return null;
-  const base = elementBase[z.element];
-  const off = z.offset || {};
-  const elMod = mod[z.element] || 0;
-  const jitter = (hashStr(dayKey+sign+'j') % 5) - 2; // -2..+2
-
-  const pct = clamp(base.pct + (off.pct||0) + elMod + jitter, 32, 98);
-  const love = clamp(base.love + (off.love||0) + (elMod>0?1:0), 1, 5);
-  const friends = clamp(base.friends + (off.friends||0), 1, 5);
-  const sex = clamp(base.sex + (off.sex||0), 1, 5);
-  const comm = clamp(base.comm + (off.comm||0) + (elMod<0 && z.element==='aer' ? -1 : 0), 1, 5);
-  const challenges = clamp(base.challenges + (off.challenges||0), 1, 5);
-
-  return {
-    pct, love, friends, sex, comm, challenges,
-    desc: `Astăzi: ${z.note}`,
-    astro: note || 'Nicio influență astrologică majoră azi, doar afinitatea naturală de element.',
-    provocari: challenges >= 4 ? 'Posibile neînțelegeri dacă nu comunicați direct.' : 'Puține tensiuni de așteptat azi.',
-    comunicare: comm >= 4 ? 'Dialogul curge ușor astăzi.' : 'Comunicarea cere puțin mai multă răbdare azi.',
-    energie: energyLabelFromPct(pct),
-    sfat: 'Fii sincer în privința a ce ai nevoie azi, în relația asta.'
-  };
-}
-
-function renderCompatLocal(){
-  const dayKey = todayKey();
-  const {mod, note} = getDailyAstroModifiers();
-
-  document.querySelectorAll('.compat-btn').forEach(btn=>{
-    const sign = btn.dataset.sign;
-    const c = computeLocalCompatFor(sign, dayKey, mod, note);
-    if(!c) return;
-    btn.dataset.pct = c.pct;
-    btn.dataset.desc = c.desc;
-    btn.dataset.astro = c.astro;
-    btn.dataset.provocari = c.provocari;
-    btn.dataset.comunicare = c.comunicare;
-    btn.dataset.energie = c.energie;
-    btn.dataset.sfat = c.sfat;
-  });
-  renderFeaturedCompat();
-}
-
-// maps our internal sign keys (data-sign attributes) to the keys the AI returns
-const AI_SIGN_KEYS = {
-  berbec:'Berbec', taur:'Taur', gemeni:'Gemeni', rac:'Rac', leu:'Leu',
-  fecioara:'Fecioara', balanta:'Balanta', scorpion:'Scorpion', sagetator:'Sagetator',
-  capricorn:'Capricorn', varsator:'Varsator', pesti:'Pesti'
-};
-
-async function renderCompat(){
-  // compatibility is always computed locally now — fast, instant, no network wait.
-  // (the AI used to generate this too, but it was the heaviest part of the prompt and
-  // was causing generation to take 30-40+ seconds, past Netlify's function time limit.)
-  renderCompatLocal();
-}
-
-function applyCompatData(compat){
-  const dayKey = todayKey();
-  const {mod, note} = getDailyAstroModifiers();
-
-  document.querySelectorAll('.compat-btn').forEach(btn=>{
-    const sign = btn.dataset.sign;
-    const aiKey = AI_SIGN_KEYS[sign];
-    const entry = aiKey && compat[aiKey];
-
-    if(entry){
-      btn.dataset.pct = entry.pct;
-      btn.dataset.desc = entry.msg;
-      btn.dataset.provocari = entry.provocari || 'Nu sunt tensiuni majore de așteptat azi.';
-      btn.dataset.comunicare = entry.comunicare || 'Dialogul curge firesc, fără efort.';
-      btn.dataset.energie = entry.energie || energyLabelFromPct(entry.pct);
-      btn.dataset.sfat = entry.sfat || 'Rămâi deschis și lasă ziua să curgă natural.';
-      btn.dataset.astro = 'Interpretare generată live, pe baza tranzitelor astrologice curente.';
-    } else {
-      // this specific sign was missing from the AI response — never leave it stale,
-      // compute its own live, date-based value instead
-      const c = computeLocalCompatFor(sign, dayKey, mod, note);
-      if(!c) return;
-      btn.dataset.pct = c.pct;
-      btn.dataset.desc = c.desc;
-      btn.dataset.provocari = c.provocari;
-      btn.dataset.comunicare = c.comunicare;
-      btn.dataset.energie = c.energie;
-      btn.dataset.sfat = c.sfat;
-      btn.dataset.astro = c.astro;
-    }
-  });
-  renderFeaturedCompat();
-}
-
-function renderFeaturedCompat(){
-  const featuredEl = document.getElementById('featured-compat');
-  if(!featuredEl) return;
-  const buttons = Array.from(document.querySelectorAll('.compat-btn'));
-  if(!buttons.length) return;
-  let best = buttons[0];
-  buttons.forEach(btn=>{
-    if(Number(btn.dataset.pct||0) > Number(best.dataset.pct||0)) best = btn;
-  });
-  const signLabel = best.textContent.trim();
-  const highlight = best.dataset.comunicare || best.dataset.desc || '';
-  featuredEl.innerHTML = `
-    <div class="featured-compat-label">Compatibilitatea zilei</div>
-    <div class="featured-compat-value">${signLabel} <span>${best.dataset.pct}%</span></div>
-    ${highlight ? `<div class="featured-compat-highlight">${highlight}</div>` : ''}
-    <div class="featured-compat-cta">Vezi de ce →</div>`;
-  featuredEl.onclick = () => best.click();
-}
 
 // real July 2026 astrological events, framed for Sagittarius
 const calendarEvents = [
@@ -3211,33 +2924,6 @@ document.getElementById('share-btn').addEventListener('click', async ()=>{
   }
 });
 
-// ---------- compatibility detail toggle ----------
-document.querySelectorAll('.compat-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const detail = document.getElementById('compat-detail');
-    const isActive = btn.classList.contains('active');
-    document.querySelectorAll('.compat-btn').forEach(b=>b.classList.remove('active'));
-    if(isActive){
-      detail.classList.remove('open');
-      detail.innerHTML = '';
-    } else {
-      btn.classList.add('active');
-      const d = btn.dataset;
-      detail.innerHTML = `
-        <div class="compat-pct">Compatibilitate azi: <span>${d.pct}%</span></div>
-        <div class="compat-desc">${d.desc}</div>
-        <div class="compat-fields">
-          <div><span>Provocări</span><p>${d.provocari}</p></div>
-          <div><span>Comunicare</span><p>${d.comunicare}</p></div>
-          <div><span>Nivel energie</span><p>${d.energie}</p></div>
-          <div><span>Sfat</span><p>${d.sfat}</p></div>
-        </div>
-        <div class="compat-astro">${d.astro}</div>`;
-      detail.classList.add('open');
-    }
-  });
-});
-
 // ---------- live "energy used today" bar, based on time of day ----------
 function renderEnergyBar(){
   const now = new Date();
@@ -3751,6 +3437,11 @@ function setListenState(state){
 }
 
 if(listenBtn && 'speechSynthesis' in window){
+  // Chrome (and others) often return an empty voice list on the very first call —
+  // voices load asynchronously, so "warm up" the list as early as possible.
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.addEventListener('voiceschanged', ()=>{ window.speechSynthesis.getVoices(); });
+
   listenBtn.addEventListener('click', ()=>{
     if(speechState === 'idle'){
       const text = lastReadingText || document.getElementById('reading-text').textContent;
@@ -3759,19 +3450,26 @@ if(listenBtn && 'speechSynthesis' in window){
         return;
       }
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ro-RO';
       utterance.rate = 0.95;
 
-      // pick the best available Romanian voice explicitly, if the browser has one —
-      // otherwise it silently falls back to whatever default voice is installed
+      // use a Romanian voice ONLY if the device actually has one installed —
+      // forcing lang="ro-RO" with no matching voice makes some devices fail outright
+      // instead of falling back gracefully, which is what caused "nu se poate reda"
       const voices = window.speechSynthesis.getVoices();
       const roVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ro'));
-      if(roVoice) utterance.voice = roVoice;
+      if(roVoice){
+        utterance.voice = roVoice;
+        utterance.lang = roVoice.lang;
+      }
+      // if no Romanian voice exists, we deliberately leave lang/voice unset so the
+      // device's default voice speaks it — wrong accent, but it actually plays.
 
       utterance.onend = () => setListenState('idle');
       utterance.onerror = () => {
         setListenState('idle');
-        showToast('Nu am putut reda vocea acum. Încearcă din nou.');
+        showToast(roVoice
+          ? 'Nu am putut reda vocea acum. Încearcă din nou.'
+          : 'Telefonul tău nu are o voce română instalată, iar vocea implicită a eșuat și ea.');
       };
       window.speechSynthesis.speak(utterance);
       setListenState('playing');
@@ -4089,7 +3787,6 @@ updateStreak();
 renderReading();
 renderCalendar();
 renderSky();
-renderCompat();
 renderEnergyBar();
 setInterval(renderEnergyBar, 60000);
 </script>
