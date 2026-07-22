@@ -218,18 +218,19 @@ body{
 .install-btn{
   display:block;
   margin:14px auto 0;
-  background:var(--gold);
-  color:#0b0a0d;
-  border:none;
+  background:transparent;
+  color:var(--gold);
+  border:1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius:3px;
   font-family:'Montserrat',sans-serif;
-  font-weight:600;
-  font-size:11px;
-  letter-spacing:.05em;
-  padding:9px 18px;
+  font-weight:500;
+  font-size:10.5px;
+  letter-spacing:.08em;
+  padding:9px 20px;
   cursor:pointer;
-  transition:background .2s ease;
+  transition:all .25s ease;
 }
-.install-btn:hover{background:var(--gold-bright);}
+.install-btn:hover{background:color-mix(in srgb, var(--gold) 10%, transparent); border-color:var(--gold);}
 .install-hint{
   max-width:280px;
   margin:14px auto 0;
@@ -331,15 +332,15 @@ body{
   content:"";
   position:absolute;
   left:50%; top:50%;
-  width:340px; height:220px;
+  width:400px; height:270px;
   transform:translate(-50%,-50%);
   background:
-    radial-gradient(ellipse at 35% 75%, rgba(255,178,90,0.35), transparent 55%),
-    radial-gradient(ellipse at 65% 30%, rgba(255,120,70,0.22), transparent 60%),
-    radial-gradient(ellipse at 50% 55%, rgba(190,110,150,0.14), transparent 65%);
-  filter:blur(18px);
+    radial-gradient(ellipse at 35% 75%, rgba(255,178,90,0.4), transparent 55%),
+    radial-gradient(ellipse at 65% 30%, rgba(255,120,70,0.26), transparent 60%),
+    radial-gradient(ellipse at 50% 55%, rgba(190,110,150,0.16), transparent 65%);
+  filter:blur(20px);
   z-index:-1;
-  opacity:.8;
+  opacity:.85;
   animation:sunsetDrift 9s ease-in-out infinite;
 }
 body.light .symbol-wrap::before{
@@ -428,7 +429,7 @@ nav.tabs{
   flex-direction:column;
   align-items:center;
   gap:10px;
-  margin:22px 0 0;
+  margin:8px 0 0;
 }
 .tabs-row{
   display:flex;
@@ -1293,7 +1294,7 @@ footer div:last-child{margin-bottom:0;}
   .hero{padding:14px 18px 0;}
   .stage{padding:26px 18px 70px;}
 
-  .eyebrow{font-size:24px; letter-spacing:.08em; margin-bottom:2px;}
+  .eyebrow{font-size:27px; letter-spacing:.08em; margin-bottom:2px;}
   .wordmark{font-size:clamp(42px,15vw,60px);}
   .dates{font-size:9.5px; letter-spacing:.16em;}
 
@@ -1366,13 +1367,13 @@ footer div:last-child{margin-bottom:0;}
   <div class="hero-promise reveal" style="animation-delay:.28s">Mai mult decât un horoscop.<br>O direcție pentru ziua ta.</div>
   <div class="streak-badge reveal" id="streak-badge" style="animation-delay:.32s; display:none;"></div>
   <button class="install-btn" id="install-btn" style="display:none;">📲 Adaugă pe ecranul principal</button>
-  <button class="install-btn" id="notif-btn" style="display:none; background:none; border:1px solid var(--gold); color:var(--gold); margin-top:8px;">🔔 Amintește-mi zilnic</button>
+  <button class="install-btn" id="notif-btn" style="display:none; margin-top:8px;">🔔 Amintește-mi zilnic</button>
 
   <div class="ornament reveal" style="animation-delay:.3s"><span>✦</span></div>
 
   <div class="symbol-wrap" id="symbol-wrap" title="Atinge pentru a trage din nou">
     <div class="arrow-trail-wrap" id="arrow-trail-wrap"></div>
-    <svg width="380" height="240" viewBox="-20 -25 400 250" fill="none" id="bow-svg">
+    <svg width="425" height="269" viewBox="-20 -25 400 250" fill="none" id="bow-svg">
       <defs>
         <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="var(--gold-bright)"/>
@@ -1798,6 +1799,20 @@ function maybeSpawnShootingStar(){
     });
   }
 }
+let nebulaT = 0;
+function drawNebula(){
+  nebulaT += 0.0006;
+  const cx = canvas.width * (0.3 + 0.15*Math.sin(nebulaT*0.7));
+  const cy = canvas.height * (0.18 + 0.06*Math.cos(nebulaT*0.5));
+  const r = Math.max(canvas.width, canvas.height) * 0.35;
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+  grad.addColorStop(0, 'rgba(180,120,70,0.10)');
+  grad.addColorStop(0.5, 'rgba(140,90,120,0.05)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
 function drawDustMotes(){
   dustMotes.forEach(d=>{
     d.wobble += d.wobbleSpeed;
@@ -1890,6 +1905,8 @@ function draw(){
     return;
   }
 
+  drawNebula();
+
   ctx.fillStyle = 'rgb(246,241,230)';
   for(const s of stars){
     s.a += s.tw*s.dir;
@@ -1900,6 +1917,8 @@ function draw(){
     ctx.fill();
   }
   ctx.globalAlpha = 1;
+
+  drawDustMotes();
 
   maybeSpawnShootingStar();
   shootingStars.forEach(s=>{
@@ -3743,7 +3762,11 @@ const installBtn = document.getElementById('install-btn');
 window.addEventListener('beforeinstallprompt', (e)=>{
   e.preventDefault();
   deferredInstallPrompt = e;
-  if(installBtn) installBtn.style.display = '';
+  // wait a bit before showing it, so the first impression of the page isn't a button —
+  // let people see the reading first, then offer the install option
+  setTimeout(()=>{
+    if(installBtn) installBtn.style.display = '';
+  }, 8000);
 });
 
 if(installBtn){
@@ -3767,18 +3790,20 @@ window.addEventListener('appinstalled', ()=>{
   if(!isIos || isStandalone) return;
   try{ if(localStorage.getItem('sagetator_ios_hint_dismissed')) return; }catch(e){}
 
-  const hint = document.createElement('div');
-  hint.className = 'install-hint';
-  hint.innerHTML = 'Adaugă aplicația pe ecranul principal: atinge butonul de distribuire <b>⬆️</b> din Safari, apoi „Adaugă pe ecranul principal".';
-  hint.style.cursor = 'pointer';
-  hint.title = 'Atinge ca să ascunzi acest mesaj';
-  hint.addEventListener('click', ()=>{
-    hint.remove();
-    try{ localStorage.setItem('sagetator_ios_hint_dismissed', '1'); }catch(e){}
-  });
-  if(installBtn && installBtn.parentNode){
-    installBtn.parentNode.insertBefore(hint, installBtn.nextSibling);
-  }
+  setTimeout(()=>{
+    const hint = document.createElement('div');
+    hint.className = 'install-hint';
+    hint.innerHTML = 'Adaugă aplicația pe ecranul principal: atinge butonul de distribuire <b>⬆️</b> din Safari, apoi „Adaugă pe ecranul principal".';
+    hint.style.cursor = 'pointer';
+    hint.title = 'Atinge ca să ascunzi acest mesaj';
+    hint.addEventListener('click', ()=>{
+      hint.remove();
+      try{ localStorage.setItem('sagetator_ios_hint_dismissed', '1'); }catch(e){}
+    });
+    if(installBtn && installBtn.parentNode){
+      installBtn.parentNode.insertBefore(hint, installBtn.nextSibling);
+    }
+  }, 8000);
 })();
 
 // ---------- push notifications: daily reminder, with a real cancel option ----------
