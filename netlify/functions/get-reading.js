@@ -65,15 +65,15 @@ function buildPrompt(cat) {
   var pStyle = 'Reguli stricte de stil: NU folosi niciodata liniuta lunga "\u2014" (em-dash) in text; foloseste virgula, punct sau punct si virgula in loc, oriunde ai fi tentat sa pui o liniuta intre doua idei. Scrie cu diacritice corecte si ortografie corecta in limba romana peste tot. Scrie ca un astrolog cu experienta, care a studiat mai multe traditii si scoli de astrologie de-a lungul timpului si reinterpreteaza acea intelepciune in cuvinte proprii, originale; nu mentiona, nu cita si nu face referire explicita la nicio sursa, carte, site sau autor anume. Scrie in propozitii complete, curgatoare, naturale, ca un om care vorbeste, nu ca o lista telegrafica de fragmente lipite intre ele; evita constructii de tipul "idee scurta, idee scurta, idee scurta" fara verbe sau legaturi naturale intre ele; fiecare propozitie trebuie sa se citeasca firesc, cu conjunctii si tranzitii normale (dar, iar, deoarece, asa ca, totusi), nu ca un rezumat mecanic generat automat. ';
   var p1 = 'Scrie un horoscop detaliat, in limba romana, pentru zodia Sagetator (Sagittarius), pentru ' + cat.period + '. Ton cald, matur, direct, fara clisee ieftine. ';
   var p2 = 'Structura ceruta, EXACT (fiecare camp separat, text natural, propozitii complete, nu liste telegrafice): ';
-  var p3 = '1) "intro": un paragraf de introducere de 4-6 propozitii, despre tema generala a perioadei. ';
-  var p4 = '2) "areas": patru obiecte, fiecare cu "text" (4-5 propozitii, dezvoltat, cu exemple concrete si context, nu doar o idee generala) si "tip" (un sfat practic, concret, o singura propozitie, actionabila) pentru: dragoste, finante, cariera, familie. ';
+  var p3 = '1) "intro": un paragraf de introducere de 3-4 propozitii, despre tema generala a perioadei. ';
+  var p4 = '2) "areas": patru obiecte, fiecare cu "text" (3-4 propozitii, cu un exemplu concret) si "tip" (un sfat practic, concret, o singura propozitie, actionabila) pentru: dragoste, finante, cariera, familie. ';
   var p5 = '3) "lesson": o propozitie sau doua, o lectie de viata, ton reflexiv. ';
   var p6 = '4) "advice": o propozitie sau doua, un sfat practic pentru perioada respectiva. ';
   var p7 = '5) "affirmation": o afirmatie la persoana intai (Imi..., Aleg..., Am...), o singura propozitie. ';
   var p8 = '6) "scores": un numar de la 1 la 10 (poate avea o zecimala, ex 9.5) pentru dragoste, finante, cariera, familie, energie. ';
   var p9 = '7) "question": o intrebare reflexiva scurta, pentru cititor, legata de tema zilei. ';
   var p9b = '7b) "keepThought": o singura propozitie foarte scurta (max 15 cuvinte), memorabila, gen citat de retinut, ton inspirational, potrivita pentru a fi distribuita separat. ';
-  var p10 = '8) "compat": compatibilitatea Sagetatorului cu fiecare din celelalte 12 zodii, PE BAZA CONTEXTULUI ASTROLOGIC DE MAI SUS (faza lunii si tranzitele active enumerate). Pentru fiecare zodie da: "pct" (procent 30-98), "msg" (mesaj scurt, max 14 cuvinte, care mentioneaza explicit, macar pentru cateva zodii, cum influenteaza faza lunii sau tranzitul activ relatia cu acea zodie, fara sa repete acelasi tipar de propozitie la toate), "provocari" (max 8 cuvinte, ce anume ar putea crea friciune azi), "comunicare" (max 8 cuvinte, cum curge dialogul azi), "energie" (un singur cuvant: Scazuta, Moderata sau Ridicata), "sfat" (un sfat practic, actionabil, o singura propozitie scurta, pentru relatia cu acea zodie azi). ';
+  var p10 = '8) "compat": compatibilitatea Sagetatorului cu fiecare din celelalte 12 zodii, PE BAZA CONTEXTULUI ASTROLOGIC DE MAI SUS (faza lunii si tranzitele active enumerate). Pentru fiecare zodie da: "pct" (procent 30-98), "msg" (mesaj scurt, max 10 cuvinte, care mentioneaza explicit, macar pentru cateva zodii, cum influenteaza faza lunii sau tranzitul activ relatia cu acea zodie, fara sa repete acelasi tipar de propozitie la toate), "provocari" (max 6 cuvinte, ce anume ar putea crea friciune azi), "comunicare" (max 6 cuvinte, cum curge dialogul azi), "energie" (un singur cuvant: Scazuta, Moderata sau Ridicata), "sfat" (max 10 cuvinte, un sfat practic, actionabil, pentru relatia cu acea zodie azi). ';
   var p11 = 'Raspunde DOAR cu JSON valid, fara text suplimentar, fara markdown, exact in acest format: ';
   var schema = '{"intro":"...","areas":{"dragoste":{"text":"...","tip":"..."},"finante":{"text":"...","tip":"..."},"cariera":{"text":"...","tip":"..."},"familie":{"text":"...","tip":"..."}},"lesson":"...","advice":"...","affirmation":"...","scores":{"dragoste":NUMAR,"finante":NUMAR,"cariera":NUMAR,"familie":NUMAR,"energie":NUMAR},"question":"...","keepThought":"...","compat":{';
   schema += SIGNS.map(function(s){ return '"' + s + '":{"pct":NUMAR_30_98,"msg":"...","provocari":"...","comunicare":"...","energie":"...","sfat":"..."}'; }).join(',');
@@ -206,7 +206,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        max_tokens: 3200,
+        max_tokens: 2200,
         messages: [{ role: 'user', content: buildPrompt(cat) }]
       })
     });
