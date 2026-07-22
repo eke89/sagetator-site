@@ -73,12 +73,9 @@ function buildPrompt(cat) {
   var p8 = '6) "scores": un numar de la 1 la 10 (poate avea o zecimala, ex 9.5) pentru dragoste, finante, cariera, familie, energie. ';
   var p9 = '7) "question": o intrebare reflexiva scurta, pentru cititor, legata de tema zilei. ';
   var p9b = '7b) "keepThought": o singura propozitie foarte scurta (max 15 cuvinte), memorabila, gen citat de retinut, ton inspirational, potrivita pentru a fi distribuita separat. ';
-  var p10 = '8) "compat": compatibilitatea Sagetatorului cu fiecare din celelalte 12 zodii, PE BAZA CONTEXTULUI ASTROLOGIC DE MAI SUS (faza lunii si tranzitele active enumerate). Pentru fiecare zodie da: "pct" (procent 30-98), "msg" (mesaj scurt, max 10 cuvinte, care mentioneaza explicit, macar pentru cateva zodii, cum influenteaza faza lunii sau tranzitul activ relatia cu acea zodie, fara sa repete acelasi tipar de propozitie la toate), "provocari" (max 6 cuvinte, ce anume ar putea crea friciune azi), "comunicare" (max 6 cuvinte, cum curge dialogul azi), "energie" (un singur cuvant: Scazuta, Moderata sau Ridicata), "sfat" (max 10 cuvinte, un sfat practic, actionabil, pentru relatia cu acea zodie azi). ';
   var p11 = 'Raspunde DOAR cu JSON valid, fara text suplimentar, fara markdown, exact in acest format: ';
-  var schema = '{"intro":"...","areas":{"dragoste":{"text":"...","tip":"..."},"finante":{"text":"...","tip":"..."},"cariera":{"text":"...","tip":"..."},"familie":{"text":"...","tip":"..."}},"lesson":"...","advice":"...","affirmation":"...","scores":{"dragoste":NUMAR,"finante":NUMAR,"cariera":NUMAR,"familie":NUMAR,"energie":NUMAR},"question":"...","keepThought":"...","compat":{';
-  schema += SIGNS.map(function(s){ return '"' + s + '":{"pct":NUMAR_30_98,"msg":"...","provocari":"...","comunicare":"...","energie":"...","sfat":"..."}'; }).join(',');
-  schema += '}}';
-  return p0 + pStyle + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p9b + p10 + p11 + schema;
+  var schema = '{"intro":"...","areas":{"dragoste":{"text":"...","tip":"..."},"finante":{"text":"...","tip":"..."},"cariera":{"text":"...","tip":"..."},"familie":{"text":"...","tip":"..."}},"lesson":"...","advice":"...","affirmation":"...","scores":{"dragoste":NUMAR,"finante":NUMAR,"cariera":NUMAR,"familie":NUMAR,"energie":NUMAR},"question":"...","keepThought":"..."}';
+  return p0 + pStyle + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p9b + p11 + schema;
 }
 
 function todayKey() {
@@ -209,7 +206,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        max_tokens: 2200,
+        max_tokens: 1400,
         messages: [{ role: 'user', content: buildPrompt(cat) }]
       })
     });
