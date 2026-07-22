@@ -92,21 +92,15 @@ function todayKey() {
 }
 
 function getConfiguredStore() {
-  // Prefer Netlify's automatic Blobs context — it's provided natively at runtime for any
-  // function actually deployed on Netlify, and is always correctly scoped to this exact site.
-  // Manual siteID/token are only needed for tools running OUTSIDE Netlify's own infrastructure
-  // (e.g. a local script) — using them here risks silent failures if they ever go stale or
-  // point at the wrong site, which would make every single request regenerate from scratch.
-  try {
-    return getStore('sagetator-readings');
-  } catch (e) {
-    var siteID = process.env.NETLIFY_SITE_ID;
-    var token = process.env.NETLIFY_TOKEN;
-    if (siteID && token) {
-      return getStore({ name: 'sagetator-readings', siteID: siteID, token: token });
-    }
-    throw e;
+  // Confirmed by direct testing: this site's functions do NOT have Netlify's automatic
+  // Blobs context available, so manual credentials are required. Use them directly.
+  var siteID = process.env.NETLIFY_SITE_ID;
+  var token = process.env.NETLIFY_TOKEN;
+  if (siteID && token) {
+    return getStore({ name: 'sagetator-readings', siteID: siteID, token: token });
   }
+  // fall back to automatic context only if manual credentials aren't set at all
+  return getStore('sagetator-readings');
 }
 
 exports.handler = async (event) => {
