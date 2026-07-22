@@ -1041,8 +1041,6 @@ body.light .area-icon{color:#8a8f96;}
   transition:all .25s ease;
 }
 .share-btn:hover{border-color:var(--gold); color:var(--gold);}
-#listen-icon{color:var(--gold); font-size:10px; margin-right:2px;}
-.share-btn:hover #listen-icon{color:var(--gold-bright);}
 .share-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 
 .return-note{
@@ -1663,7 +1661,7 @@ footer div:last-child{margin-bottom:0;}
 
     <div class="btn-row">
       <button class="share-btn" id="share-btn">Trimite unui prieten</button>
-      <button class="share-btn" id="listen-btn"><span id="listen-icon">▶</span> Ascultă</button>
+
       <button class="share-btn" id="share-image-btn">🖼 Distribuie ca imagine</button>
     </div>
 
@@ -2428,7 +2426,14 @@ function renderCalendar(){
 async function tryFetchAIReading(tab, fresh){
   try{
     const url = `/.netlify/functions/get-reading?tab=${tab}${fresh ? '&fresh=1' : ''}`;
-    const response = await fetch(url);
+    const controller = new AbortController();
+    // never wait more than this for a normal page load — if the server hasn't
+    // answered by then (usually because it's generating live, not serving from cache),
+    // give up and show the instant local fallback instead of leaving the page stuck
+    const timeoutMs = fresh ? 45000 : 3500;
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
     if(!response.ok) return null;
     const parsed = await response.json();
     if(!parsed.intro || !parsed.areas || !parsed.scores) return null;
@@ -2785,8 +2790,7 @@ document.querySelectorAll('nav.tabs button').forEach(btn=>{
     btn.classList.add('active');
     currentTab = btn.dataset.tab;
     document.getElementById('extra-panel').classList.remove('open');
-    if('speechSynthesis' in window) window.speechSynthesis.cancel();
-    if(typeof setListenState === 'function') setListenState('idle');
+
     const archP = document.getElementById('archive-panel');
     const archB = document.getElementById('archive-btn');
     if(archP){ archP.style.display = 'none'; }
@@ -3422,68 +3426,6 @@ function initFeedbackButtons(){
   down.onclick = () => vote('down');
 }
 
-// ---------- "Ascultă citirea": native browser text-to-speech, no external API ----------
-// states: idle ("▶ Ascultă") -> playing ("⏸ Pauză") -> paused ("↻ Reia") -> back to playing, or idle again once finished
-let speechState = 'idle';
-const listenBtn = document.getElementById('listen-btn');
-const listenIcon = document.getElementById('listen-icon');
-
-function setListenState(state){
-  speechState = state;
-  if(!listenIcon || !listenBtn) return;
-  if(state === 'idle'){ listenIcon.textContent = '▶'; listenBtn.lastChild.textContent = ' Ascultă'; }
-  if(state === 'playing'){ listenIcon.textContent = '⏸'; listenBtn.lastChild.textContent = ' Pauză'; }
-  if(state === 'paused'){ listenIcon.textContent = '↻'; listenBtn.lastChild.textContent = ' Reia'; }
-}
-
-if(listenBtn && 'speechSynthesis' in window){
-  // Chrome (and others) often return an empty voice list on the very first call —
-  // voices load asynchronously, so "warm up" the list as early as possible.
-  window.speechSynthesis.getVoices();
-  window.speechSynthesis.addEventListener('voiceschanged', ()=>{ window.speechSynthesis.getVoices(); });
-
-  listenBtn.addEventListener('click', ()=>{
-    if(speechState === 'idle'){
-      const text = lastReadingText || document.getElementById('reading-text').textContent;
-      if(!text){
-        showToast('Citirea nu s-a încărcat încă, mai așteaptă puțin.');
-        return;
-      }
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-
-      // use a Romanian voice ONLY if the device actually has one installed —
-      // forcing lang="ro-RO" with no matching voice makes some devices fail outright
-      // instead of falling back gracefully, which is what caused "nu se poate reda"
-      const voices = window.speechSynthesis.getVoices();
-      const roVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ro'));
-      if(roVoice){
-        utterance.voice = roVoice;
-        utterance.lang = roVoice.lang;
-      }
-      // if no Romanian voice exists, we deliberately leave lang/voice unset so the
-      // device's default voice speaks it — wrong accent, but it actually plays.
-
-      utterance.onend = () => setListenState('idle');
-      utterance.onerror = () => {
-        setListenState('idle');
-        showToast(roVoice
-          ? 'Nu am putut reda vocea acum. Încearcă din nou.'
-          : 'Telefonul tău nu are o voce română instalată, iar vocea implicită a eșuat și ea.');
-      };
-      window.speechSynthesis.speak(utterance);
-      setListenState('playing');
-    } else if(speechState === 'playing'){
-      window.speechSynthesis.pause();
-      setListenState('paused');
-    } else if(speechState === 'paused'){
-      window.speechSynthesis.resume();
-      setListenState('playing');
-    }
-  });
-} else if(listenBtn){
-  listenBtn.style.display = 'none';
-}
 
 // ---------- shareable image card: draws the day's reading onto a canvas, ready to post ----------
 function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
