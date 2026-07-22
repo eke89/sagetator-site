@@ -2314,6 +2314,34 @@ function getMoonPhase(date){
   return {name:'Lună descrescătoare', glyph:'🌘'};
 }
 
+// today's real astrological influence: moon phase + Mercury retrograde window —
+// used by the "why this score?" tap-to-explain feature on each area's ring
+function getDailyAstroModifiers(){
+  const moon = getMoonPhase(new Date());
+  const now = new Date();
+  const mercuryRetro = now >= new Date(2026,5,29) && now <= new Date(2026,6,23);
+
+  const notes = [];
+  if(moon.name === 'Lună Plină'){
+    notes.push(`azi e Lună Plină (${moon.glyph}), iar emoțiile sunt mai intense`);
+  } else if(moon.name === 'Lună Nouă'){
+    notes.push(`azi e Lună Nouă (${moon.glyph}), un moment bun pentru începuturi`);
+  } else if(moon.name === 'Primul pătrar' || moon.name === 'Ultimul pătrar'){
+    notes.push(`faza lunară de azi (${moon.glyph}) ascute comunicarea`);
+  }
+  if(mercuryRetro){
+    notes.push('Mercur e retrograd, ceea ce îngreunează puțin comunicarea');
+  }
+
+  let note = '';
+  if(notes.length === 1){
+    note = notes[0].charAt(0).toUpperCase() + notes[0].slice(1) + '.';
+  } else if(notes.length === 2){
+    note = notes[0].charAt(0).toUpperCase() + notes[0].slice(1) + ', iar în plus ' + notes[1] + '.';
+  }
+  return {note};
+}
+
 const goodForPool = [
   "decizii, drumuri scurte, conversații sincere",
   "începuturi, negocieri, exerciții fizice",
