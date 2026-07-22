@@ -2322,20 +2322,10 @@ async function renderCompat(){
     }
   }catch(e){ /* fall through */ }
 
-  // today's cache is stale (saved before compatibility existed) or unreachable —
-  // ask for one live, uncached generation so compatibility is still real and current,
-  // without touching the already-cached official reading
-  try{
-    const freshRes = await fetch('/.netlify/functions/get-reading?tab=zi&fresh=1');
-    if(freshRes.ok){
-      const freshData = await freshRes.json();
-      if(freshData && freshData.compat){
-        applyCompatData(freshData.compat);
-        return;
-      }
-    }
-  }catch(e){ /* fall through to local calculation */ }
-
+  // today's cache doesn't have compatibility yet (stale cache, or unreachable) — don't wait
+  // on a brand-new live generation just for this, that would make every page load slow.
+  // Use the fast, local, date-based calculation instead; it self-heals automatically once
+  // the scheduled function regenerates today's cache with compatibility included.
   renderCompatLocal();
 }
 
