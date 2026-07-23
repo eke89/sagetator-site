@@ -2452,12 +2452,14 @@ function renderCalendar(){
 
 // ---------- live reading via Claude API, with offline fallback ----------
 async function tryFetchAIReading(tab, fresh){
+  // normal reads: plain static file, generated nightly by GitHub Actions — fast,
+  // reliable, no Netlify Blobs involved at all, cache-busted so it's never stale
+  // fresh=1 (the "Oracolul" bonus button): still a real live generation call
+  const url = fresh
+    ? `/.netlify/functions/get-reading?tab=${tab}&fresh=1`
+    : `/data/${tab}.json?v=${Date.now()}`;
   try{
-    const url = `/.netlify/functions/get-reading?tab=${tab}${fresh ? '&fresh=1' : ''}`;
     const controller = new AbortController();
-    // never wait more than this for a normal page load — if the server hasn't
-    // answered by then (usually because it's generating live, not serving from cache),
-    // give up and show the instant local fallback instead of leaving the page stuck
     const timeoutMs = fresh ? 45000 : 4000;
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     const response = await fetch(url, { signal: controller.signal });
@@ -2528,8 +2530,11 @@ async function renderReading(){
 
       let parsed = null;
       try{
-        const res = await fetch(`/.netlify/functions/get-reading?tab=zi&date=${yesterdayKey()}`);
-        if(res.ok) parsed = await res.json();
+        const res = await fetch(`/data/archive-zi.json?v=${Date.now()}`);
+        if(res.ok){
+          const archive = await res.json();
+          parsed = (archive || []).find(entry => entry.date === yesterdayKey()) || null;
+        }
       }catch(e){ /* network/backend unavailable */ }
 
       if(parsed && parsed.intro){
@@ -3271,10 +3276,10 @@ async function renderWeeklyStat(){
   const el = document.getElementById('weekly-stat');
   if(!el) return;
   try{
-    const res = await fetch('/.netlify/functions/get-reading?tab=zi&list=1');
-    if(!res.ok) return;
-    const data = await res.json();
-    const items = (data.items || []).filter(it => it.scores && typeof it.scores.energie === 'number');
+    const res = await fetch(`/data/archive-zi.json?v=${Date.now()}`);
+    if(!res.ok){ el.style.display = 'none'; return; }
+    const archive = await res.json();
+    const items = (archive || []).filter(it => it.scores && typeof it.scores.energie === 'number');
     if(items.length < 2){ el.style.display = 'none'; return; } // not enough history yet to be meaningful
 
     const recent = items.slice(0, 7);
