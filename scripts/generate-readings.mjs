@@ -97,7 +97,7 @@ async function generateOne(tab) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-5',
-      max_tokens: 2000,
+      max_tokens: 4096,
       messages: [{ role: 'user', content: buildPrompt(cat) }]
     })
   });
