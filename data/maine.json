@@ -1,0 +1,34 @@
+{
+  "intro": "Ziua de azi te provoacă să alegi între ceea ce este confortabil și ceea ce te ajută cu adevărat să evoluezi. Ai acumulat destulă experiență ca să faci diferența dintre lucrurile care doar îți consumă energia și cele care îți schimbă direcția în bine. Nu te lăsa influențat de ritmul altora, progresul tău vine din consecvență, nu din comparație.",
+  "areas": {
+    "dragoste": {
+      "text": "Relațiile se întăresc când lași deoparte nevoia de a avea dreptate și alegi să înțelegi perspectiva celuilalt.",
+      "tip": "Exprimă-ți aprecierea față de persoana dragă, azi."
+    },
+    "finante": {
+      "text": "E o zi bună pentru planificare, poți identifica o modalitate de a-ți optimiza bugetul.",
+      "tip": "Notează un obiectiv financiar pentru următoarele trei luni."
+    },
+    "cariera": {
+      "text": "Poți demonstra că gestionezi responsabilități importante cu calm.",
+      "tip": "Prioritizează activitatea cu cel mai mare impact azi."
+    },
+    "familie": {
+      "text": "Răbdarea și disponibilitatea de a asculta fac diferența acasă.",
+      "tip": "Petrece timp de calitate cu cei dragi, fără grabă."
+    }
+  },
+  "lesson": "Adevărata încredere nu apare când toate merg perfect, ci atunci când continui să înaintezi în incertitudine.",
+  "advice": "Investește-ți timpul în ceea ce construiește viitorul pe care ți-l dorești.",
+  "affirmation": "Îmi folosesc curajul și claritatea pentru a crea oportunități care mă apropie de cea mai bună versiune a mea.",
+  "scores": {
+    "dragoste": 9,
+    "finante": 8.5,
+    "cariera": 9,
+    "familie": 8.5,
+    "energie": 9
+  },
+  "question": "Ce alegere poți face azi pentru a investi mai mult în viitorul tău decât în confortul de moment?",
+  "keepThought": "Uneori, cel mai curajos pas este să renunți la ceea ce nu îți mai servește.",
+  "ts": 1784786775736
+}
