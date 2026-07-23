@@ -1,0 +1,39 @@
+name: Generate daily readings
+
+on:
+  schedule:
+    # 22:00 UTC daily — midnight in Romania (winter, UTC+2), 1am during summer DST (UTC+3)
+    - cron: '0 22 * * *'
+  workflow_dispatch: {}
+    # ^ lets you trigger this manually from the GitHub Actions tab, any time, for testing
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate today's readings
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-readings.mjs
+
+      - name: Commit and push updated data
+        run: |
+          git config user.name "sagetator-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update daily readings ($(date -u +%Y-%m-%d))"
+            git push
+          fi
