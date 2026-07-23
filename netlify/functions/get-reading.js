@@ -199,6 +199,15 @@ exports.handler = async (event) => {
     }
   }
 
+  // normal page loads never wait on live generation — only fresh=1 (the "Oracolul"
+  // bonus button, where waiting is expected) or the scheduled function actually generate.
+  // this guarantees every regular visitor gets an instant response, either from cache
+  // or this quick "not ready yet" signal, so the client can fall back to local content
+  // right away instead of waiting 20+ seconds on a live AI call.
+  if (!isFresh) {
+    return { statusCode: 404, body: JSON.stringify({ error: 'not cached yet' }) };
+  }
+
   var cat = CAT_MAP[tab];
   var apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
