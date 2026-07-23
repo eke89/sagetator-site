@@ -100,6 +100,15 @@ function getConfiguredStore() {
   return getStore('sagetator-readings');
 }
 
+// races a promise against a timeout so a slow/hanging Blobs call can never
+// eat into the platform's own hard function timeout unnoticed
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timed out after ' + ms + 'ms')), ms))
+  ]);
+}
+
 exports.handler = async (event) => {
   var params = event.queryStringParameters || {};
   var tab = params.tab || 'zi';
@@ -114,7 +123,7 @@ exports.handler = async (event) => {
   // ---------- archive: list past cached readings for this tab ----------
   if (params.list === '1') {
     try {
-      var listResult = await store.list({ prefix: tab + ':' });
+      var listResult = await withTimeout(store.list({ prefix: tab + ':' }), 5000);
       var blobs = [];
       if (listResult && Array.isArray(listResult.blobs)) {
         blobs = listResult.blobs;
@@ -134,7 +143,7 @@ exports.handler = async (event) => {
       var results = [];
       for (var i = 0; i < items.length; i++) {
         try {
-          var val = await store.get(items[i].key, { type: 'json' });
+          var val = await withTimeout(store.get(items[i].key, { type: 'json' }), 4000);
           if (val) {
             results.push({
               date: items[i].day,
@@ -161,7 +170,7 @@ exports.handler = async (event) => {
   if (params.date) {
     var archiveKey = tab + ':' + params.date;
     try {
-      var archived = await store.get(archiveKey, { type: 'json' });
+      var archived = await withTimeout(store.get(archiveKey, { type: 'json' }), 4000);
       if (archived) {
         return {
           statusCode: 200,
@@ -177,7 +186,7 @@ exports.handler = async (event) => {
 
   if (!isFresh) {
     try {
-      var cached = await store.get(cacheKey, { type: 'json' });
+      var cached = await withTimeout(store.get(cacheKey, { type: 'json' }), 1200);
       if (cached) {
         return {
           statusCode: 200,
@@ -186,7 +195,7 @@ exports.handler = async (event) => {
         };
       }
     } catch (e) {
-      console.error('cache read failed for', cacheKey, ':', String(e));
+      console.error('cache read failed or timed out for', cacheKey, ':', String(e));
     }
   }
 
@@ -197,19 +206,27 @@ exports.handler = async (event) => {
   }
 
   try {
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-5',
-        max_tokens: 1400,
-        messages: [{ role: 'user', content: buildPrompt(cat) }]
-      })
-    });
+    var controller = new AbortController();
+    var abortTimer = setTimeout(function () { controller.abort(); }, 20000);
+    var response;
+    try {
+      response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          max_tokens: 2000,
+          messages: [{ role: 'user', content: buildPrompt(cat) }]
+        }),
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(abortTimer);
+    }
 
     if (!response.ok) {
       var errText = await response.text();
@@ -219,7 +236,23 @@ exports.handler = async (event) => {
     var data = await response.json();
     var text = (data.content || []).map(function (b) { return b.text || ''; }).join('').trim();
     var clean = text.replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(clean);
+    var stopReason = data.stop_reason || 'unknown';
+    var parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch (parseErr) {
+      return {
+        statusCode: 502,
+        body: JSON.stringify({
+          error: 'JSON parse failed',
+          detail: String(parseErr),
+          stop_reason: stopReason,
+          text_length: clean.length,
+          text_end: clean.slice(-300),
+          text_start: clean.slice(0, 200)
+        })
+      };
+    }
 
     if (!parsed.intro || !parsed.areas || !parsed.scores) {
       return { statusCode: 502, body: JSON.stringify({ error: 'malformed generation' }) };
@@ -228,7 +261,13 @@ exports.handler = async (event) => {
     parsed.ts = Date.now();
 
     if (!isFresh) {
-      try { await store.setJSON(cacheKey, parsed); } catch (e) { console.error('cache write failed for', cacheKey, ':', String(e)); }
+      // bounded wait: cache it if we can within a few seconds, but never let a slow/hanging
+      // write hold up the response longer than that — the reading is ready either way
+      try {
+        await withTimeout(store.setJSON(cacheKey, parsed), 1200);
+      } catch (e) {
+        console.error('cache write failed or timed out for', cacheKey, ':', String(e));
+      }
     }
 
     return {
@@ -237,6 +276,7 @@ exports.handler = async (event) => {
       body: JSON.stringify(parsed)
     };
   } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'generation failed', detail: String(e) }) };
+    var isTimeout = e && e.name === 'AbortError';
+    return { statusCode: isTimeout ? 504 : 500, body: JSON.stringify({ error: isTimeout ? 'generation timed out' : 'generation failed', detail: String(e) }) };
   }
 };
