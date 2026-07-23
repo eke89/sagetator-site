@@ -2187,7 +2187,7 @@ const calendarEvents = [
   {month:7, day:26, icon:"♄", title:"Saturn intră retrograd", impact:"mare", desc:"Saturn intră retrograd, o lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
   {month:7, day:29, icon:"🌕", title:"Lună Plină în Vărsător", impact:"foarte mare", desc:"Lună Plină în Vărsător, în aspect favorabil cu Jupiter, una dintre cele mai norocoase zile ale anului pentru noi direcții."},
   {month:8, day:3,  icon:"⚷", title:"Chiron intră retrograd", impact:"moderat", desc:"Chiron intră retrograd în Taur, un ciclu bun pentru introspecție și vindecare, în valuri, nu dintr-o dată."},
-  {month:8, day:12, icon:"☀", title:"Eclipsă parțială de Soare", impact:"foarte mare", desc:"Eclipsă parțială de Soare, un moment intens pentru începuturi, chiar dacă rezultatele nu se văd imediat."},
+  {month:8, day:12, icon:"☀", title:"Eclipsă totală de Soare", impact:"foarte mare", desc:"Eclipsă totală de Soare, un moment intens pentru începuturi, chiar dacă rezultatele nu se văd imediat."},
   {month:8, day:22, icon:"☉", title:"Soarele intră în Fecioară", impact:"mare", desc:"Soarele intră în Fecioară, cu accent pe ordine, sănătate și detalii practice, în contrast cu avântul lunii precedente."},
   {month:8, day:28, icon:"🌘", title:"Eclipsă parțială de Lună", impact:"foarte mare", desc:"Eclipsă parțială de Lună, o închidere de ciclu emoțională, bună pentru a lăsa în urmă ce nu mai servește."}
 ];
@@ -2458,7 +2458,7 @@ async function tryFetchAIReading(tab, fresh){
     // never wait more than this for a normal page load — if the server hasn't
     // answered by then (usually because it's generating live, not serving from cache),
     // give up and show the instant local fallback instead of leaving the page stuck
-    const timeoutMs = fresh ? 45000 : 3500;
+    const timeoutMs = fresh ? 45000 : 4000;
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
