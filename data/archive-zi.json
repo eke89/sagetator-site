@@ -1,5 +1,40 @@
 [
   {
+    "date": "2026-07-24",
+    "intro": "Astazi Luna gibboasa crescatoare aduce o tensiune fina intre ce ai planuit si ce simti cu adevarat ca mai trebuie ajustat, iar tu, Sagetatorule, esti chemat sa nu te grabesti spre linia de sosire doar ca sa bifezi ceva. Neptun retrograd in Berbec iti lumineaza zona pasiunilor, a iubirii si a creativitatii, aducand la suprafata iluzii vechi pe care poate le-ai purtat fara sa le observi. E o zi in care visul si realitatea cer o reconciliere onesta, nu o negare de o parte sau alta. Daca esti dispus sa privesti limpede, poti transforma o confuzie veche intr-o claritate noua si folositoare.",
+    "areas": {
+      "dragoste": {
+        "text": "In dragoste, Neptun retrograd te pune fata in fata cu o idealizare pe care ai construit-o poate fara sa realizezi, fie despre o persoana, fie despre cum ar trebui sa arate o relatie. Daca esti singur, azi poti observa ca atractia puternica fata de cineva ascunde de fapt o proiectie, nu o cunoastere reala a lui. Daca esti intr-o relatie, un partener iti poate cere azi mai multa transparenta decat esti obisnuit sa oferi, mai ales in privinta unor promisiuni facute in trecut. De exemplu, daca ai spus ca vei face ceva romantic saptamana asta si ai amanat, azi e momentul sa clarifici, nu sa te ascunzi in vag.",
+        "tip": "Spune azi un adevar mic dar clar, in loc sa lasi lucrurile in ceata frumoasa a promisiunilor neterminate."
+      },
+      "finante": {
+        "text": "Financiar, Luna gibboasa crescatoare cere o privire sobra asupra unui plan care se apropie de finalizare, poate un buget, o investitie sau o rambursare pe care ai pornit-o de curand. Nu e o zi pentru decizii impulsive de cheltuit sau investit, ci pentru verificarea detaliilor inainte de ultimul pas. Spre exemplu, daca urmeaza sa platesti un avans sau sa semnezi ceva legat de bani, reciteste azi documentul cu atentie dubla, fiindca Neptun poate ascunde o clauza sau un cost pe care nu l-ai vazut prima data. Precautia de azi iti economiseste o neplacere peste cateva saptamani.",
+        "tip": "Verifica de doua ori orice cifra inainte sa o consideri finala."
+      },
+      "cariera": {
+        "text": "La job, energia zilei favorizeaza munca de finisare, nu inceputurile noi; daca ai un proiect aproape gata, azi e ziua sa il rafinezi, nu sa il abandonezi pentru ceva mai palpitant. Poate simti tentatia sa scapi de o sarcina plictisitoare spre ceva mai creativ, dar disciplina de azi iti construieste reputatia de maine. De exemplu, daca ai un raport sau o prezentare de predat in urmatoarele zile, dedica azi timp exact acelor detalii pe care le-ai lasat la urma din lene sau plictiseala. Colegii vor observa cine termina lucrurile bine, nu doar cine incepe cu entuziasm.",
+        "tip": "Termina azi un singur lucru pe deplin, in loc sa incepi trei pe jumatate."
+      },
+      "familie": {
+        "text": "In familie, discutiile de azi pot atinge un subiect vechi legat de asteptari nespuse, poate ceva ce un parinte sau un frate a presupus despre tine fara sa iti spuna direct. E o zi buna pentru a intreba clar ce se asteapta de la tine, in loc sa ghicesti si sa te frustrezi ulterior. De exemplu, daca simti presiune legata de o vizita sau o sarbatoare care se apropie, intreaba direct cine ce isi doreste, in loc sa presupui tu totul. Claritatea de azi previne o suparare tacuta peste cateva zile.",
+        "tip": "Pune intrebarea directa pe care ai evitat-o pana acum in familie."
+      }
+    },
+    "lesson": "Uneori confuzia nu vine din lipsa de informatie, ci din refuzul de a privi ce stii deja de mult timp; azi ai ocazia sa privesti fara sa mai clipesti.",
+    "advice": "Alege azi o singura zona neclara din viata ta, romantica, financiara sau profesionala, si adu-i putina lumina concreta, in loc sa incerci sa rezolvi totul deodata.",
+    "affirmation": "Aleg sa vad limpede, chiar si atunci cand adevarul e mai putin frumos decat visul meu despre el.",
+    "scores": {
+      "dragoste": 6.5,
+      "finante": 7,
+      "cariera": 7.5,
+      "familie": 6,
+      "energie": 6.5
+    },
+    "question": "Ce adevar am evitat sa il numesc direct in ultima vreme, de teama sa nu stric o iluzie confortabila?",
+    "keepThought": "Claritatea de azi e mai valoroasa decat orice iluzie frumoasa de ieri.",
+    "ts": 1784878908911
+  },
+  {
     "date": "2026-07-23",
     "intro": "Astazi, Sagetatorule, energia zilei te invita sa rafinezi ceea ce ai construit deja, nu sa incepi lucruri noi cu capul inainte. Luna crescatoare gibboasa cere ajustari fine, o privire atenta asupra detaliilor care inca nu suna perfect, chiar daca tentatia ta naturala este sa arunci totul la aer si sa iei totul de la capat. Neptun retrograd in Berbec, un semn care rezoneaza puternic cu felul tau de a fi impulsiv si vizionar, iti aduce in fata niste vise vechi care par ceva mai neclare decat le credeai, cerandu-ti sa distingi intre curajul autentic si dorinta de a fugi de realitate. E o zi buna pentru corectii, nu pentru revolutii.",
     "areas": {
