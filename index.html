@@ -327,6 +327,14 @@ body{
   color:var(--ink-soft);
 }
 .featured-event-impact b{color:var(--gold-bright); font-weight:600;}
+.featured-event-desc{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:14.5px;
+  line-height:1.55;
+  color:var(--ink-soft);
+  margin-top:10px;
+}
 
 .ornament{
   display:flex;
@@ -2180,9 +2188,9 @@ const universePool = [
 ];
 
 
-// real July 2026 astrological events, framed for Sagittarius
+// real July-August 2026 astrological events, framed for Sagittarius
 const calendarEvents = [
-  {month:7, day:22, icon:"☉", title:"Soarele intră în Leu", impact:"mare", desc:"Soarele intră în Leu. Se activează zona ta de aventură, filosofie și expansiune, o perioadă bună pentru a îndrăzni."},
+  {month:7, day:22, endMonth:8, endDay:22, icon:"☉", title:"Soarele în Leu", impact:"mare", desc:"Soarele traversează Leul din 22 iulie până pe 22 august 2026, aducând o lună întreagă de expansiune, curaj și viziune de ansamblu pentru Săgetător. Este un tranzit prietenos, între două semne de foc, care îți amplifică nevoia de aventură, dorința de a-ți asuma riscuri calculate și tendința de a gândi mai mare decât de obicei. Poate apărea o oportunitate de călătorie, un curs sau o formare pe care ai tot amânat-o, ori pur și simplu o dorință puternică de a ieși din rutina zilnică. Folosește această energie pentru proiecte care au nevoie de încredere și optimism, dar rămâi atent să nu promiți mai mult decât poți susține, pentru că entuziasmul din această perioadă te poate face să subestimezi timpul sau resursele necesare."},
   {month:7, day:23, icon:"☿", title:"Mercur devine direct", impact:"mare", desc:"Mercur redevine direct după retrogradarea din Rac, comunicarea și proiectele amânate încep să avanseze."},
   {month:7, day:26, icon:"♄", title:"Saturn intră retrograd", impact:"mare", desc:"Saturn intră retrograd, o lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
   {month:7, day:29, icon:"🌕", title:"Lună Plină în Vărsător", impact:"foarte mare", desc:"Lună Plină în Vărsător, în aspect favorabil cu Jupiter, una dintre cele mai norocoase zile ale anului pentru noi direcții."},
@@ -2422,19 +2430,29 @@ function renderCalendar(){
   document.getElementById('calendar-title').textContent = `Ce urmează pe cer`;
 
   const upcoming = calendarEvents
-    .filter(ev => (ev.month * 100 + ev.day) >= todayKeyNum)
+    .filter(ev => {
+      const endKey = (ev.endMonth && ev.endDay) ? (ev.endMonth*100+ev.endDay) : (ev.month*100+ev.day);
+      return endKey >= todayKeyNum;
+    })
     .sort((a, b) => (a.month*100+a.day) - (b.month*100+b.day))
     .slice(0, 5);
 
   if(upcoming.length){
     const featured = upcoming[0];
+    const startKey = featured.month*100 + featured.day;
+    const endKey = (featured.endMonth && featured.endDay) ? (featured.endMonth*100+featured.endDay) : startKey;
+    const isActiveNow = startKey <= todayKeyNum && todayKeyNum <= endKey;
     const isToday = featured.month === todayMonth && featured.day === todayNum;
     const RO_LUNI_FULL_EV = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
-    const featuredDateLabel = isToday ? 'azi' : `${featured.day} ${RO_LUNI_FULL_EV[featured.month-1]} 2026`;
+    let featuredDateLabel;
+    if(isToday) featuredDateLabel = 'azi';
+    else if(isActiveNow) featuredDateLabel = `activ acum · până pe ${featured.endDay} ${RO_LUNI_FULL_EV[featured.endMonth-1]}`;
+    else featuredDateLabel = `${featured.day} ${RO_LUNI_FULL_EV[featured.month-1]} 2026`;
     featuredEl.innerHTML = `
-      <div class="featured-event-label">Eveniment major: ${featuredDateLabel}</div>
+      <div class="featured-event-label">${isActiveNow ? 'Tranzit activ acum' : 'Eveniment major'}: ${featuredDateLabel}</div>
       <div class="featured-event-title">${featured.icon} ${featured.title}</div>
-      <div class="featured-event-impact">Impact: <b>${featured.impact}</b></div>`;
+      <div class="featured-event-impact">Impact: <b>${featured.impact}</b></div>
+      <div class="featured-event-desc">${featured.desc}</div>`;
   } else {
     featuredEl.innerHTML = '';
   }
@@ -3693,15 +3711,22 @@ async function subscribeToPush(){
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     });
-    await fetch('/.netlify/functions/push-subscribe', {
+    const res = await fetch('/.netlify/functions/push-subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ subscription: sub.toJSON() })
     });
+    if(!res.ok) throw new Error('save failed: ' + res.status);
     showToast('Te anunț zilnic când e gata citirea ✦');
     setNotifBtnState();
   }catch(e){
     showToast('Nu am putut activa notificările acum.');
+    try{
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if(sub) await sub.unsubscribe();
+    }catch(e2){}
+    setNotifBtnState();
   }
 }
 
