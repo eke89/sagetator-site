@@ -1396,7 +1396,6 @@ footer div:last-child{margin-bottom:0;}
   <div class="hero-club-line reveal" style="animation-delay:.3s">Ai intrat în universul ✨️Sagittarius Decoded✨️</div>
   <div class="streak-badge reveal" id="streak-badge" style="animation-delay:.32s; display:none;"></div>
   <button class="install-btn" id="install-btn" style="display:none;">📲 Adaugă pe ecranul principal</button>
-  <button class="install-btn" id="notif-btn" style="display:none; margin-top:8px;">🔔 Amintește-mi zilnic</button>
 
   <div class="ornament reveal" style="animation-delay:.3s"><span>✦</span></div>
 
@@ -3663,109 +3662,10 @@ window.addEventListener('appinstalled', ()=>{
   }, 8000);
 })();
 
-// ---------- push notifications: daily reminder, with a real cancel option ----------
-const VAPID_PUBLIC_KEY = 'BPtWYlN6Eww7RifA7jg0UtimtKXBwEqC1QBFq3O6fyF5i8yfGOZn5UdT3tilsiLclI-jA9WmmouMmXj9hyP_hgs';
-
-function urlBase64ToUint8Array(base64String){
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i){
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
-async function setNotifBtnState(){
-  const notifBtn = document.getElementById('notif-btn');
-  if(!notifBtn) return;
-  if(!('serviceWorker' in navigator) || !('PushManager' in window)){
-    notifBtn.style.display = 'none';
-    return;
-  }
-  notifBtn.style.display = '';
-  try{
-    const reg = await navigator.serviceWorker.ready;
-    const existingSub = await reg.pushManager.getSubscription();
-    if(existingSub){
-      notifBtn.textContent = '🔕 Oprește notificările';
-      notifBtn.dataset.state = 'subscribed';
-    } else {
-      notifBtn.textContent = '🔔 Amintește-mi zilnic';
-      notifBtn.dataset.state = 'unsubscribed';
-    }
-  }catch(e){ notifBtn.style.display = 'none'; }
-}
-
-async function subscribeToPush(){
-  const notifBtn = document.getElementById('notif-btn');
-  const permission = await Notification.requestPermission();
-  if(permission !== 'granted'){
-    showToast('Ai blocat notificările — le poți activa oricând din setările browserului.');
-    return;
-  }
-  try{
-    const reg = await navigator.serviceWorker.ready;
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-    });
-    const res = await fetch('/.netlify/functions/push-subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subscription: sub.toJSON() })
-    });
-    if(!res.ok) throw new Error('save failed: ' + res.status);
-     showToast('Te anunț zilnic când e gata citirea ✦');
-    setNotifBtnState();
-  }catch(e){
-    showToast('Eroare: ' + (e && e.message ? e.message : String(e)));
-    try{
-      const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.getSubscription();
-      if(sub) await sub.unsubscribe();
-    }catch(e2){}
-    setNotifBtnState();
-  }
-}
-
-async function unsubscribeFromPush(){
-  try{
-    const reg = await navigator.serviceWorker.ready;
-    const sub = await reg.pushManager.getSubscription();
-    if(sub){
-      const endpoint = sub.endpoint;
-      await sub.unsubscribe();
-      await fetch('/.netlify/functions/push-subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'unsubscribe', endpoint })
-      });
-    }
-    showToast('Notificările au fost oprite.');
-    setNotifBtnState();
-  }catch(e){
-    showToast('Nu am putut opri notificările acum.');
-  }
-}
-
-const notifBtn = document.getElementById('notif-btn');
-if(notifBtn){
-  notifBtn.addEventListener('click', ()=>{
-    if(notifBtn.dataset.state === 'subscribed'){
-      unsubscribeFromPush();
-    } else {
-      subscribeToPush();
-    }
-  });
-}
-
 // ---------- PWA: register the minimal service worker (installability only, no caching) ----------
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('/service-worker.js')
-      .then(()=>{ if(typeof setNotifBtnState === 'function') setNotifBtnState(); })
       .catch(()=>{ /* not critical if it fails */ });
   });
 }
