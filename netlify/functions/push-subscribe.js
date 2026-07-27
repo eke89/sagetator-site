@@ -33,10 +33,10 @@ exports.handler = async (event) => {
       }
 
       return { statusCode: 400, body: JSON.stringify({ error: 'invalid payload' }) };
-    } catch (e) {
-      return { statusCode: 500, body: JSON.stringify({ error: 'server error', detail: String(e) }) };
+   } catch (e) {
+      console.error('push-subscribe error:', e);
+      return { statusCode: 500, body: JSON.stringify({ error: 'server error', detail: String(e), stack: e && e.stack }) };
     }
-  }
 
   return { statusCode: 405, body: JSON.stringify({ error: 'method not allowed' }) };
 };
