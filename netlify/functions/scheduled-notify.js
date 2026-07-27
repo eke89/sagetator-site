@@ -3,11 +3,6 @@ const { getStore } = require('@netlify/blobs');
 const webpush = require('web-push');
 
 function getSubsStore() {
-  var siteID = process.env.NETLIFY_SITE_ID;
-  var token = process.env.NETLIFY_TOKEN;
-  if (siteID && token) {
-    return getStore({ name: 'sagetator-push-subs', siteID: siteID, token: token });
-  }
   return getStore('sagetator-push-subs');
 }
 
