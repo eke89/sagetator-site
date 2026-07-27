@@ -3717,10 +3717,10 @@ async function subscribeToPush(){
       body: JSON.stringify({ subscription: sub.toJSON() })
     });
     if(!res.ok) throw new Error('save failed: ' + res.status);
-    showToast('Te anunț zilnic când e gata citirea ✦');
+     showToast('Te anunț zilnic când e gata citirea ✦');
     setNotifBtnState();
   }catch(e){
-    showToast('Nu am putut activa notificările acum.');
+    showToast('Eroare: ' + (e && e.message ? e.message : String(e)));
     try{
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.getSubscription();
