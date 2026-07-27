@@ -1,6 +1,6 @@
 {
-  "name": "Săgetător · Horoscop by Sagittarius Decoded",
-  "short_name": "Săgetător",
+  "name": "Sagittarius Decoded",
+  "short_name": "Sagittarius Decoded",
   "description": "Horoscop zilnic pentru Săgetător, generat live pe baza tranzitelor astrologice reale.",
   "start_url": "/",
   "display": "standalone",
