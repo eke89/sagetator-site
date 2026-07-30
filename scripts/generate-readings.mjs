@@ -52,20 +52,19 @@ function todayKey() {
   return `${map.year}-${map.month}-${map.day}`;
 }
 
-function buildAstroContext() {
-  const now = new Date();
-  const moon = getMoonPhaseInfo(now);
-  const transits = getActiveTransits(now);
-  const dateStr = todayKey();
-  let line = `Data de azi: ${dateStr}. Faza lunii: ${moon}.`;
+function buildAstroContext(targetDate) {
+  const moon = getMoonPhaseInfo(targetDate);
+  const transits = getActiveTransits(targetDate);
+  const dateStr = targetDate.toISOString().slice(0,10);
+  let line = `Data: ${dateStr}. Faza lunii: ${moon}.`;
   line += transits.length
-    ? ` Tranzite active acum: ${transits.join(', ')}.`
-    : ' Niciun tranzit retrograd major activ in acest moment.';
+    ? ` Tranzite active in acea perioada: ${transits.join(', ')}.`
+    : ' Niciun tranzit retrograd major activ in acea perioada.';
   return line;
 }
 
-function buildPrompt(cat) {
-  const astro = buildAstroContext();
+function buildPrompt(cat, targetDate) {
+  const astro = buildAstroContext(targetDate);
   const p0 = `Context astrologic real, foloseste-l ca sa faci continutul specific acestei zile, nu generic: ${astro} `;
   const pStyle = 'Reguli stricte de stil: NU folosi niciodata liniuta lunga "\u2014" (em-dash) in text; foloseste virgula, punct sau punct si virgula in loc, oriunde ai fi tentat sa pui o liniuta intre doua idei. Scrie cu diacritice corecte si ortografie corecta in limba romana peste tot. Scrie ca un astrolog cu experienta, care a studiat mai multe traditii si scoli de astrologie de-a lungul timpului si reinterpreteaza acea intelepciune in cuvinte proprii, originale; nu mentiona, nu cita si nu face referire explicita la nicio sursa, carte, site sau autor anume. Scrie in propozitii complete, curgatoare, naturale, ca un om care vorbeste, nu ca o lista telegrafica de fragmente lipite intre ele. ';
   const p1 = `Scrie un horoscop detaliat, in limba romana, pentru zodia Sagetator (Sagittarius), pentru ${cat.period}. Ton cald, matur, direct, fara clisee ieftine. `;
@@ -84,83 +83,4 @@ function buildPrompt(cat) {
 }
 
 async function generateOne(tab) {
-  const cat = CAT_MAP[tab];
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-5',
-      max_tokens: 4096,
-      messages: [{ role: 'user', content: buildPrompt(cat) }]
-    })
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Anthropic API error for ${tab}: ${response.status} ${errText}`);
-  }
-
-  const data = await response.json();
-  const text = (data.content || []).map(b => b.text || '').join('').trim();
-  const clean = text.replace(/```json|```/g, '').trim();
-  const parsed = JSON.parse(clean);
-
-  if (!parsed.intro || !parsed.areas || !parsed.scores) {
-    throw new Error(`Malformed generation for ${tab}: missing required fields`);
-  }
-
-  parsed.ts = Date.now();
-  return parsed;
-}
-
-async function main() {
-  const dataDir = path.join(process.cwd(), 'data');
-  fs.mkdirSync(dataDir, { recursive: true });
-
-  const dayKey = todayKey();
-  const results = {};
-
-  for (const tab of Object.keys(CAT_MAP)) {
-    try {
-      const parsed = await generateOne(tab);
-      results[tab] = parsed;
-      fs.writeFileSync(path.join(dataDir, `${tab}.json`), JSON.stringify(parsed, null, 2));
-      console.log(`✓ ${tab}: generated and saved`);
-    } catch (e) {
-      console.error(`✗ ${tab}: FAILED — ${e.message}`);
-      // deliberately do not overwrite the previous file on failure — better to keep
-      // yesterday's real content live than to wipe it out with an error
-    }
-  }
-
-  // maintain a rolling 14-day archive for the daily tab only (used by "Ieri" and weekly stats)
-  if (results.zi) {
-    const archivePath = path.join(dataDir, 'archive-zi.json');
-    let archive = [];
-    try {
-      archive = JSON.parse(fs.readFileSync(archivePath, 'utf8'));
-    } catch (e) { /* no archive yet, start fresh */ }
-
-    archive = archive.filter(entry => entry.date !== dayKey);
-    archive.unshift({
-      date: dayKey,
-      ...results.zi
-    });
-    archive = archive.slice(0, 14);
-
-    fs.writeFileSync(archivePath, JSON.stringify(archive, null, 2));
-    console.log(`✓ archive-zi: updated (${archive.length} entries)`);
-  }
-}
-
-main().catch(e => {
-  console.error('Fatal error:', e);
-  process.exit(1);
-});
+  const c
