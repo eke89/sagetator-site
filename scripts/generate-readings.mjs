@@ -83,4 +83,86 @@ function buildPrompt(cat, targetDate) {
 }
 
 async function generateOne(tab) {
-  const c
+  const cat = CAT_MAP[tab];
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
+
+  const targetDate = new Date();
+  if (tab === 'maine') targetDate.setDate(targetDate.getDate() + 1);
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      max_tokens: 4096,
+      messages: [{ role: 'user', content: buildPrompt(cat, targetDate) }]
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Anthropic API error for ${tab}: ${response.status} ${errText}`);
+  }
+
+  const data = await response.json();
+  const text = (data.content || []).map(b => b.text || '').join('').trim();
+  const clean = text.replace(/```json|```/g, '').trim();
+  const parsed = JSON.parse(clean);
+
+  if (!parsed.intro || !parsed.areas || !parsed.scores) {
+    throw new Error(`Malformed generation for ${tab}: missing required fields`);
+  }
+
+  parsed.ts = Date.now();
+  return parsed;
+}
+
+async function main() {
+  const dataDir = path.join(process.cwd(), 'data');
+  fs.mkdirSync(dataDir, { recursive: true });
+
+  const dayKey = todayKey();
+  const results = {};
+
+  for (const tab of Object.keys(CAT_MAP)) {
+    try {
+      const parsed = await generateOne(tab);
+      results[tab] = parsed;
+      fs.writeFileSync(path.join(dataDir, `${tab}.json`), JSON.stringify(parsed, null, 2));
+      console.log(`✓ ${tab}: generated and saved`);
+    } catch (e) {
+      console.error(`✗ ${tab}: FAILED — ${e.message}`);
+      // deliberately do not overwrite the previous file on failure — better to keep
+      // yesterday's real content live than to wipe it out with an error
+    }
+  }
+
+  // maintain a rolling 14-day archive for the daily tab only (used by "Ieri" and weekly stats)
+  if (results.zi) {
+    const archivePath = path.join(dataDir, 'archive-zi.json');
+    let archive = [];
+    try {
+      archive = JSON.parse(fs.readFileSync(archivePath, 'utf8'));
+    } catch (e) { /* no archive yet, start fresh */ }
+
+    archive = archive.filter(entry => entry.date !== dayKey);
+    archive.unshift({
+      date: dayKey,
+      ...results.zi
+    });
+    archive = archive.slice(0, 14);
+
+    fs.writeFileSync(archivePath, JSON.stringify(archive, null, 2));
+    console.log(`✓ archive-zi: updated (${archive.length} entries)`);
+  }
+}
+
+main().catch(e => {
+  console.error('Fatal error:', e);
+  process.exit(1);
+});
