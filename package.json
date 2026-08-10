@@ -4,6 +4,9 @@
   "dependencies": {
     "@netlify/blobs": "^8.1.0",
     "@netlify/functions": "^2.8.2",
-    "web-push": "^3.6.7"
+    "@supabase/supabase-js": "^2.45.0",
+    "web-push": "^3.6.7",
+    "stripe": "^16.8.0",
+    "astronomy-engine": "^2.1.19"
   }
 }

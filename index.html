@@ -5,6 +5,9 @@
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZFSZ4P3W15"></script>
+
+
+
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -167,6 +170,26 @@ body{
   flex-shrink:0;
 }
 .theme-toggle-icon:hover{border-color:var(--gold); box-shadow:0 0 10px color-mix(in srgb, var(--gold) 35%, transparent);}
+.account-btn-visible{
+  background:var(--gold);
+  color:#0b0a0d;
+  border:none;
+  border-radius:20px;
+  padding:8px 16px;
+  font-family:'Montserrat',sans-serif;
+  font-weight:600;
+  font-size:11px;
+  letter-spacing:.03em;
+  cursor:pointer;
+  transition:all .25s ease;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+.account-btn-visible:hover{background:var(--gold-bright); transform:scale(1.03);}
+.account-btn-visible.is-premium{
+  background:linear-gradient(100deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  box-shadow:0 0 12px color-mix(in srgb, var(--gold) 50%, transparent);
+}
 .theme-toggle-icon:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 
 .live-note{
@@ -274,6 +297,233 @@ body{
   color:var(--ink-soft);
 }
 
+.account-modal-overlay{
+  position:fixed; inset:0; z-index:50;
+  background:rgba(0,0,0,0.7);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+}
+.account-modal{
+  background:var(--bg); border:1px solid var(--gold);
+  max-width:380px; width:100%; max-height:85vh; overflow-y:auto;
+  padding:30px 24px; position:relative; text-align:center;
+}
+.account-modal-close{
+  position:absolute; top:12px; right:14px;
+  background:none; border:none; color:var(--ink-soft);
+  font-size:16px; cursor:pointer;
+}
+.account-tabs{display:flex; gap:0; margin-bottom:20px; border-bottom:1px solid var(--line-soft);}
+.account-tab{
+  flex:1; background:none; border:none; padding:10px;
+  font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-soft); cursor:pointer;
+  border-bottom:2px solid transparent;
+}
+.account-tab.active{color:var(--gold); border-bottom-color:var(--gold);}
+.account-input{
+  display:block; width:100%; margin-bottom:10px;
+  background:transparent; border:1px solid var(--line-soft); color:var(--ink);
+  padding:10px 12px; font-family:'Montserrat',sans-serif; font-size:13px;
+  border-radius:2px;
+}
+.account-error{color:#c96a4a; font-size:11px; margin-top:6px; min-height:14px;}
+.account-email{font-family:'Montserrat',sans-serif; font-size:12px; color:var(--gold-bright); margin-bottom:10px;}
+.account-premium-status{
+  font-family:'Montserrat',sans-serif; font-size:11px; letter-spacing:.04em;
+  padding:8px 12px; border:1px solid var(--line-soft); margin:16px 0; color:var(--ink-soft);
+}
+.account-premium-status.active{border-color:var(--gold); color:var(--gold-bright);}
+.account-section-title{
+  font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--gold); margin:22px 0 6px; text-align:left;
+}
+.account-hint{font-size:11px; color:var(--ink-soft); text-align:left; margin-bottom:10px; line-height:1.4;}
+.city-search-wrap{position:relative;}
+.city-suggestions{
+  position:absolute; top:100%; left:0; right:0; z-index:10;
+  background:var(--bg); border:1px solid var(--gold); border-top:none;
+  max-height:180px; overflow-y:auto; display:none;
+}
+.city-suggestions.open{display:block;}
+.city-suggestion-item{
+  padding:9px 12px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px;
+  color:var(--ink-soft); cursor:pointer; border-bottom:1px solid var(--line-soft);
+}
+.city-suggestion-item:last-child{border-bottom:none;}
+.city-suggestion-item:hover{background:color-mix(in srgb, var(--gold) 10%, transparent); color:var(--gold-bright);}
+.premium-list{
+  text-align:left; font-family:'Cormorant Garamond',serif; font-style:italic;
+  font-size:14px; color:var(--ink-soft); margin:0 0 16px;
+  list-style:none; padding-left:0;
+}
+.premium-list li{
+  position:relative; padding-left:22px; margin-bottom:7px;
+}
+.premium-list li::before{
+  content:"✓"; position:absolute; left:0; top:0;
+  color:var(--gold); font-style:normal; font-weight:600;
+}
+.premium-list li{margin-bottom:6px;}
+#natal-chart-result{text-align:left; font-size:13px; line-height:1.6; margin-top:16px;}
+
+.journal-scale-row{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:16px;
+}
+.journal-scale-label{font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink-soft);}
+.journal-mood-picker{display:flex; gap:6px;}
+.journal-mood-picker button{
+  background:none; border:1px solid var(--line-soft); border-radius:50%;
+  width:36px; height:36px; font-size:16px; cursor:pointer; transition:all .2s ease;
+}
+.journal-mood-picker button.active{border-color:var(--gold); background:color-mix(in srgb, var(--gold) 15%, transparent); transform:scale(1.1);}
+
+.journal-slider-row{
+  display:grid; grid-template-columns:90px 1fr 24px;
+  align-items:center; gap:10px; margin-bottom:12px;
+  font-family:'Montserrat',sans-serif; font-size:11.5px; color:var(--ink-soft);
+}
+.journal-slider-row input[type="range"]{accent-color:var(--gold); width:100%;}
+.journal-slider-row span:last-child{text-align:right; color:var(--gold-bright); font-weight:600;}
+.journal-tags-picker{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+.journal-tags-picker button{
+  background:none; border:1px solid var(--line-soft); border-radius:14px;
+  padding:5px 12px; font-family:'Montserrat',sans-serif; font-size:10.5px; color:var(--ink-soft);
+  cursor:pointer; transition:all .2s ease;
+}
+.journal-tags-picker button.active{border-color:var(--gold); background:color-mix(in srgb, var(--gold) 15%, transparent); color:var(--gold-bright);}
+
+#ai-chat-messages{
+  max-height:320px; overflow-y:auto; margin:14px 0; display:flex; flex-direction:column; gap:10px;
+}
+.ai-chat-bubble{
+  max-width:85%; padding:10px 14px; font-size:13px; line-height:1.5;
+  font-family:'Cormorant Garamond',serif; font-style:italic;
+}
+.ai-chat-bubble.user{
+  align-self:flex-end; background:color-mix(in srgb, var(--gold) 15%, transparent);
+  color:var(--ink); border:1px solid var(--gold);
+}
+.ai-chat-bubble.assistant{
+  align-self:flex-start; background:transparent; color:var(--ink-soft); border:1px solid var(--line-soft);
+}
+.ai-chat-input-row{display:flex; gap:8px; align-items:center;}
+.ai-chat-input-row input{flex:1;}
+.ai-example-prompts{display:flex; flex-direction:column; gap:6px; margin-bottom:14px;}
+.ai-example-prompts button{
+  text-align:left; background:none; border:1px solid var(--line-soft); border-radius:4px;
+  padding:8px 12px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px;
+  color:var(--ink-soft); cursor:pointer; transition:all .2s ease;
+}
+.ai-example-prompts button:hover{border-color:var(--gold); color:var(--gold-bright);}
+.ai-suggestions-row{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;}
+.ai-suggestions-row button{
+  background:color-mix(in srgb, var(--gold) 10%, transparent); border:1px solid var(--gold);
+  border-radius:12px; padding:5px 11px; font-family:'Montserrat',sans-serif; font-size:10.5px;
+  color:var(--gold-bright); cursor:pointer;
+}
+.ai-chat-bubble-wrap{position:relative;}
+.ai-favorite-btn{
+  background:none; border:none; cursor:pointer; font-size:12px; opacity:.5;
+  margin-top:4px; align-self:flex-start;
+}
+.ai-favorite-btn.active{opacity:1;}
+.diagnostic-error-item{
+  border-left:2px solid #c96a4a; padding:6px 10px; margin-bottom:6px;
+  font-family:'Montserrat',sans-serif; font-size:10.5px; color:var(--ink-soft);
+}
+.diagnostic-status-ok{color:var(--gold-bright); font-weight:600;}
+.diagnostic-status-bad{color:#c96a4a; font-weight:600;}
+
+#journal-history-panel{margin-top:6px;}
+.journal-entry-item{
+  border:1px solid var(--line-soft); padding:12px 14px; margin-bottom:10px;
+  font-size:12.5px; text-align:left;
+}
+.journal-entry-date{
+  font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:6px;
+}
+.journal-entry-scores{color:var(--ink-soft); margin-bottom:6px; font-size:11.5px;}
+.journal-entry-notes{font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--ink-soft); line-height:1.5;}
+.journal-entry-context{
+  margin-top:8px; padding-top:8px; border-top:1px solid var(--line-soft);
+  font-size:10.5px; color:var(--ink-soft); opacity:.75;
+}
+.evolution-chart-label{
+  font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--gold); margin:18px 0 8px;
+}
+#evolution-chart{width:100%; height:auto; display:block; border:1px solid var(--line-soft);}
+.mood-bar-row{
+  display:grid; grid-template-columns:24px 1fr 30px; align-items:center; gap:8px;
+  margin-bottom:6px; font-family:'Montserrat',sans-serif; font-size:11px; color:var(--ink-soft);
+}
+.mood-bar-track{height:8px; background:var(--line-soft);}
+.mood-bar-track i{display:block; height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-bright));}
+.insight-item{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13.5px;
+  color:var(--ink-soft); line-height:1.6; margin-bottom:10px; padding-left:16px; position:relative;
+}
+.insight-item::before{content:"✦"; position:absolute; left:0; color:var(--gold); font-size:11px;}
+
+#natal-chart-result .nc-block{margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--line-soft);}
+#natal-chart-result .nc-label{color:var(--gold); font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px;}
+#natal-chart-result .nc-text{font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--ink-soft);}
+#natal-chart-result .nc-positions{font-size:11.5px; color:var(--ink-soft); margin-bottom:10px;}
+
+.compat-ring-center{display:flex; justify-content:center; margin:10px 0 18px;}
+.compat-ring-num{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600; font-size:24px;
+  fill:var(--gold-bright);
+}
+.compat-ring-anim{transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1);}
+.compat-categories{margin-bottom:16px;}
+.compat-cat-row{margin-bottom:16px;}
+.compat-cat-head{
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;
+  font-family:'Montserrat',sans-serif; font-size:12px; color:var(--ink);
+}
+.compat-cat-score{color:var(--gold-bright); font-weight:600;}
+.compat-cat-track{height:3px; background:var(--line-soft); margin-bottom:6px;}
+.compat-cat-track i{display:block; height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-bright));}
+.compat-cat-text{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:12.5px; color:var(--ink-soft); line-height:1.5;}
+
+.signup-success-emoji{font-size:40px; text-align:center; margin-bottom:6px;}
+
+.wizard-progress{
+  display:flex; justify-content:center; gap:10px; margin-bottom:18px;
+}
+.wizard-progress span{
+  width:24px; height:24px; border-radius:50%; border:1px solid var(--line-soft);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Montserrat',sans-serif; font-size:11px; color:var(--ink-soft);
+}
+.wizard-progress span.active{border-color:var(--gold); color:var(--gold); font-weight:600;}
+
+.natal-teaser{
+  border:1px solid var(--line-soft); padding:12px 16px; margin-bottom:18px;
+}
+.teaser-row{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14.5px;
+  padding:7px 0; color:var(--ink-soft);
+  border-bottom:1px solid var(--line-soft);
+}
+.teaser-row:last-child{border-bottom:none;}
+.teaser-row span:first-child{color:var(--ink);}
+.teaser-row.unlocked span:last-child{color:var(--gold-bright); font-weight:500;}
+.teaser-row.locked span:first-child{color:var(--ink-soft); opacity:.8;}
+.teaser-blur{
+  filter:blur(4px);
+  user-select:none;
+  color:var(--gold-bright);
+  font-weight:500;
+}
+
+.natal-chart-icon{display:flex; justify-content:center; margin:10px 0 16px;}
+
 .score-note{
   font-family:'Montserrat',sans-serif;
   font-size:10.5px;
@@ -337,6 +587,23 @@ body{
   color:var(--ink-soft);
 }
 .featured-event-impact b{color:var(--gold-bright); font-weight:600;}
+.featured-event-sagittarius{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px;
+  color:var(--ink-soft); margin-top:10px; line-height:1.5;
+}
+.featured-event-personal{
+  margin-top:12px; padding-top:12px; border-top:1px solid var(--line-soft);
+  font-family:'Montserrat',sans-serif; font-size:10.5px; color:var(--gold-bright);
+}
+.featured-event-personal.locked{color:var(--ink-soft); opacity:.7;}
+.tl-title{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px;
+  color:var(--ink); margin:3px 0 2px;
+}
+.tl-cat{
+  font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--gold); opacity:.7; margin-left:6px;
+}
 
 .ornament{
   display:flex;
@@ -786,6 +1053,10 @@ body.light .area-icon{color:#8a8f96;}
   width:0%;
   background:linear-gradient(90deg, var(--gold), var(--gold-bright));
   transition:width 1.4s cubic-bezier(.2,.8,.2,1);
+}
+.energy-explain{
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px;
+  color:var(--ink-soft); margin-top:10px; line-height:1.5; text-align:center;
 }
 
 .card-reveal-wrap{
@@ -1311,6 +1582,64 @@ footer{
 footer div{margin-bottom:6px;}
 footer div:last-child{margin-bottom:0;}
 
+.legal-footer{
+  max-width:420px;
+  margin:20px auto 0;
+  padding:16px 20px 0;
+  border-top:1px solid var(--line-soft);
+  text-align:center;
+}
+.legal-copyright{
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  opacity:.5;
+  margin-bottom:10px;
+}
+.legal-links{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px 14px;
+}
+.legal-link{
+  background:none;
+  border:none;
+  font-family:'Montserrat',sans-serif;
+  font-size:9.5px;
+  letter-spacing:.04em;
+  color:var(--ink-soft);
+  opacity:.65;
+  cursor:pointer;
+  padding:2px;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.legal-link:hover{opacity:1; color:var(--gold);}
+.legal-modal-overlay{
+  position:fixed; inset:0; z-index:55;
+  background:rgba(0,0,0,0.7);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+}
+.legal-modal{text-align:left; max-width:420px;}
+.legal-modal .account-section-title{margin-top:0;}
+.privacy-content{
+  margin-top:14px;
+  padding:16px 18px;
+  border:1px solid var(--line-soft);
+  font-size:11.5px;
+  line-height:1.6;
+  color:var(--ink-soft);
+  text-align:left;
+  max-height:55vh;
+  overflow-y:auto;
+}
+.privacy-content p{margin:0 0 10px;}
+.privacy-content p:last-child{margin-bottom:0;}
+.privacy-content strong{color:var(--gold); font-weight:600;}
+
 .toast{
   position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
   background:var(--gold); color:var(--btn-text);
@@ -1374,6 +1703,257 @@ footer div:last-child{margin-bottom:0;}
 </style>
 </head>
 <body>
+<div class="account-modal-overlay" id="account-modal-overlay" style="display:none;">
+    <div class="account-modal">
+      <button class="account-modal-close" id="account-modal-close">✕</button>
+
+      <div id="account-logged-out">
+        <div class="account-tabs">
+          <button class="account-tab active" data-atab="login">Autentificare</button>
+          <button class="account-tab" data-atab="signup">Cont nou</button>
+        </div>
+        <div id="account-login-form">
+          <input type="email" class="account-input" id="login-email" placeholder="Email">
+          <input type="password" class="account-input" id="login-password" placeholder="Parolă">
+          <button class="install-btn" id="login-submit" style="display:block; width:100%;">Intră în cont</button>
+          <div class="account-error" id="login-error"></div>
+        </div>
+        <div id="account-signup-form" style="display:none;">
+          <input type="email" class="account-input" id="signup-email" placeholder="Email">
+          <input type="password" class="account-input" id="signup-password" placeholder="Parolă (minim 6 caractere)">
+          <button class="install-btn" id="signup-submit" style="display:block; width:100%;">Creează cont</button>
+          <div class="account-error" id="signup-error"></div>
+        </div>
+      </div>
+
+      <div id="account-logged-in" style="display:none;">
+        <div class="account-email" id="account-email-display"></div>
+        <button class="archive-btn" id="logout-btn">Deconectare</button>
+
+        <div class="account-premium-status" id="account-premium-status"></div>
+
+        <!-- shown right after signup/login, before birth data exists -->
+        <div id="birth-wizard-prompt" style="display:none;">
+          <div class="signup-success-emoji">🎉</div>
+          <div class="account-section-title" style="text-align:center;">Cont creat cu succes!</div>
+          <button class="install-btn" id="start-birth-wizard" style="display:block; width:100%; background:var(--gold); color:#0b0a0d;">Completează profilul astrologic</button>
+        </div>
+
+        <!-- multi-step birth data wizard -->
+        <div id="birth-wizard" style="display:none;">
+          <div class="wizard-progress"><span data-step="1" class="active">1</span><span data-step="2">2</span><span data-step="3">3</span></div>
+
+          <div class="wizard-step" id="wizard-step-1">
+            <div class="account-section-title">Când te-ai născut?</div>
+            <input type="date" class="account-input" id="birth-date">
+            <button class="install-btn wizard-next-btn" data-goto="2" style="display:block; width:100%;">Continuă</button>
+          </div>
+
+          <div class="wizard-step" id="wizard-step-2" style="display:none;">
+            <div class="account-section-title">La ce oră?</div>
+            <input type="time" class="account-input" id="birth-time">
+            <button class="install-btn wizard-next-btn" data-goto="3" style="display:block; width:100%;">Continuă</button>
+          </div>
+
+          <div class="wizard-step" id="wizard-step-3" style="display:none;">
+            <div class="account-section-title">Unde te-ai născut?</div>
+            <div class="city-search-wrap">
+              <input type="text" class="account-input" id="birth-city" placeholder="Scrie orașul nașterii..." autocomplete="off">
+              <div id="birth-city-suggestions" class="city-suggestions"></div>
+            </div>
+            <div class="account-hint" id="birth-city-confirmed"></div>
+
+            <button class="legal-link" id="toggle-advanced-location" style="display:block; margin:14px 0 0;">Nu găsești orașul? Introdu manual</button>
+            <div id="advanced-location-fields" style="display:none; margin-top:12px;">
+              <select class="account-input" id="birth-utc-offset">
+                <option value="-12">UTC-12</option><option value="-11">UTC-11</option><option value="-10">UTC-10</option>
+                <option value="-9">UTC-9</option><option value="-8">UTC-8</option><option value="-7">UTC-7</option>
+                <option value="-6">UTC-6</option><option value="-5">UTC-5</option><option value="-4">UTC-4</option>
+                <option value="-3">UTC-3</option><option value="-2">UTC-2</option><option value="-1">UTC-1</option>
+                <option value="0">UTC+0</option><option value="1">UTC+1</option><option value="2" selected>UTC+2 (România, iarna)</option>
+                <option value="3">UTC+3 (România, vara)</option><option value="4">UTC+4</option><option value="5">UTC+5</option>
+                <option value="6">UTC+6</option><option value="7">UTC+7</option><option value="8">UTC+8</option>
+                <option value="9">UTC+9</option><option value="10">UTC+10</option><option value="11">UTC+11</option><option value="12">UTC+12</option>
+              </select>
+              <input type="text" class="account-input" id="birth-lat" placeholder="Latitudine (ex. 44.4268)">
+              <input type="text" class="account-input" id="birth-lng" placeholder="Longitudine (ex. 26.1025)">
+            </div>
+
+            <button class="install-btn" id="save-birth-data" style="display:block; width:100%; background:var(--gold); color:#0b0a0d; margin-top:14px;">Salvează datele</button>
+          </div>
+          <div class="account-error" id="birth-data-error"></div>
+        </div>
+
+        <!-- premium pitch, with a locked/unlocked natal-chart teaser -->
+        <div id="premium-upsell">
+          <div class="account-section-title" style="text-align:center;">✨ Descoperă-ți adevărata hartă natală</div>
+          <div class="natal-teaser">
+            <div class="teaser-row unlocked"><span>☉ Soare</span><span id="teaser-sun">Săgetător</span></div>
+            <div class="teaser-row locked"><span>☾ Lună</span><span class="teaser-blur">Capricorn</span></div>
+            <div class="teaser-row locked"><span>✦ Ascendent</span><span class="teaser-blur">Fecioară</span></div>
+            <div class="teaser-row locked"><span>♀ Venus</span><span class="teaser-blur">Scorpion</span></div>
+            <div class="teaser-row locked"><span>♂ Marte</span><span class="teaser-blur">Balanță</span></div>
+          </div>
+          <ul class="premium-list">
+            <li>Horoscop personalizat, după harta ta natală</li>
+            <li>Hartă natală completă</li>
+            <li>Compatibilitate completă</li>
+            <li>Horoscop lunar complet</li>
+            <li>Horoscop anual complet</li>
+            <li>Oracol nelimitat</li>
+            <li>Astrolog AI personal</li>
+            <li>Actualizări exclusive</li>
+          </ul>
+          <button class="install-btn" id="subscribe-btn" style="display:block; width:100%; background:var(--gold); color:#0b0a0d;">✨ Devino Premium — 19 lei/lună</button>
+        </div>
+
+        <!-- shown once, right after a successful payment -->
+        <div id="premium-success-view" style="display:none;">
+          <div class="signup-success-emoji">🎉</div>
+          <div class="account-section-title" style="text-align:center;">Bine ai venit în Premium!</div>
+          <ul class="premium-list">
+            <li>Harta natală completă</li>
+            <li>Oracol nelimitat</li>
+            <li>Citiri lunare și anuale complete</li>
+            <li>Compatibilitate și Astrolog AI, imediat ce sunt gata</li>
+          </ul>
+          <button class="install-btn" id="premium-success-close" style="display:block; width:100%; background:var(--gold); color:#0b0a0d;">Explorează</button>
+        </div>
+
+        <div id="natal-chart-section" style="display:none;">
+          <button class="legal-link" id="edit-birth-data-btn" style="display:block; margin:0 0 14px;">✎ Editează datele de naștere</button>
+          <div class="account-section-title">Harta ta natală</div>
+          <div class="natal-chart-icon">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+              <circle cx="45" cy="45" r="42" fill="none" stroke="var(--gold)" stroke-width="1"/>
+              <circle cx="45" cy="45" r="30" fill="none" stroke="var(--gold)" stroke-width="0.6" opacity="0.6"/>
+              <g stroke="var(--gold)" stroke-width="0.5" opacity="0.5">
+                <line x1="45" y1="3" x2="45" y2="87"/><line x1="3" y1="45" x2="87" y2="45"/>
+                <line x1="15" y1="15" x2="75" y2="75"/><line x1="75" y1="15" x2="15" y2="75"/>
+              </g>
+              <circle cx="45" cy="3" r="2" fill="var(--gold-bright)"/>
+              <circle cx="45" cy="87" r="2" fill="var(--gold-bright)"/>
+              <circle cx="3" cy="45" r="2" fill="var(--gold-bright)"/>
+              <circle cx="87" cy="45" r="2" fill="var(--gold-bright)"/>
+            </svg>
+          </div>
+          <button class="install-btn" id="compute-natal-btn" style="display:block; width:100%;">Calculează harta mea natală</button>
+          <div id="natal-chart-result"></div>
+
+          <div class="account-section-title" style="margin-top:28px;">Compatibilitate</div>
+          <div class="account-hint">Introdu datele celeilalte persoane.</div>
+          <input type="text" class="account-input" id="compat-b-name" placeholder="Numele persoanei (opțional)">
+          <input type="date" class="account-input" id="compat-b-date">
+          <input type="time" class="account-input" id="compat-b-time">
+          <div class="city-search-wrap">
+            <input type="text" class="account-input" id="compat-b-city" placeholder="Orașul nașterii..." autocomplete="off">
+            <div id="compat-b-city-suggestions" class="city-suggestions"></div>
+          </div>
+          <input type="hidden" id="compat-b-utc" value="2">
+          <button class="install-btn" id="compute-compat-btn" style="display:block; width:100%;">Verifică compatibilitatea</button>
+          <div id="compat-result"></div>
+        </div>
+
+        <div id="journal-section" style="display:none;">
+          <div class="account-section-title">Jurnal astrologic</div>
+          <div class="account-hint" id="journal-context-note"></div>
+
+          <div class="journal-scale-row">
+            <span class="journal-scale-label">Stare</span>
+            <div class="journal-mood-picker" id="journal-mood-picker">
+              <button data-val="1">😞</button><button data-val="2">😐</button><button data-val="3">🙂</button><button data-val="4">😊</button><button data-val="5">😄</button>
+            </div>
+          </div>
+
+          <div class="journal-slider-row"><span>⚡ Energie</span><input type="range" min="1" max="10" value="5" id="journal-energy"><span id="journal-energy-val">5</span></div>
+          <div class="journal-slider-row"><span>❤️ Dragoste</span><input type="range" min="1" max="10" value="5" id="journal-love"><span id="journal-love-val">5</span></div>
+          <div class="journal-slider-row"><span>💼 Carieră</span><input type="range" min="1" max="10" value="5" id="journal-career"><span id="journal-career-val">5</span></div>
+          <div class="journal-slider-row"><span>💰 Finanțe</span><input type="range" min="1" max="10" value="5" id="journal-finance"><span id="journal-finance-val">5</span></div>
+          <div class="journal-slider-row"><span>🩸 Sănătate</span><input type="range" min="1" max="10" value="5" id="journal-health"><span id="journal-health-val">5</span></div>
+
+          <input type="text" class="account-input" id="journal-event" placeholder="Eveniment important azi (opțional)">
+          <div class="journal-tags-picker" id="journal-tags-picker">
+            <button data-tag="munca">💼 muncă</button><button data-tag="relatie">❤️ relație</button>
+            <button data-tag="familie">🏡 familie</button><button data-tag="sanatate">🩺 sănătate</button>
+            <button data-tag="bani">💰 bani</button><button data-tag="calatorie">✈️ călătorie</button>
+            <button data-tag="stres">⚡ stres</button><button data-tag="succes">🏆 succes</button>
+          </div>
+          <textarea class="account-input" id="journal-notes" placeholder="Notițe libere..." rows="3" style="resize:vertical;"></textarea>
+
+          <button class="install-btn" id="save-journal-btn" style="display:block; width:100%; background:var(--gold); color:#0b0a0d;">Salvează intrarea de azi</button>
+          <div class="account-error" id="journal-save-result"></div>
+
+          <button class="legal-link" id="toggle-journal-history" style="display:block; margin:16px 0 0;">📖 Vezi jurnalul din trecut</button>
+          <div id="journal-history-panel" style="display:none;">
+            <input type="date" class="account-input" id="journal-search-date" style="margin-top:14px;">
+            <div id="journal-history-list"></div>
+          </div>
+
+          <button class="legal-link" id="toggle-evolution" style="display:block; margin:10px 0 0;">📈 Evoluția mea</button>
+          <div id="evolution-panel" style="display:none;">
+            <div id="evolution-not-enough" class="account-hint" style="display:none;"></div>
+            <div id="evolution-content" style="display:none;">
+              <div class="evolution-chart-label">Energia din ultimele 30 de zile</div>
+              <canvas id="evolution-chart" width="332" height="110"></canvas>
+
+              <div class="evolution-chart-label">Distribuția stărilor</div>
+              <div id="evolution-mood-bars"></div>
+
+              <div class="evolution-chart-label">Insight-uri automate</div>
+              <div id="evolution-insights"></div>
+              <div class="account-hint" id="evolution-note"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="ai-astrologer-section" style="display:none;">
+          <div class="account-section-title">🔮 Astrologul tău AI</div>
+          <div class="account-hint">Cunoaște harta ta natală, jurnalul și tiparele tale. Întreabă orice.</div>
+          <div class="account-hint" id="ai-free-limit-note"></div>
+
+          <div id="ai-example-prompts" class="ai-example-prompts">
+            <button>Cum mă influențează săptămâna aceasta?</button>
+            <button>Ce spune harta mea despre carieră?</button>
+            <button>De ce mă simt lipsit de energie?</button>
+            <button>Ce perioadă e favorabilă pentru relații?</button>
+          </div>
+
+          <div id="ai-chat-messages"></div>
+          <div id="ai-suggestions-row" class="ai-suggestions-row"></div>
+          <div class="ai-chat-input-row">
+            <input type="text" class="account-input" id="ai-chat-input" placeholder="Scrie o întrebare..." style="margin-bottom:0;">
+            <button class="install-btn" id="ai-chat-send" style="width:auto; margin-bottom:0;">Trimite</button>
+          </div>
+        </div>
+
+        <div id="admin-panel-section" style="display:none;">
+          <div class="account-section-title">Panou de administrare</div>
+          <div id="admin-stats-display" class="account-hint"></div>
+          <textarea class="account-input" id="admin-broadcast-message" placeholder="Mesaj de trimis..." rows="2" style="resize:vertical;"></textarea>
+          <select class="account-input" id="admin-broadcast-audience">
+            <option value="all">Toți utilizatorii</option>
+            <option value="premium">Doar Premium</option>
+          </select>
+          <button class="install-btn" id="admin-broadcast-btn" style="display:block; width:100%;">Trimite notificarea</button>
+          <div class="account-error" id="admin-broadcast-result"></div>
+
+          <div class="account-section-title" style="margin-top:24px;">Diagnostic sistem</div>
+          <button class="legal-link" id="load-diagnostics-btn" style="display:block; margin-bottom:12px;">🔄 Reîmprospătează diagnosticul</button>
+          <div id="diagnostics-display" class="account-hint"></div>
+          <div id="diagnostics-errors"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+<div class="legal-modal-overlay" id="legal-modal-overlay" style="display:none;">
+    <div class="account-modal legal-modal">
+      <button class="account-modal-close" id="legal-modal-close">✕</button>
+      <div class="account-section-title" id="legal-modal-title"></div>
+      <div class="privacy-content" id="legal-modal-body"></div>
+    </div>
+  </div>
+
 
 <canvas id="stars"></canvas>
 <div class="entrance-flash" id="entrance-flash"></div>
@@ -1384,6 +1964,7 @@ footer div:last-child{margin-bottom:0;}
 <div class="topline" style="justify-content:space-between;">
   <div class="live-note">✦ Actualizat în timp real după tranzitele astrale</div>
   <div style="display:flex; gap:8px;">
+    <button class="account-btn-visible" id="account-btn" title="Contul meu" aria-label="Deschide contul tău">👤 Cont</button>
     <button class="theme-toggle-icon" id="music-btn" title="Ambient cosmic" aria-label="Pornește sau oprește muzica ambientală">♫</button>
     <button class="theme-toggle-icon" id="theme-btn" title="Comută tema" aria-label="Comută între mod nocturn și mod luminos">☾</button>
   </div>
@@ -1399,6 +1980,8 @@ footer div:last-child{margin-bottom:0;}
   <div class="streak-badge reveal" id="streak-badge" style="animation-delay:.32s; display:none;"></div>
   <button class="install-btn" id="install-btn" style="display:none;">📲 Adaugă pe ecranul principal</button>
   <button class="install-btn" id="notif-btn" style="display:none; margin-top:8px;">🔔 Amintește-mi zilnic</button>
+
+  
 
   <div class="ornament reveal" style="animation-delay:.3s"><span>✦</span></div>
 
@@ -1652,6 +2235,7 @@ footer div:last-child{margin-bottom:0;}
         <span id="energy-pct">0%</span>
       </div>
       <div class="energy-track"><i id="energy-fill" style="width:0%"></i></div>
+      <div class="energy-explain" id="energy-explain"></div>
     </div>
 
     <div class="weekly-stat" id="weekly-stat" style="display:none;"></div>
@@ -1716,6 +2300,19 @@ footer div:last-child{margin-bottom:0;}
     <div>Planeta: Jupiter</div>
     <div>Piatra: Turcoaz</div>
   </footer>
+
+  <div class="legal-footer">
+    <div class="legal-copyright">© 2026 Sagittarius Decoded</div>
+    <div class="legal-links">
+      <button class="legal-link" data-legal="privacy">Politica de confidențialitate</button>
+      <button class="legal-link" data-legal="terms">Termeni și condiții</button>
+      <button class="legal-link" data-legal="cookies">Politica Cookies</button>
+      <button class="legal-link" data-legal="disclaimer">Disclaimer</button>
+      <button class="legal-link" data-legal="contact">Contact</button>
+    </div>
+  </div>
+
+  
 
 </div>
 
@@ -2191,15 +2788,41 @@ const universePool = [
 
 
 // real July 2026 astrological events, framed for Sagittarius
+const CALENDAR_CATEGORIES = {
+  luna_noua:   { icon:'🌑', label:'Lună Nouă' },
+  luna_plina:  { icon:'🌕', label:'Lună Plină' },
+  mercur_retro:{ icon:'☿',  label:'Mercur retrograd' },
+  venus_retro: { icon:'♀',  label:'Venus retrograd' },
+  marte_retro: { icon:'♂',  label:'Marte retrograd' },
+  eclipsa:     { icon:'🌒', label:'Eclipse' },
+  tranzit:     { icon:'✨', label:'Tranzite importante' }
+};
+
 const calendarEvents = [
-  {month:7, day:22, icon:"☉", title:"Soarele intră în Leu", impact:"mare", desc:"Soarele intră în Leu. Se activează zona ta de aventură, filosofie și expansiune, o perioadă bună pentru a îndrăzni."},
-  {month:7, day:23, icon:"☿", title:"Mercur devine direct", impact:"mare", desc:"Mercur redevine direct după retrogradarea din Rac, comunicarea și proiectele amânate încep să avanseze."},
-  {month:7, day:26, icon:"♄", title:"Saturn intră retrograd", impact:"mare", desc:"Saturn intră retrograd, o lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
-  {month:7, day:29, icon:"🌕", title:"Lună Plină în Vărsător", impact:"foarte mare", desc:"Lună Plină în Vărsător, în aspect favorabil cu Jupiter, una dintre cele mai norocoase zile ale anului pentru noi direcții."},
-  {month:8, day:3,  icon:"⚷", title:"Chiron intră retrograd", impact:"moderat", desc:"Chiron intră retrograd în Taur, un ciclu bun pentru introspecție și vindecare, în valuri, nu dintr-o dată."},
-  {month:8, day:12, icon:"☀", title:"Eclipsă totală de Soare", impact:"foarte mare", desc:"Eclipsă totală de Soare, un moment intens pentru începuturi, chiar dacă rezultatele nu se văd imediat."},
-  {month:8, day:22, icon:"☉", title:"Soarele intră în Fecioară", impact:"mare", desc:"Soarele intră în Fecioară, cu accent pe ordine, sănătate și detalii practice, în contrast cu avântul lunii precedente."},
-  {month:8, day:28, icon:"🌘", title:"Eclipsă parțială de Lună", impact:"foarte mare", desc:"Eclipsă parțială de Lună, o închidere de ciclu emoțională, bună pentru a lăsa în urmă ce nu mai servește."}
+  {month:7, day:22, category:'tranzit', title:"Soarele intră în Leu", impact:"mare",
+    desc:"Soarele își schimbă poziția, intrând în zodia Leului.",
+    sagittariusImpact:"Se activează zona ta de aventură, filosofie și expansiune, o perioadă bună pentru a îndrăzni."},
+  {month:7, day:23, category:'mercur_retro', title:"Mercur devine direct", impact:"mare",
+    desc:"Mercur redevine direct, după o perioadă de retrogradare.",
+    sagittariusImpact:"Comunicarea și proiectele amânate încep să avanseze din nou, fără blocajele din ultimele săptămâni."},
+  {month:7, day:26, category:'tranzit', title:"Saturn intră retrograd", impact:"mare",
+    desc:"Saturn își inversează mișcarea aparentă, intrând într-o fază retrogradă.",
+    sagittariusImpact:"O lecție de răbdare tocmai când vrei să accelerezi. Ține arcul tras, nu trage încă."},
+  {month:7, day:29, category:'luna_plina', title:"Lună Plină în Vărsător", impact:"foarte mare",
+    desc:"Luna atinge punctul de iluminare maximă, în zodia Vărsătorului.",
+    sagittariusImpact:"În aspect favorabil cu Jupiter, una dintre cele mai norocoase zile ale anului pentru noi direcții."},
+  {month:8, day:3,  category:'tranzit', title:"Chiron intră retrograd", impact:"moderat",
+    desc:"Chiron, „vindecătorul rănit”, intră retrograd în Taur.",
+    sagittariusImpact:"Un ciclu bun pentru introspecție și vindecare, în valuri, nu dintr-o dată."},
+  {month:8, day:12, category:'eclipsa', title:"Eclipsă totală de Soare", impact:"foarte mare",
+    desc:"Eclipsă totală de Soare, coincizând cu Luna Nouă din această lună.",
+    sagittariusImpact:"Un moment intens pentru începuturi, chiar dacă rezultatele nu se văd imediat."},
+  {month:8, day:22, category:'tranzit', title:"Soarele intră în Fecioară", impact:"mare",
+    desc:"Soarele își schimbă poziția, intrând în zodia Fecioarei.",
+    sagittariusImpact:"Accent pe ordine, sănătate și detalii practice, în contrast cu avântul lunii precedente."},
+  {month:8, day:28, category:'eclipsa', title:"Eclipsă parțială de Lună", impact:"foarte mare",
+    desc:"Eclipsă parțială de Lună, coincizând cu Luna Plină din această lună.",
+    sagittariusImpact:"O închidere de ciclu emoțională, bună pentru a lăsa în urmă ce nu mai servește."}
 ];
 const RO_LUNI_SCURT = ["ian","feb","mar","apr","mai","iun","iul","aug","sep","oct","nov","dec"];
 
@@ -2434,30 +3057,44 @@ function renderCalendar(){
   const upcoming = calendarEvents
     .filter(ev => (ev.month * 100 + ev.day) >= todayKeyNum)
     .sort((a, b) => (a.month*100+a.day) - (b.month*100+b.day))
-    .slice(0, 5);
+    .slice(0, 6);
+
+  const catInfo = (ev) => CALENDAR_CATEGORIES[ev.category] || {icon:'✦', label:''};
 
   if(upcoming.length){
     const featured = upcoming[0];
+    const cat = catInfo(featured);
     const isToday = featured.month === todayMonth && featured.day === todayNum;
     const RO_LUNI_FULL_EV = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
     const featuredDateLabel = isToday ? 'azi' : `${featured.day} ${RO_LUNI_FULL_EV[featured.month-1]} 2026`;
+    const personalImpactHtml = isPremiumSafe()
+      ? `<div class="featured-event-personal">✨ Impact personal: calculat din harta ta natală, în secțiunea Cont → Hartă natală.</div>`
+      : `<div class="featured-event-personal locked">🔒 Impact personal — disponibil cu Premium</div>`;
     featuredEl.innerHTML = `
-      <div class="featured-event-label">Eveniment major: ${featuredDateLabel}</div>
-      <div class="featured-event-title">${featured.icon} ${featured.title}</div>
-      <div class="featured-event-impact">Impact: <b>${featured.impact}</b></div>`;
+      <div class="featured-event-label">${cat.icon} ${cat.label} · ${featuredDateLabel}</div>
+      <div class="featured-event-title">${featured.title}</div>
+      <div class="featured-event-impact">Impact general: <b>${featured.impact}</b></div>
+      <div class="featured-event-sagittarius">${featured.sagittariusImpact || featured.desc || ''}</div>
+      ${personalImpactHtml}`;
   } else {
     featuredEl.innerHTML = '';
   }
 
   const rest = upcoming.slice(1);
   wrap.innerHTML = rest.length ? rest.map(ev=>{
+    const cat = catInfo(ev);
     const isToday = ev.month === todayMonth && ev.day === todayNum;
     const dateLabel = `${ev.day} ${RO_LUNI_SCURT[ev.month-1]}`;
     return `<div class="tl-item${isToday?' today':''}">
-      <div class="tl-date">${ev.icon||''} ${dateLabel}${isToday?' · azi':''}</div>
-      <div class="tl-desc">${ev.desc}</div>
+      <div class="tl-date">${cat.icon} ${dateLabel}${isToday?' · azi':''} <span class="tl-cat">${cat.label}</span></div>
+      <div class="tl-title">${ev.title}</div>
+      <div class="tl-desc">${ev.sagittariusImpact || ev.desc || ''}</div>
     </div>`;
   }).join('') : (upcoming.length ? '' : `<div class="tl-item"><div class="tl-desc">Evenimentele astrologice curate se actualizează periodic, revino curând pentru cele care urmează.</div></div>`);
+}
+
+function isPremiumSafe(){
+  return typeof isPremium === 'function' && isPremium();
 }
 
 // ---------- live reading via Claude API, with offline fallback ----------
@@ -2806,6 +3443,7 @@ function renderParsedReading(parsed){
   lastReadingText = shareParts.join(' ');
   lastParsedReading = parsed;
   if(typeof initFeedbackButtons === 'function') initFeedbackButtons();
+  if(typeof applyPremiumGating === 'function') applyPremiumGating();
 }
 
 // ---------- extra bonus message: separate from the official reading, freshly random every time ----------
@@ -2832,6 +3470,7 @@ document.querySelectorAll('nav.tabs button').forEach(btn=>{
     document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentTab = btn.dataset.tab;
+    if(typeof gtag === 'function') gtag('event', 'tab_switch', { tab_name: currentTab });
     document.getElementById('extra-panel').classList.remove('open');
 
     const archP = document.getElementById('archive-panel');
@@ -2860,6 +3499,10 @@ document.getElementById('extra-btn').addEventListener('click', (e)=>{
   symbol.classList.remove('shooting'); void symbol.offsetWidth; symbol.classList.add('shooting');
   triggerExtraBurst();
   setTimeout(renderExtra, 450);
+
+  if(typeof isPremium === 'function' && isPremium()){
+    return; // premium users have no cooldown at all
+  }
 
   btn.dataset.cooling = '1';
   const originalText = btn.textContent;
@@ -2972,12 +3615,48 @@ document.getElementById('share-btn').addEventListener('click', async ()=>{
 });
 
 // ---------- live "energy used today" bar, based on time of day ----------
-function renderEnergyBar(){
+function computeEnergyScore(){
   const now = new Date();
-  const minutesSinceMidnight = now.getHours()*60 + now.getMinutes();
-  const pct = Math.round((minutesSinceMidnight / (24*60)) * 100);
-  document.getElementById('energy-pct').textContent = `${pct}%`;
-  document.getElementById('energy-fill').style.width = `${pct}%`;
+  const moon = getMoonPhase(now);
+  const dayKey = todayKey();
+  const reasons = [];
+
+  let score = 55;
+
+  if(moon.name === 'Lună Plină'){ score += 18; reasons.push('Lună Plină, energie la maxim'); }
+  else if(moon.name === 'Lună Nouă'){ score += 10; reasons.push('Lună Nouă, energie de început'); }
+  else if(moon.name === 'Primul pătrar' || moon.name === 'Ultimul pătrar'){ score += 5; reasons.push('fază de tensiune constructivă a lunii'); }
+
+  const mercuryRetro = now >= new Date(2026,5,29) && now <= new Date(2026,6,23);
+  if(mercuryRetro){ score -= 10; reasons.push('Mercur retrograd, comunicarea cere mai multă atenție'); }
+
+  const todayMonth = now.getMonth()+1, todayNum = now.getDate();
+  const todaysEvent = (typeof calendarEvents !== 'undefined') ? calendarEvents.find(ev => ev.month === todayMonth && ev.day === todayNum) : null;
+  const eventIsMoonPhase = todaysEvent && (todaysEvent.category === 'luna_plina' || todaysEvent.category === 'luna_noua');
+  if(todaysEvent && !eventIsMoonPhase){ score += 14; reasons.push(todaysEvent.title.toLowerCase()); }
+  else if(todaysEvent && eventIsMoonPhase){ score += 8; } // already counted via moon phase above, just add a smaller bonus for the exact alignment
+
+  // small deterministic daily variation, so it's not identical every day with no event
+  score += (hashStr(dayKey+'energy') % 11) - 5;
+
+  score = Math.max(8, Math.min(98, Math.round(score)));
+
+  let explain;
+  if(reasons.length){
+    explain = `Energia de azi e influențată de: ${reasons.join(', ')}.`;
+  } else {
+    explain = `Fără tranzite majore azi, energia curge stabil, în ritmul tău obișnuit.`;
+  }
+
+  return { score, explain };
+}
+
+function renderEnergyBar(){
+  const { score, explain } = computeEnergyScore();
+  document.getElementById('energy-pct').textContent = `${score}%`;
+  document.getElementById('energy-fill').style.width = `${score}%`;
+  const explainEl = document.getElementById('energy-explain');
+  if(explainEl) explainEl.textContent = explain;
 }
 
 // ---------- ambient nature soundscapes: day & night, fully synthesized ----------
@@ -3303,7 +3982,7 @@ renderWeeklyStat();
 
 const saveThoughtBtn = document.getElementById('save-thought-btn');
 if(saveThoughtBtn){
-  saveThoughtBtn.addEventListener('click', (e)=>{
+  saveThoughtBtn.addEventListener('click', async (e)=>{
     e.stopPropagation();
     const text = document.getElementById('keep-thought-text').textContent;
     if(!text) return;
@@ -3318,6 +3997,19 @@ if(saveThoughtBtn){
     saveThoughtBtn.textContent = '✓ Salvat';
     saveThoughtBtn.classList.add('saved');
     refreshSavedCallout();
+
+    // if logged in, also save it permanently in the account (cross-device), not just this browser
+    if(typeof supabaseClient !== 'undefined' && supabaseClient && typeof currentUser !== 'undefined' && currentUser){
+      try{
+        await supabaseClient.from('favorite_readings').upsert({
+          user_id: currentUser.id,
+          reading_date: todayKey(),
+          tab: currentTab,
+          keep_thought: text,
+          intro: (lastParsedReading && lastParsedReading.intro) || null
+        }, { onConflict: 'user_id,reading_date,tab' });
+      }catch(err){ /* local save already succeeded, this is just a nice-to-have */ }
+    }
   });
 }
 
@@ -3706,7 +4398,7 @@ async function subscribeToPush(){
     await fetch('/.netlify/functions/push-subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subscription: sub.toJSON() })
+      body: JSON.stringify({ subscription: sub.toJSON(), userId: (typeof currentUser !== 'undefined' && currentUser) ? currentUser.id : null })
     });
     showToast('Te anunț zilnic când e gata citirea ✦');
     setNotifBtnState();
@@ -3775,6 +4467,1195 @@ renderSky();
 renderEnergyBar();
 setInterval(renderEnergyBar, 60000);
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ---------- Supabase setup — replace these with YOUR project's real values ----------
+// found in Supabase dashboard → Project Settings → API
+const SUPABASE_URL = 'https://rwohricqvbnnteikhtkb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_5z_a-MfYsXfleYEW87OCyA_ulvBazXk';
+
+const supabaseClient = (SUPABASE_URL.includes('YOUR-PROJECT') ) ? null :
+  window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+let currentNatalChart = null;
+
+function isPremium(){
+  return !!(currentProfile && currentProfile.subscription_status === 'active');
+}
+
+// ---------- modal open/close ----------
+const accountBtn = document.getElementById('account-btn');
+const accountOverlay = document.getElementById('account-modal-overlay');
+const accountClose = document.getElementById('account-modal-close');
+
+if(accountBtn){
+  accountBtn.addEventListener('click', ()=>{
+    accountOverlay.style.display = 'flex';
+  });
+}
+if(accountClose){
+  accountClose.addEventListener('click', ()=>{
+    accountOverlay.style.display = 'none';
+  });
+}
+if(accountOverlay){
+  accountOverlay.addEventListener('click', (e)=>{
+    if(e.target === accountOverlay) accountOverlay.style.display = 'none';
+  });
+}
+
+// ---------- login/signup tab switching ----------
+document.querySelectorAll('.account-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.account-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const isLogin = tab.dataset.atab === 'login';
+    document.getElementById('account-login-form').style.display = isLogin ? '' : 'none';
+    document.getElementById('account-signup-form').style.display = isLogin ? 'none' : '';
+  });
+});
+
+// ---------- auth actions ----------
+let wizardStarted = false;
+
+async function refreshProfileUI(){
+  if(!supabaseClient || !currentUser){
+    document.getElementById('account-logged-out').style.display = '';
+    document.getElementById('account-logged-in').style.display = 'none';
+    if(accountBtn){ accountBtn.textContent = '👤 Cont'; accountBtn.classList.remove('is-premium'); }
+    return;
+  }
+
+  document.getElementById('account-logged-out').style.display = 'none';
+  document.getElementById('account-logged-in').style.display = '';
+  document.getElementById('account-email-display').textContent = currentUser.email;
+
+  const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single();
+  currentProfile = profile;
+
+  const { data: natalChartRow } = await supabaseClient.from('natal_charts').select('*').eq('user_id', currentUser.id).single();
+  currentNatalChart = natalChartRow || null;
+
+  const statusEl = document.getElementById('account-premium-status');
+  const upsellEl = document.getElementById('premium-upsell');
+  const natalSection = document.getElementById('natal-chart-section');
+  const wizardPromptEl = document.getElementById('birth-wizard-prompt');
+  const wizardEl = document.getElementById('birth-wizard');
+  const successEl = document.getElementById('premium-success-view');
+
+  const hasBirthData = !!(profile && profile.birth_date);
+  const justSubscribed = new URLSearchParams(window.location.search).get('premium') === 'success';
+
+  if(profile){
+    if(profile.birth_date) document.getElementById('birth-date').value = profile.birth_date;
+    if(profile.birth_time) document.getElementById('birth-time').value = profile.birth_time.slice(0,5);
+    if(profile.birth_lat) document.getElementById('birth-lat').value = profile.birth_lat;
+    if(profile.birth_lng) document.getElementById('birth-lng').value = profile.birth_lng;
+    if(currentNatalChart) renderNatalChart(currentNatalChart);
+  }
+
+  if(isPremium()){
+    statusEl.textContent = '✨ Ești abonat Premium';
+    statusEl.classList.add('active');
+    if(accountBtn){ accountBtn.textContent = '👑 Premium'; accountBtn.classList.add('is-premium'); }
+
+    if(justSubscribed){
+      wizardPromptEl.style.display = 'none';
+      wizardEl.style.display = 'none';
+      upsellEl.style.display = 'none';
+      successEl.style.display = '';
+      natalSection.style.display = 'none';
+      document.getElementById('ai-astrologer-section').style.display = 'none';
+    } else {
+      wizardPromptEl.style.display = 'none';
+      wizardEl.style.display = 'none';
+      upsellEl.style.display = 'none';
+      successEl.style.display = 'none';
+      natalSection.style.display = '';
+      document.getElementById('ai-astrologer-section').style.display = '';
+      loadAiConversationHistory();
+    }
+  } else {
+    statusEl.textContent = 'Cont gratuit';
+    statusEl.classList.remove('active');
+    if(accountBtn){ accountBtn.textContent = '👤 Contul meu'; accountBtn.classList.remove('is-premium'); }
+    successEl.style.display = 'none';
+    natalSection.style.display = 'none';
+    document.getElementById('ai-astrologer-section').style.display = '';
+    loadAiConversationHistory();
+
+    if(!hasBirthData && !wizardStarted){
+      wizardPromptEl.style.display = '';
+      wizardEl.style.display = 'none';
+      upsellEl.style.display = 'none';
+    } else if(!hasBirthData && wizardStarted){
+      wizardPromptEl.style.display = 'none';
+      wizardEl.style.display = '';
+      upsellEl.style.display = 'none';
+    } else {
+      wizardPromptEl.style.display = 'none';
+      wizardEl.style.display = 'none';
+      upsellEl.style.display = '';
+    }
+  }
+
+  applyPremiumGating();
+  checkAdminAccess();
+  if(typeof renderCalendar === 'function') renderCalendar();
+
+  const journalSection = document.getElementById('journal-section');
+  if(journalSection){
+    journalSection.style.display = '';
+    loadTodayJournalEntry();
+  }
+}
+
+async function checkSession(){
+  if(!supabaseClient) return;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  currentUser = session ? session.user : null;
+  await refreshProfileUI();
+}
+
+const loginSubmit = document.getElementById('login-submit');
+if(loginSubmit){
+  loginSubmit.addEventListener('click', async ()=>{
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errEl = document.getElementById('login-error');
+    errEl.textContent = '';
+    if(!supabaseClient){ errEl.textContent = 'Contul nu e configurat încă.'; return; }
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if(error){ errEl.textContent = error.message; return; }
+    currentUser = (await supabaseClient.auth.getUser()).data.user;
+    await refreshProfileUI();
+  });
+}
+
+const signupSubmit = document.getElementById('signup-submit');
+if(signupSubmit){
+  signupSubmit.addEventListener('click', async ()=>{
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const errEl = document.getElementById('signup-error');
+    errEl.textContent = '';
+    if(!supabaseClient){ errEl.textContent = 'Contul nu e configurat încă.'; return; }
+    if(password.length < 6){ errEl.textContent = 'Parola trebuie să aibă minim 6 caractere.'; return; }
+    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+    if(error){ errEl.textContent = error.message; return; }
+
+    if(data.session){
+      // email confirmation is off — the user is already logged in, straight to the wizard prompt
+      currentUser = data.session.user;
+      wizardStarted = false;
+      await refreshProfileUI();
+    } else {
+      errEl.style.color = 'var(--gold)';
+      errEl.textContent = 'Cont creat! Verifică emailul pentru confirmare, apoi intră în cont.';
+    }
+  });
+}
+
+const logoutBtn = document.getElementById('logout-btn');
+if(logoutBtn){
+  logoutBtn.addEventListener('click', async ()=>{
+    if(supabaseClient) await supabaseClient.auth.signOut();
+    currentUser = null;
+    currentProfile = null;
+    await refreshProfileUI();
+  });
+}
+
+// ---------- save birth data ----------
+// ---------- birth data wizard: start button + step navigation ----------
+const editBirthBtn = document.getElementById('edit-birth-data-btn');
+if(editBirthBtn){
+  editBirthBtn.addEventListener('click', ()=>{
+    wizardStarted = true;
+    document.getElementById('natal-chart-section').style.display = 'none';
+    document.getElementById('premium-upsell').style.display = 'none';
+    document.getElementById('birth-wizard-prompt').style.display = 'none';
+    document.getElementById('birth-wizard').style.display = '';
+    document.querySelectorAll('.wizard-step').forEach(step => step.style.display = 'none');
+    document.getElementById('wizard-step-1').style.display = '';
+    document.querySelectorAll('.wizard-progress span').forEach(s=>{
+      s.classList.toggle('active', s.dataset.step === '1');
+    });
+  });
+}
+
+// ---------- same city search, for the second person in compatibility ----------
+let compatBCityTimer = null;
+const compatBCityInput = document.getElementById('compat-b-city');
+const compatBSuggestionsEl = document.getElementById('compat-b-city-suggestions');
+
+if(compatBCityInput){
+  compatBCityInput.addEventListener('input', ()=>{
+    clearTimeout(compatBCityTimer);
+    const query = compatBCityInput.value.trim();
+    if(query.length < 3){ compatBSuggestionsEl.classList.remove('open'); return; }
+    compatBCityTimer = setTimeout(async ()=>{
+      try{
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&q=${encodeURIComponent(query)}`);
+        const results = await res.json();
+        if(!results.length){ compatBSuggestionsEl.classList.remove('open'); return; }
+        compatBSuggestionsEl.innerHTML = results.map((r,i) =>
+          `<div class="city-suggestion-item" data-idx="${i}">${r.display_name}</div>`
+        ).join('');
+        compatBSuggestionsEl.classList.add('open');
+        compatBSuggestionsEl.querySelectorAll('.city-suggestion-item').forEach((el, i)=>{
+          el.addEventListener('click', ()=>{
+            const r = results[i];
+            compatBCityInput.value = r.display_name;
+            compatBSuggestionsEl.classList.remove('open');
+            const approxOffset = Math.round(parseFloat(r.lon) / 15);
+            document.getElementById('compat-b-utc').value = String(Math.max(-12, Math.min(12, approxOffset)));
+          });
+        });
+      }catch(e){ compatBSuggestionsEl.classList.remove('open'); }
+    }, 450);
+  });
+  document.addEventListener('click', (e)=>{
+    if(!compatBCityInput.contains(e.target) && !compatBSuggestionsEl.contains(e.target)){
+      compatBSuggestionsEl.classList.remove('open');
+    }
+  });
+}
+
+// ---------- city search: auto-fills coordinates + approximate UTC offset, no manual entry needed ----------
+let citySearchTimer = null;
+let selectedCityData = null;
+
+const birthCityInput = document.getElementById('birth-city');
+const citySuggestionsEl = document.getElementById('birth-city-suggestions');
+
+if(birthCityInput){
+  birthCityInput.addEventListener('input', ()=>{
+    selectedCityData = null;
+    document.getElementById('birth-city-confirmed').textContent = '';
+    clearTimeout(citySearchTimer);
+    const query = birthCityInput.value.trim();
+    if(query.length < 3){ citySuggestionsEl.classList.remove('open'); return; }
+    citySearchTimer = setTimeout(async ()=>{
+      try{
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&q=${encodeURIComponent(query)}`);
+        const results = await res.json();
+        if(!results.length){ citySuggestionsEl.classList.remove('open'); return; }
+        citySuggestionsEl.innerHTML = results.map((r,i) =>
+          `<div class="city-suggestion-item" data-idx="${i}">${r.display_name}</div>`
+        ).join('');
+        citySuggestionsEl.classList.add('open');
+        citySuggestionsEl.querySelectorAll('.city-suggestion-item').forEach((el, i)=>{
+          el.addEventListener('click', ()=>{
+            const r = results[i];
+            selectedCityData = { name: r.display_name, lat: parseFloat(r.lat), lng: parseFloat(r.lon) };
+            birthCityInput.value = r.display_name;
+            citySuggestionsEl.classList.remove('open');
+
+            // approximate UTC offset from longitude (15° per hour) — a reasonable
+            // default that removes the confusing "UTC+2 vs UTC+3" question entirely;
+            // the "introdu manual" option remains for anyone who needs precision
+            const approxOffset = Math.round(selectedCityData.lng / 15);
+            document.getElementById('birth-utc-offset').value = String(Math.max(-12, Math.min(12, approxOffset)));
+            document.getElementById('birth-lat').value = selectedCityData.lat;
+            document.getElementById('birth-lng').value = selectedCityData.lng;
+
+            document.getElementById('birth-city-confirmed').textContent = `✓ Coordonate găsite automat`;
+          });
+        });
+      }catch(e){ citySuggestionsEl.classList.remove('open'); }
+    }, 450);
+  });
+
+  document.addEventListener('click', (e)=>{
+    if(!birthCityInput.contains(e.target) && !citySuggestionsEl.contains(e.target)){
+      citySuggestionsEl.classList.remove('open');
+    }
+  });
+}
+
+const toggleAdvancedLocation = document.getElementById('toggle-advanced-location');
+if(toggleAdvancedLocation){
+  toggleAdvancedLocation.addEventListener('click', ()=>{
+    const fields = document.getElementById('advanced-location-fields');
+    fields.style.display = fields.style.display === 'none' ? '' : 'none';
+  });
+}
+
+const startWizardBtn = document.getElementById('start-birth-wizard');
+if(startWizardBtn){
+  startWizardBtn.addEventListener('click', ()=>{
+    wizardStarted = true;
+    document.getElementById('birth-wizard-prompt').style.display = 'none';
+    document.getElementById('birth-wizard').style.display = '';
+  });
+}
+
+document.querySelectorAll('.wizard-next-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const goto = btn.dataset.goto;
+    document.querySelectorAll('.wizard-step').forEach(step => step.style.display = 'none');
+    document.getElementById(`wizard-step-${goto}`).style.display = '';
+    document.querySelectorAll('.wizard-progress span').forEach(s=>{
+      s.classList.toggle('active', s.dataset.step === goto);
+    });
+
+    if(goto === '3'){
+      // pre-select the user's current UTC offset as a convenient default —
+      // they can still change it, since birth location/DST rules may differ
+      const detectedOffset = -new Date().getTimezoneOffset() / 60;
+      const select = document.getElementById('birth-utc-offset');
+      const match = Array.from(select.options).find(o => parseFloat(o.value) === detectedOffset);
+      if(match) select.value = match.value;
+    }
+  });
+});
+
+const saveBirthBtn = document.getElementById('save-birth-data');
+if(saveBirthBtn){
+  saveBirthBtn.addEventListener('click', async ()=>{
+    const errEl = document.getElementById('birth-data-error');
+    errEl.textContent = '';
+    const birthDate = document.getElementById('birth-date').value;
+    const birthTime = document.getElementById('birth-time').value;
+    const lat = parseFloat(document.getElementById('birth-lat').value);
+    const lng = parseFloat(document.getElementById('birth-lng').value);
+    if(!birthDate || !birthTime || isNaN(lat) || isNaN(lng)){
+      errEl.textContent = 'Completează data, ora și orașul nașterii (alege-l din sugestii).';
+      return;
+    }
+    const { error } = await supabaseClient.from('profiles').update({
+      birth_date: birthDate, birth_time: birthTime, birth_lat: lat, birth_lng: lng
+    }).eq('id', currentUser.id);
+    if(error){ errEl.textContent = error.message; return; }
+    showToast('Profilul astrologic e complet ✦');
+    wizardStarted = false;
+    await refreshProfileUI(); // moves on to the premium pitch automatically
+  });
+}
+
+// ---------- subscribe (Stripe Checkout) ----------
+const premiumSuccessClose = document.getElementById('premium-success-close');
+if(premiumSuccessClose){
+  premiumSuccessClose.addEventListener('click', async ()=>{
+    const url = new URL(window.location.href);
+    url.searchParams.delete('premium');
+    window.history.replaceState({}, '', url);
+    await refreshProfileUI();
+  });
+}
+
+const subscribeBtn = document.getElementById('subscribe-btn');
+if(subscribeBtn){
+  subscribeBtn.addEventListener('click', async ()=>{
+    subscribeBtn.textContent = 'Se pregătește...';
+    try{
+      const res = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
+      });
+      const data = await res.json();
+      if(data.url) window.location.href = data.url;
+      else { subscribeBtn.textContent = 'Abonează-te, 19 lei/lună'; showToast('Nu am putut porni plata acum.'); }
+    }catch(e){
+      subscribeBtn.textContent = 'Abonează-te, 19 lei/lună';
+      showToast('Nu am putut porni plata acum.');
+    }
+  });
+}
+
+// ---------- natal chart ----------
+function renderNatalChart(chart){
+  const el = document.getElementById('natal-chart-result');
+  if(!el || !chart) return;
+  const posLines = Object.entries(chart.positions || {})
+    .map(([label, pos]) => `${label}: ${pos.sign} ${pos.degree}°`).join(' · ');
+  const asc = chart.ascendant ? `Ascendent: ${chart.ascendant.sign} ${chart.ascendant.degree}°` : '';
+  const interp = chart.interpretation || {};
+  el.innerHTML = `
+    <div class="nc-positions">${posLines}${asc ? ' · ' + asc : ''}</div>
+    ${interp.overview ? `<div class="nc-block"><div class="nc-label">Sinteza generală</div><div class="nc-text">${interp.overview}</div></div>` : ''}
+    ${interp.sun ? `<div class="nc-block"><div class="nc-label">Soare</div><div class="nc-text">${interp.sun}</div></div>` : ''}
+    ${interp.moon ? `<div class="nc-block"><div class="nc-label">Lună</div><div class="nc-text">${interp.moon}</div></div>` : ''}
+    ${interp.ascendant ? `<div class="nc-block"><div class="nc-label">Ascendent</div><div class="nc-text">${interp.ascendant}</div></div>` : ''}
+    ${interp.loveAndCareer ? `<div class="nc-block"><div class="nc-label">Dragoste & Carieră</div><div class="nc-text">${interp.loveAndCareer}</div></div>` : ''}
+    ${interp.strengthsAndChallenges ? `<div class="nc-block"><div class="nc-label">Puncte forte & Provocări</div><div class="nc-text">${interp.strengthsAndChallenges}</div></div>` : ''}
+  `;
+}
+
+const computeNatalBtn = document.getElementById('compute-natal-btn');
+if(computeNatalBtn){
+  computeNatalBtn.addEventListener('click', async ()=>{
+    if(!currentProfile || !currentProfile.birth_date || !currentProfile.birth_lat){
+      showToast('Completează și salvează întâi datele de naștere.');
+      return;
+    }
+
+    const utcOffset = parseInt(document.getElementById('birth-utc-offset').value, 10);
+    const currentFingerprint = `${currentProfile.birth_date}|${currentProfile.birth_time}|${utcOffset}|${currentProfile.birth_lat}|${currentProfile.birth_lng}`;
+
+    // fastest path: birth data unchanged since last computation — show the
+    // already-fetched chart instantly, no network call at all
+    if(currentNatalChart && currentNatalChart.birth_data_fingerprint === currentFingerprint){
+      renderNatalChart(currentNatalChart);
+      showToast('Harta ta natală (deja calculată) ✦');
+      return;
+    }
+    computeNatalBtn.textContent = 'Se calculează...';
+    try{
+      const res = await fetch('/.netlify/functions/natal-chart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          birthDate: currentProfile.birth_date,
+          birthTime: currentProfile.birth_time,
+          utcOffsetHours: parseInt(document.getElementById('birth-utc-offset').value, 10),
+          lat: currentProfile.birth_lat,
+          lng: currentProfile.birth_lng
+        })
+      });
+      const data = await res.json();
+      if(data.positions){
+        currentNatalChart = { ...data, birth_data_fingerprint: currentFingerprint };
+        renderNatalChart(data);
+        showToast(data.fromCache ? 'Harta ta natală (deja calculată) ✦' : 'Harta natală e gata ✦');
+      } else {
+        showToast('Nu am putut calcula harta acum.');
+      }
+    }catch(e){
+      showToast('Nu am putut calcula harta acum.');
+    }
+    computeNatalBtn.textContent = 'Calculează harta natală';
+  });
+}
+
+// ---------- compatibility, two people ----------
+function bigRingSvg(pct){
+  const R = 50, C = 2 * Math.PI * R;
+  const offset = C - (pct/100)*C;
+  return `<svg width="130" height="130" viewBox="0 0 130 130" overflow="visible">
+    <circle cx="65" cy="65" r="${R}" fill="none" stroke="var(--line-soft)" stroke-width="5"/>
+    <circle cx="65" cy="65" r="${R}" fill="none" stroke="url(#goldGrad)" stroke-width="5"
+      stroke-linecap="round" transform="rotate(-90 65 65)"
+      stroke-dasharray="${C}" stroke-dashoffset="${C}" class="compat-ring-anim" data-target="${offset}"/>
+    <text x="65" y="72" text-anchor="middle" class="compat-ring-num">${pct}%</text>
+  </svg>`;
+}
+
+function renderCompatResult(result){
+  const el = document.getElementById('compat-result');
+  if(!el) return;
+  const cats = result.categories || {};
+  const catMeta = {
+    love: {icon:'❤️', label:'Iubire'},
+    communication: {icon:'💬', label:'Comunicare'},
+    chemistry: {icon:'🔥', label:'Chimie'},
+    family: {icon:'🏡', label:'Viață de familie'},
+    longTerm: {icon:'⭐', label:'Potențial termen lung'}
+  };
+
+  el.innerHTML = `
+    <div class="compat-ring-center">${bigRingSvg(result.pct || 0)}</div>
+    <div class="nc-text" style="text-align:center; margin-bottom:18px;">${result.overview || ''}</div>
+    <div class="compat-categories">
+      ${Object.entries(catMeta).map(([key, meta])=>{
+        const cat = cats[key];
+        if(!cat) return '';
+        return `<div class="compat-cat-row">
+          <div class="compat-cat-head"><span>${meta.icon} ${meta.label}</span><span class="compat-cat-score">${cat.score}%</span></div>
+          <div class="compat-cat-track"><i style="width:${cat.score}%"></i></div>
+          <div class="compat-cat-text">${cat.text || ''}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${result.strengths ? `<div class="nc-block"><div class="nc-label">Puncte forte</div><div class="nc-text">${result.strengths}</div></div>` : ''}
+    ${result.challenges ? `<div class="nc-block"><div class="nc-label">Provocări</div><div class="nc-text">${result.challenges}</div></div>` : ''}
+  `;
+
+  requestAnimationFrame(()=>{
+    const ring = el.querySelector('.compat-ring-anim');
+    if(ring) ring.style.strokeDashoffset = ring.dataset.target;
+  });
+}
+
+const computeCompatBtn = document.getElementById('compute-compat-btn');
+if(computeCompatBtn){
+  computeCompatBtn.addEventListener('click', async ()=>{
+    if(!currentProfile || !currentProfile.birth_date){
+      showToast('Completează întâi propriul tău profil astrologic.');
+      return;
+    }
+    const bDate = document.getElementById('compat-b-date').value;
+    const bTime = document.getElementById('compat-b-time').value;
+    if(!bDate || !bTime){
+      showToast('Completează data și ora nașterii celeilalte persoane.');
+      return;
+    }
+    computeCompatBtn.textContent = 'Se calculează...';
+    try{
+      const res = await fetch('/.netlify/functions/compatibility', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          personA: {
+            name: 'Tu',
+            birthDate: currentProfile.birth_date,
+            birthTime: currentProfile.birth_time,
+            utcOffsetHours: parseInt(document.getElementById('birth-utc-offset').value, 10)
+          },
+          personB: {
+            name: document.getElementById('compat-b-name').value || 'Cealaltă persoană',
+            birthDate: bDate,
+            birthTime: bTime,
+            utcOffsetHours: parseInt(document.getElementById('compat-b-utc').value, 10)
+          }
+        })
+      });
+      const data = await res.json();
+      if(data.pct){
+        renderCompatResult(data);
+        showToast('Compatibilitatea e gata ✦');
+      } else {
+        showToast('Nu am putut calcula compatibilitatea acum.');
+      }
+    }catch(e){
+      showToast('Nu am putut calcula compatibilitatea acum.');
+    }
+    computeCompatBtn.textContent = 'Verifică compatibilitatea';
+  });
+}
+
+// ---------- premium gating: monthly/yearly full content + unlimited Oracolul ----------
+function applyPremiumGating(){
+  const premiumLockNote = 'Conținutul complet pentru această perioadă e disponibil doar cu Premium.';
+  if((currentTab === 'sapt' || currentTab === 'luna') && !isPremium()){
+    document.querySelectorAll('.area-block .area-text, .area-block .area-tip').forEach(el=>{
+      el.dataset.fullText = el.dataset.fullText || el.textContent;
+      el.textContent = '';
+    });
+    const readingRest = document.querySelector('.reading-rest');
+    if(readingRest && !document.getElementById('premium-lock-note')){
+      const note = document.createElement('div');
+      note.id = 'premium-lock-note';
+      note.className = 'install-hint';
+      note.textContent = premiumLockNote;
+      readingRest.parentNode.insertBefore(note, readingRest.nextSibling);
+    }
+  } else {
+    const existingNote = document.getElementById('premium-lock-note');
+    if(existingNote) existingNote.remove();
+  }
+}
+
+// ---------- legal documents: privacy, terms, cookies, disclaimer, contact ----------
+const LEGAL_CONTENT = {
+  privacy: {
+    title: 'Politica de confidențialitate',
+    html: `
+      <p style="color:var(--ink-soft); opacity:.7; font-size:10.5px;">Ultima actualizare: [Data]</p>
+      <p><strong>1. Cine suntem</strong></p>
+      <p>Sagittarius Decoded ("Serviciul", "noi", "nouă") este o aplicație online care oferă conținut astrologic și funcționalități bazate pe inteligență artificială.</p>
+      <p>Operatorul datelor cu caracter personal: <strong>[Numele persoanei sau firmei]</strong>, adresă: <strong>[Adresă]</strong>, email: <strong>[Email contact]</strong>. Dacă ai întrebări privind prelucrarea datelor tale personale, ne poți contacta folosind datele de mai sus.</p>
+
+      <p><strong>2. Ce date colectăm</strong></p>
+      <p><em>Date de identificare:</em> adresa de e-mail, identificatorul contului, parola (criptată și administrată prin serviciul de autentificare; nu este accesibilă în format clar).</p>
+      <p><em>Date pentru funcțiile astrologice:</em> dacă alegi să folosești funcțiile personalizate, putem prelucra data nașterii, ora nașterii, localitatea nașterii, preferințele introduse în aplicație. Aceste date sunt folosite exclusiv pentru generarea funcțiilor astrologice personalizate.</p>
+      <p><em>Date privind abonamentul:</em> în cazul unui abonament Premium putem prelucra identificatorul clientului Stripe, starea abonamentului, tipul abonamentului, istoricul plăților (fără datele cardului). Nu colectăm și nu stocăm niciodată datele cardului bancar — toate plățile sunt procesate securizat de Stripe.</p>
+
+      <p><strong>3. Date stocate doar pe dispozitivul tău</strong></p>
+      <p>Unele informații sunt păstrate exclusiv local, prin intermediul browserului (localStorage), fără a fi transmise către serverele noastre: streak-ul de utilizare, gândurile salvate, feedback-ul zilnic, alte preferințe locale. Dacă ștergi datele browserului, aceste informații pot fi pierdute.</p>
+
+      <p><strong>4. În ce scop folosim datele</strong></p>
+      <p>Prelucrăm datele pentru: crearea și administrarea contului, autentificare, furnizarea funcțiilor aplicației, calculul hărții natale, gestionarea abonamentului Premium, prevenirea fraudelor și securizarea serviciului, comunicarea cu utilizatorii, îndeplinirea obligațiilor legale. Nu vindem și nu închiriem datele tale personale.</p>
+
+      <p><strong>5. Temeiul juridic</strong></p>
+      <p>Prelucrarea datelor se bazează, după caz, pe: executarea contractului (art. 6 alin. (1) lit. b GDPR), consimțământul utilizatorului (art. 6 alin. (1) lit. a), obligațiile legale (art. 6 alin. (1) lit. c), interesul legitim privind securitatea și funcționarea serviciului (art. 6 alin. (1) lit. f).</p>
+
+      <p><strong>6. Furnizori terți</strong></p>
+      <p>Pentru furnizarea serviciului folosim furnizori specializați, precum Supabase (autentificare și bază de date), Stripe (procesarea plăților), Netlify (găzduirea aplicației), Google Analytics (dacă este activat). Acești furnizori prelucrează date doar în măsura necesară furnizării serviciilor.</p>
+
+      <p><strong>7. Transferuri internaționale</strong></p>
+      <p>Anumiți furnizori pot prelucra date în afara Spațiului Economic European. În aceste situații sunt utilizate mecanisme de protecție prevăzute de GDPR, inclusiv Clauzele Contractuale Standard aprobate de Comisia Europeană, acolo unde este cazul.</p>
+
+      <p><strong>8. Cât timp păstrăm datele</strong></p>
+      <p>Datele contului sunt păstrate atât timp cât contul este activ. Datele privind abonamentele pot fi păstrate atât timp cât legislația fiscală sau contabilă impune acest lucru. La ștergerea contului, datele personale sunt eliminate sau anonimizate, cu excepția celor pe care legea ne obligă să le păstrăm.</p>
+
+      <p><strong>9. Drepturile tale</strong></p>
+      <p>Conform GDPR ai dreptul la: acces, rectificare, ștergere, restricționarea prelucrării, opoziție, portabilitatea datelor, retragerea consimțământului, depunerea unei plângeri la autoritatea competentă. În România, autoritatea competentă este ANSPDCP.</p>
+
+      <p><strong>10. Securitate</strong></p>
+      <p>Aplicăm măsuri tehnice și organizatorice rezonabile pentru protejarea datelor personale. Cu toate acestea, niciun sistem informatic nu poate garanta securitate absolută.</p>
+
+      <p><strong>11. Modificări</strong></p>
+      <p>Putem actualiza periodic această politică. Versiunea actualizată va fi publicată pe această pagină.</p>
+    `
+  },
+  terms: {
+    title: 'Termeni și condiții',
+    html: `
+      <p><strong>1. Despre serviciu</strong></p>
+      <p>Sagittarius Decoded oferă conținut astrologic și funcționalități bazate pe inteligență artificială. Conținutul are scop informativ și de divertisment.</p>
+
+      <p><strong>2. Contul utilizatorului</strong></p>
+      <p>Pentru anumite funcții este necesară crearea unui cont. Utilizatorul este responsabil pentru păstrarea confidențialității datelor de autentificare.</p>
+
+      <p><strong>3. Abonamentul Premium</strong></p>
+      <p>Abonamentul este lunar, se reînnoiește automat până la anulare, și poate fi anulat oricând. Anularea oprește reînnoirea viitoare. Accesul Premium rămâne activ până la expirarea perioadei deja achitate.</p>
+
+      <p><strong>4. Plăți</strong></p>
+      <p>Toate plățile sunt procesate exclusiv prin Stripe. Nu stocăm datele cardurilor bancare.</p>
+
+      <p><strong>5. Rambursări</strong></p>
+      <p>Cu excepția cazurilor prevăzute de legislația aplicabilă, abonamentele deja facturate nu sunt rambursabile pentru perioada deja începută.</p>
+
+      <p><strong>6. Utilizare interzisă</strong></p>
+      <p>Este interzisă: încercarea de compromitere a securității, folosirea automată abuzivă, revânzarea serviciului fără acord, încălcarea drepturilor de proprietate intelectuală.</p>
+
+      <p><strong>7. Suspendarea contului</strong></p>
+      <p>Putem suspenda sau închide conturile utilizate fraudulos sau cu încălcarea acestor termeni.</p>
+
+      <p><strong>8. Limitarea răspunderii</strong></p>
+      <p>Serviciul este furnizat "ca atare", fără garanția că va funcționa fără întreruperi sau erori. În măsura permisă de lege, nu răspundem pentru prejudicii indirecte rezultate din utilizarea serviciului.</p>
+
+      <p><strong>9. Legea aplicabilă</strong></p>
+      <p>Acești termeni sunt guvernați de legislația din România și de legislația Uniunii Europene aplicabilă.</p>
+    `
+  },
+  cookies: {
+    title: 'Politica Cookies',
+    html: `
+      <p>Aplicația utilizează cookie-uri și tehnologii similare pentru: autentificare, menținerea sesiunii, funcționarea serviciului, procesarea plăților, analiză statistică (dacă este activată).</p>
+      <p>Cookie-urile strict necesare nu pot fi dezactivate fără afectarea funcționării aplicației.</p>
+      <p>Cookie-urile de analiză vor fi utilizate numai în conformitate cu opțiunile exprimate de utilizator, atunci când legislația impune obținerea consimțământului.</p>
+      <p>Poți modifica preferințele privind cookie-urile din browserul tău sau prin panoul de consimțământ, dacă acesta este disponibil.</p>
+    `
+  },
+  disclaimer: {
+    title: 'Disclaimer astrologic',
+    html: `
+      <p>Sagittarius Decoded oferă interpretări astrologice generate automat pe baza unor calcule astronomice și a unor modele de inteligență artificială.</p>
+      <p>Conținutul are exclusiv scop informativ și de divertisment.</p>
+      <p>Interpretările nu constituie și nu înlocuiesc consultanță medicală, psihologică, juridică, financiară sau de altă natură profesională.</p>
+      <p>Astrologia nu este o disciplină științifică cu valoare predictivă demonstrată, iar interpretările nu garantează producerea unor evenimente viitoare.</p>
+      <p>Orice decizie luată pe baza informațiilor furnizate prin serviciu aparține exclusiv utilizatorului.</p>
+    `
+  },
+  contact: {
+    title: 'Contact',
+    html: `
+      <p>Pentru întrebări privind: contul, abonamentul Premium, protecția datelor, exercitarea drepturilor prevăzute de GDPR, ne poți contacta la:</p>
+      <p><strong>Email: [contact@domeniul-tău.ro]</strong></p>
+      <p>Vom încerca să răspundem solicitărilor într-un termen rezonabil și, în cazul cererilor privind protecția datelor, în termenele prevăzute de legislația aplicabilă.</p>
+    `
+  }
+};
+
+const legalOverlay = document.getElementById('legal-modal-overlay');
+document.querySelectorAll('.legal-link').forEach(link=>{
+  link.addEventListener('click', ()=>{
+    const doc = LEGAL_CONTENT[link.dataset.legal];
+    if(!doc) return;
+    document.getElementById('legal-modal-title').textContent = doc.title;
+    document.getElementById('legal-modal-body').innerHTML = doc.html;
+    legalOverlay.style.display = 'flex';
+  });
+});
+const legalClose = document.getElementById('legal-modal-close');
+if(legalClose) legalClose.addEventListener('click', ()=>{ legalOverlay.style.display = 'none'; });
+if(legalOverlay) legalOverlay.addEventListener('click', (e)=>{
+  if(e.target === legalOverlay) legalOverlay.style.display = 'none';
+});
+
+// ---------- admin panel: only shows/works if the server confirms this email is the admin ----------
+// ---------- jurnal astrologic ----------
+let journalMoodValue = null;
+let journalTagsValue = [];
+
+document.querySelectorAll('#journal-tags-picker button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tag = btn.dataset.tag;
+    btn.classList.toggle('active');
+    if(journalTagsValue.includes(tag)) journalTagsValue = journalTagsValue.filter(t => t !== tag);
+    else journalTagsValue.push(tag);
+  });
+});
+
+
+document.querySelectorAll('#journal-mood-picker button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#journal-mood-picker button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    journalMoodValue = parseInt(btn.dataset.val, 10);
+  });
+});
+
+['energy','love','career','finance','health'].forEach(key=>{
+  const slider = document.getElementById(`journal-${key}`);
+  const label = document.getElementById(`journal-${key}-val`);
+  if(slider && label){
+    slider.addEventListener('input', ()=>{ label.textContent = slider.value; });
+  }
+});
+
+async function loadTodayJournalEntry(){
+  if(!supabaseClient || !currentUser) return;
+  const { data } = await supabaseClient.from('journal_entries').select('*').eq('user_id', currentUser.id).eq('entry_date', todayKey()).single();
+  if(data){
+    if(data.mood_score){
+      document.querySelectorAll('#journal-mood-picker button').forEach(b=>{
+        b.classList.toggle('active', parseInt(b.dataset.val,10) === data.mood_score);
+      });
+      journalMoodValue = data.mood_score;
+    }
+    ['energy','love','career','finance','health'].forEach(key=>{
+      const val = data[`${key === 'energy' ? 'energy_level' : key + '_score'}`];
+      if(val){
+        document.getElementById(`journal-${key}`).value = val;
+        document.getElementById(`journal-${key}-val`).textContent = val;
+      }
+    });
+    if(data.important_event) document.getElementById('journal-event').value = data.important_event;
+    if(data.tags && data.tags.length){
+      journalTagsValue = [...data.tags];
+      document.querySelectorAll('#journal-tags-picker button').forEach(b=>{
+        b.classList.toggle('active', journalTagsValue.includes(b.dataset.tag));
+      });
+    }
+    if(data.notes) document.getElementById('journal-notes').value = data.notes;
+    document.getElementById('journal-context-note').textContent = 'Ai completat deja intrarea de azi — o poți actualiza oricând.';
+  } else {
+    journalTagsValue = [];
+    document.querySelectorAll('#journal-tags-picker button').forEach(b=>b.classList.remove('active'));
+    document.getElementById('journal-context-note').textContent = 'Cum a fost ziua ta de azi?';
+  }
+}
+
+const saveJournalBtn = document.getElementById('save-journal-btn');
+if(saveJournalBtn){
+  saveJournalBtn.addEventListener('click', async ()=>{
+    const resultEl = document.getElementById('journal-save-result');
+    resultEl.textContent = '';
+    if(!supabaseClient){ resultEl.textContent = 'Contul nu e configurat încă.'; return; }
+
+    // auto-captured astrological context, at the moment of writing — this is
+    // what makes future correlation ("energia ta e mai mică în Mercur retrograd")
+    // possible, without the user having to note any of it themselves
+    const moon = getMoonPhase(new Date());
+    const { score: energyScore } = computeEnergyScore();
+    const now = new Date();
+    const todaysEvent = calendarEvents.find(ev => ev.month === now.getMonth()+1 && ev.day === now.getDate());
+
+    const entry = {
+      user_id: currentUser.id,
+      entry_date: todayKey(),
+      mood_score: journalMoodValue,
+      energy_level: parseInt(document.getElementById('journal-energy').value, 10),
+      love_score: parseInt(document.getElementById('journal-love').value, 10),
+      career_score: parseInt(document.getElementById('journal-career').value, 10),
+      finance_score: parseInt(document.getElementById('journal-finance').value, 10),
+      health_score: parseInt(document.getElementById('journal-health').value, 10),
+      important_event: document.getElementById('journal-event').value || null,
+      tags: journalTagsValue.length ? journalTagsValue : null,
+      notes: document.getElementById('journal-notes').value || null,
+      moon_phase: moon.name,
+      astro_energy_score: energyScore,
+      active_transits: todaysEvent ? [todaysEvent.title] : [],
+      updated_at: new Date().toISOString()
+    };
+
+    const { error } = await supabaseClient.from('journal_entries').upsert(entry, { onConflict: 'user_id,entry_date' });
+    if(error){ resultEl.textContent = error.message; return; }
+    resultEl.style.color = 'var(--gold)';
+    resultEl.textContent = 'Salvat ✦';
+    showToast('Intrarea din jurnal e salvată ✦');
+  });
+}
+
+function renderJournalHistory(entries){
+  const list = document.getElementById('journal-history-list');
+  if(!entries.length){
+    list.innerHTML = '<div class="account-hint" style="margin-top:14px;">Nicio intrare încă pentru această căutare.</div>';
+    return;
+  }
+  const moodEmoji = {1:'😞',2:'😐',3:'🙂',4:'😊',5:'😄'};
+  list.innerHTML = entries.map(e => `
+    <div class="journal-entry-item">
+      <div class="journal-entry-date">${e.entry_date} ${e.mood_score ? moodEmoji[e.mood_score] : ''}</div>
+      <div class="journal-entry-scores">⚡${e.energy_level||'–'} · ❤️${e.love_score||'–'} · 💼${e.career_score||'–'} · 💰${e.finance_score||'–'} · 🩸${e.health_score||'–'}</div>
+      ${e.important_event ? `<div class="journal-entry-scores">📌 ${e.important_event}</div>` : ''}
+      ${e.tags && e.tags.length ? `<div class="journal-entry-scores">🏷️ ${e.tags.join(', ')}</div>` : ''}
+      ${e.notes ? `<div class="journal-entry-notes">${e.notes}</div>` : ''}
+      ${e.moon_phase ? `<div class="journal-entry-context">${e.moon_phase}${e.active_transits && e.active_transits.length ? ' · ' + e.active_transits.join(', ') : ''}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+const toggleJournalHistory = document.getElementById('toggle-journal-history');
+if(toggleJournalHistory){
+  toggleJournalHistory.addEventListener('click', async ()=>{
+    const panel = document.getElementById('journal-history-panel');
+    const isOpen = panel.style.display !== 'none';
+    if(isOpen){ panel.style.display = 'none'; return; }
+    panel.style.display = '';
+    if(!supabaseClient){ renderJournalHistory([]); return; }
+    const { data } = await supabaseClient.from('journal_entries').select('*').eq('user_id', currentUser.id).order('entry_date', { ascending: false }).limit(30);
+    renderJournalHistory(data || []);
+  });
+}
+
+const journalSearchDate = document.getElementById('journal-search-date');
+if(journalSearchDate){
+  journalSearchDate.addEventListener('change', async ()=>{
+    if(!supabaseClient){ renderJournalHistory([]); return; }
+    if(!journalSearchDate.value){
+      const { data } = await supabaseClient.from('journal_entries').select('*').eq('user_id', currentUser.id).order('entry_date', { ascending: false }).limit(30);
+      renderJournalHistory(data || []);
+      return;
+    }
+    const { data } = await supabaseClient.from('journal_entries').select('*').eq('user_id', currentUser.id).eq('entry_date', journalSearchDate.value);
+    renderJournalHistory(data || []);
+  });
+}
+
+// ---------- "Evoluția mea": energy chart, mood distribution, auto-generated insights ----------
+function drawEnergyChart(points){
+  const canvas = document.getElementById('evolution-chart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const valid = points.filter(p => typeof p.energy === 'number');
+  if(valid.length < 2){
+    ctx.fillStyle = 'rgba(200,190,170,0.5)';
+    ctx.font = '11px Montserrat, sans-serif';
+    ctx.fillText('Nu sunt încă destule date pentru grafic.', 10, h/2);
+    return;
+  }
+
+  const pad = 10;
+  const maxE = 10, minE = 1;
+  const stepX = (w - pad*2) / (valid.length - 1);
+
+  ctx.beginPath();
+  valid.forEach((p, i)=>{
+    const x = pad + i * stepX;
+    const y = h - pad - ((p.energy - minE) / (maxE - minE)) * (h - pad*2);
+    if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#c9a24a';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  valid.forEach((p, i)=>{
+    const x = pad + i * stepX;
+    const y = h - pad - ((p.energy - minE) / (maxE - minE)) * (h - pad*2);
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, Math.PI*2);
+    ctx.fillStyle = '#e8c76f';
+    ctx.fill();
+  });
+}
+
+function renderMoodDistribution(entries){
+  const el = document.getElementById('evolution-mood-bars');
+  if(!el) return;
+  const moodEmoji = {1:'😞',2:'😐',3:'🙂',4:'😊',5:'😄'};
+  const counts = {1:0,2:0,3:0,4:0,5:0};
+  entries.forEach(e => { if(e.mood_score) counts[e.mood_score]++; });
+  const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
+  el.innerHTML = [1,2,3,4,5].map(m => {
+    const pct = Math.round((counts[m]/total)*100);
+    return `<div class="mood-bar-row"><span>${moodEmoji[m]}</span><div class="mood-bar-track"><i style="width:${pct}%"></i></div><span>${pct}%</span></div>`;
+  }).join('');
+}
+
+async function loadEvolutionDashboard(){
+  const notEnoughEl = document.getElementById('evolution-not-enough');
+  const contentEl = document.getElementById('evolution-content');
+  if(!supabaseClient || !currentUser) return;
+
+  try{
+    const res = await fetch('/.netlify/functions/journal-insights', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: currentUser.id })
+    });
+    const data = await res.json();
+
+    if(data.notEnoughData){
+      notEnoughEl.style.display = '';
+      contentEl.style.display = 'none';
+      notEnoughEl.textContent = `Ai ${data.entryCount || 0} intrări în jurnal. Scrie cel puțin 7 zile ca să apară primele tale insight-uri.`;
+      return;
+    }
+
+    notEnoughEl.style.display = 'none';
+    contentEl.style.display = '';
+
+    drawEnergyChart(data.energyTrend || []);
+
+    const { data: allEntries } = await supabaseClient.from('journal_entries').select('mood_score').eq('user_id', currentUser.id);
+    renderMoodDistribution(allEntries || []);
+
+    const insightsEl = document.getElementById('evolution-insights');
+    const patterns = data.patterns || [];
+    insightsEl.innerHTML = patterns.length
+      ? patterns.map(p => `<div class="insight-item">${p}</div>`).join('')
+      : '<div class="account-hint">Încă strângem date pentru insight-uri mai profunde — continuă să scrii în jurnal.</div>';
+
+    document.getElementById('evolution-note').textContent = data.note || '';
+  }catch(e){
+    notEnoughEl.style.display = '';
+    contentEl.style.display = 'none';
+    notEnoughEl.textContent = 'Nu am putut încărca evoluția ta acum.';
+  }
+}
+
+const toggleEvolution = document.getElementById('toggle-evolution');
+if(toggleEvolution){
+  toggleEvolution.addEventListener('click', async ()=>{
+    const panel = document.getElementById('evolution-panel');
+    const isOpen = panel.style.display !== 'none';
+    if(isOpen){ panel.style.display = 'none'; return; }
+    panel.style.display = '';
+    await loadEvolutionDashboard();
+  });
+}
+
+// ---------- Astrologul AI (MVP) — memorie, sugestii inteligente, favorite, limită gratuit ----------
+let aiConversationId = localStorage.getItem('sagetator_last_ai_conversation') || null;
+let aiMessageCountToday = 0;
+
+function addChatBubble(role, text, messageId, isFavorite){
+  const wrap = document.getElementById('ai-chat-messages');
+  if(!wrap) return;
+  document.getElementById('ai-example-prompts').style.display = 'none';
+
+  const outer = document.createElement('div');
+  outer.className = 'ai-chat-bubble-wrap';
+  const bubble = document.createElement('div');
+  bubble.className = `ai-chat-bubble ${role}`;
+  bubble.textContent = text;
+  outer.appendChild(bubble);
+
+  if(role === 'assistant' && messageId){
+    const favBtn = document.createElement('button');
+    favBtn.className = `ai-favorite-btn${isFavorite ? ' active' : ''}`;
+    favBtn.textContent = isFavorite ? '★ Salvat printre favorite' : '☆ Salvează ca favorit';
+    favBtn.addEventListener('click', async ()=>{
+      const newVal = !favBtn.classList.contains('active');
+      favBtn.classList.toggle('active', newVal);
+      favBtn.textContent = newVal ? '★ Salvat printre favorite' : '☆ Salvează ca favorit';
+      if(supabaseClient){
+        await supabaseClient.from('ai_messages').update({ is_favorite: newVal }).eq('id', messageId);
+      }
+    });
+    outer.appendChild(favBtn);
+  }
+
+  wrap.appendChild(outer);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function renderSuggestions(suggestions){
+  const row = document.getElementById('ai-suggestions-row');
+  if(!row) return;
+  if(!suggestions || !suggestions.length){ row.innerHTML = ''; return; }
+  row.innerHTML = suggestions.map(s => `<button>${s}</button>`).join('');
+  row.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.getElementById('ai-chat-input').value = btn.textContent;
+      sendAiChatMessage();
+    });
+  });
+}
+
+const aiChatSend = document.getElementById('ai-chat-send');
+const aiChatInput = document.getElementById('ai-chat-input');
+
+async function sendAiChatMessage(){
+  const text = aiChatInput.value.trim();
+  if(!text) return;
+  if(!supabaseClient){ showToast('Contul nu e configurat încă.'); return; }
+
+  addChatBubble('user', text);
+  renderSuggestions([]);
+  aiChatInput.value = '';
+  aiChatSend.disabled = true;
+  aiChatSend.textContent = '...';
+
+  try{
+    const res = await fetch('/.netlify/functions/ai-astrologer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: currentUser.id, conversationId: aiConversationId, message: text })
+    });
+    const data = await res.json();
+
+    if(data.limitReached){
+      addChatBubble('assistant', data.reply);
+      updateFreeLimitNote(5, 5);
+    } else if(data.reply){
+      aiConversationId = data.conversationId;
+      localStorage.setItem('sagetator_last_ai_conversation', aiConversationId);
+      addChatBubble('assistant', data.reply, null, false);
+      renderSuggestions(data.suggestions);
+      if(!isPremium()){
+        aiMessageCountToday++;
+        updateFreeLimitNote(aiMessageCountToday, 5);
+      }
+    } else {
+      addChatBubble('assistant', data.error || 'Nu am putut răspunde acum, încearcă din nou.');
+    }
+  }catch(e){
+    addChatBubble('assistant', 'Nu am putut răspunde acum, încearcă din nou.');
+  }
+  aiChatSend.disabled = false;
+  aiChatSend.textContent = 'Trimite';
+}
+
+function updateFreeLimitNote(used, total){
+  const el = document.getElementById('ai-free-limit-note');
+  if(!el) return;
+  if(isPremium()){ el.textContent = ''; return; }
+  const remaining = Math.max(0, total - used);
+  el.textContent = remaining > 0
+    ? `${remaining} din ${total} întrebări gratuite rămase azi.`
+    : `Ai folosit întrebările gratuite de azi. Devino Premium pentru conversații nelimitate.`;
+}
+
+document.querySelectorAll('#ai-example-prompts button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    aiChatInput.value = btn.textContent;
+    sendAiChatMessage();
+  });
+});
+
+if(aiChatSend) aiChatSend.addEventListener('click', sendAiChatMessage);
+if(aiChatInput) aiChatInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') sendAiChatMessage(); });
+
+async function loadAiConversationHistory(){
+  if(!supabaseClient || !currentUser) return;
+  updateFreeLimitNote(0, 5);
+  if(!aiConversationId) return;
+  const { data: messages } = await supabaseClient
+    .from('ai_messages')
+    .select('id, role, content, suggestions, is_favorite')
+    .eq('conversation_id', aiConversationId)
+    .order('created_at', { ascending: true });
+  if(!messages || !messages.length) return;
+
+  const wrap = document.getElementById('ai-chat-messages');
+  wrap.innerHTML = '';
+  let lastSuggestions = [];
+  let userCountToday = 0;
+  const todayStr = todayKey();
+  messages.forEach(m=>{
+    addChatBubble(m.role, m.content, m.role === 'assistant' ? m.id : null, m.is_favorite);
+    if(m.role === 'assistant') lastSuggestions = m.suggestions || [];
+  });
+  renderSuggestions(lastSuggestions);
+}
+
+async function loadDiagnostics(){
+  const display = document.getElementById('diagnostics-display');
+  const errorsEl = document.getElementById('diagnostics-errors');
+  if(!display || !currentUser) return;
+  display.textContent = 'Se încarcă...';
+  try{
+    const res = await fetch('/.netlify/functions/admin-stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUser.email, action: 'diagnostics' })
+    });
+    const d = await res.json();
+    if(!res.ok){ display.textContent = 'Nu am putut încărca diagnosticul.'; return; }
+
+    display.innerHTML = `
+      Supabase: <span class="${d.supabaseConnected ? 'diagnostic-status-ok' : 'diagnostic-status-bad'}">${d.supabaseConnected ? '✓ conectat' : '✗ deconectat'}</span> (${d.supabaseLatencyMs}ms)<br>
+      Utilizator curent: <strong>${currentUser.email}</strong><br>
+      Statut Premium: <strong>${isPremium() ? 'activ' : 'gratuit'}</strong><br>
+      Versiune schemă: ${d.schemaVersion}<br>
+      Versiune algoritm hartă natală: v${d.natalChartAlgorithmVersion}<br>
+      Versiune algoritm insight-uri: v${d.insightAlgorithmVersion}
+    `;
+
+    errorsEl.innerHTML = d.recentErrors && d.recentErrors.length
+      ? '<div class="account-section-title" style="margin-top:16px;">Ultimele erori server</div>' +
+        d.recentErrors.map(e => `<div class="diagnostic-error-item">[${e.function_name}] ${e.error_message.slice(0,150)}<br><span style="opacity:.6;">${new Date(e.created_at).toLocaleString('ro-RO')}</span></div>`).join('')
+      : '<div class="account-hint" style="margin-top:12px;">Nicio eroare recentă înregistrată.</div>';
+  }catch(e){
+    display.textContent = 'Nu am putut încărca diagnosticul acum.';
+  }
+}
+
+const loadDiagnosticsBtn = document.getElementById('load-diagnostics-btn');
+if(loadDiagnosticsBtn) loadDiagnosticsBtn.addEventListener('click', loadDiagnostics);
+
+async function checkAdminAccess(){
+  const panel = document.getElementById('admin-panel-section');
+  if(!panel || !currentUser) return;
+  try{
+    const res = await fetch('/.netlify/functions/admin-stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUser.email, action: 'stats' })
+    });
+    if(!res.ok){ panel.style.display = 'none'; return; }
+    const stats = await res.json();
+    panel.style.display = '';
+    document.getElementById('admin-stats-display').innerHTML = `
+      Utilizatori totali: <strong>${stats.totalUsers}</strong><br>
+      Premium activi: <strong>${stats.premiumUsers}</strong> (${stats.conversionRate}% conversie)<br>
+      Plăți restante: <strong>${stats.pastDueUsers}</strong><br>
+      Abonați push: <strong>${stats.pushSubscribers}</strong><br>
+      Hărți natale calculate: <strong>${stats.natalChartsComputed}</strong><br>
+      Rapoarte compatibilitate: <strong>${stats.compatibilityReports}</strong>
+    `;
+  }catch(e){ panel.style.display = 'none'; }
+}
+
+const adminBroadcastBtn = document.getElementById('admin-broadcast-btn');
+if(adminBroadcastBtn){
+  adminBroadcastBtn.addEventListener('click', async ()=>{
+    const message = document.getElementById('admin-broadcast-message').value.trim();
+    const audience = document.getElementById('admin-broadcast-audience').value;
+    const resultEl = document.getElementById('admin-broadcast-result');
+    if(!message){ resultEl.textContent = 'Scrie un mesaj mai întâi.'; return; }
+    adminBroadcastBtn.textContent = 'Se trimite...';
+    try{
+      const res = await fetch('/.netlify/functions/admin-stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser.email, action: 'broadcast', message, audience })
+      });
+      const data = await res.json();
+      resultEl.style.color = 'var(--gold)';
+      resultEl.textContent = `Trimis: ${data.sent}, eșuat: ${data.failed}`;
+    }catch(e){
+      resultEl.textContent = 'Nu am putut trimite notificarea.';
+    }
+    adminBroadcastBtn.textContent = 'Trimite notificarea';
+  });
+}
+
+checkSession().then(()=>{
+  if(new URLSearchParams(window.location.search).get('premium') === 'success' && accountOverlay){
+    accountOverlay.style.display = 'flex';
+  }
+});
+</script>
+
+
+
+
 
 
 </body>

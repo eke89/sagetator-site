@@ -1,43 +1,43 @@
-const { getStore } = require('@netlify/blobs');
-const crypto = require('crypto');
-
-function getConfiguredStore() {
-  var siteID = process.env.NETLIFY_SITE_ID;
-  var token = process.env.NETLIFY_TOKEN;
-  if (siteID && token) {
-    return getStore({ name: 'sagetator-push-subs', siteID: siteID, token: token });
-  }
-  return getStore('sagetator-push-subs');
-}
-
-function keyFor(endpoint) {
-  return crypto.createHash('sha256').update(endpoint).digest('hex');
-}
+// Push subscriptions now live in Supabase, not Netlify Blobs — Blobs proved
+// unreliable for this account (repeated 401/400/timeout errors). Supabase is
+// already the reliable backbone for accounts and profiles, so this consolidates
+// everything into one place.
+const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event) => {
-  var store = getConfiguredStore();
-
-  if (event.httpMethod === 'POST') {
-    try {
-      var body = JSON.parse(event.body || '{}');
-
-      if (body.action === 'unsubscribe' && body.endpoint) {
-        await store.delete(keyFor(body.endpoint));
-        return { statusCode: 200, body: JSON.stringify({ ok: true, action: 'unsubscribed' }) };
-      }
-
-      if (body.subscription && body.subscription.endpoint) {
-        var key = keyFor(body.subscription.endpoint);
-        await store.setJSON(key, body.subscription);
-        return { statusCode: 200, body: JSON.stringify({ ok: true, action: 'subscribed' }) };
-      }
-
-      return { statusCode: 400, body: JSON.stringify({ error: 'invalid payload' }) };
-    } catch (e) {
-      console.error('push-subscribe error:', e);
-      return { statusCode: 500, body: JSON.stringify({ error: 'server error', detail: String(e && e.message) }) };
-    }
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: JSON.stringify({ error: 'method not allowed' }) };
   }
 
-  return { statusCode: 405, body: JSON.stringify({ error: 'method not allowed' }) };
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return { statusCode: 500, body: JSON.stringify({ error: 'server not configured' }) };
+  }
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  try {
+    const body = JSON.parse(event.body || '{}');
+
+    if (body.action === 'unsubscribe' && body.endpoint) {
+      await supabase.from('push_subscriptions').delete().eq('endpoint', body.endpoint);
+      return { statusCode: 200, body: JSON.stringify({ ok: true, action: 'unsubscribed' }) };
+    }
+
+    if (body.subscription && body.subscription.endpoint) {
+      const { error } = await supabase.from('push_subscriptions').upsert({
+        user_id: body.userId || null,
+        endpoint: body.subscription.endpoint,
+        subscription: body.subscription
+      }, { onConflict: 'endpoint' });
+      if (error) {
+        return { statusCode: 500, body: JSON.stringify({ error: 'db error', detail: error.message }) };
+      }
+      return { statusCode: 200, body: JSON.stringify({ ok: true, action: 'subscribed' }) };
+    }
+
+    return { statusCode: 400, body: JSON.stringify({ error: 'invalid payload' }) };
+  } catch (e) {
+    return { statusCode: 500, body: JSON.stringify({ error: 'server error', detail: String(e) }) };
+  }
 };

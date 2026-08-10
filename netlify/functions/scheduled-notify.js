@@ -1,69 +1,91 @@
 const { schedule } = require('@netlify/functions');
-const { getStore } = require('@netlify/blobs');
+const { createClient } = require('@supabase/supabase-js');
 const webpush = require('web-push');
 
-function getSubsStore() {
-  var siteID = process.env.NETLIFY_SITE_ID;
-  var token = process.env.NETLIFY_TOKEN;
-  if (siteID && token) {
-    return getStore({ name: 'sagetator-push-subs', siteID: siteID, token: token });
-  }
-  return getStore('sagetator-push-subs');
+// same major-event list used on the front end, kept in sync manually for now
+const MAJOR_EVENTS = [
+  { month: 7, day: 22, title: 'Soarele intră în Leu' },
+  { month: 7, day: 23, title: 'Mercur devine direct' },
+  { month: 7, day: 26, title: 'Saturn intră retrograd' },
+  { month: 7, day: 29, title: 'Lună Plină în Vărsător' },
+  { month: 8, day: 3,  title: 'Chiron intră retrograd' },
+  { month: 8, day: 12, title: 'Eclipsă totală de Soare' },
+  { month: 8, day: 22, title: 'Soarele intră în Fecioară' },
+  { month: 8, day: 28, title: 'Eclipsă parțială de Lună' }
+];
+
+function todayInBucharest() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Bucharest', year: 'numeric', month: 'numeric', day: 'numeric'
+  }).formatToParts(new Date());
+  const map = {};
+  parts.forEach(p => { map[p.type] = p.value; });
+  return { year: +map.year, month: +map.month, day: +map.day };
 }
 
-async function sendDailyNotifications() {
-  var vapidPublic = process.env.VAPID_PUBLIC_KEY;
-  var vapidPrivate = process.env.VAPID_PRIVATE_KEY;
-  if (!vapidPublic || !vapidPrivate) {
-    return { status: 'no-vapid-keys' };
+function messageFor(isPremium) {
+  const today = todayInBucharest();
+  const majorEvent = MAJOR_EVENTS.find(e => e.month === today.month && e.day === today.day);
+
+  if (majorEvent) {
+    return isPremium
+      ? `✨ Azi: ${majorEvent.title}. Ca abonat Premium, ai deja interpretarea completă pregătită.`
+      : `✨ Azi: ${majorEvent.title}. Deschide aplicația pentru interpretare.`;
+  }
+
+  return isPremium
+    ? 'Horoscopul tău Premium (zilnic, lunar, anual) e gata. ✨'
+    : 'Horoscopul zilei e gata. ✨';
+}
+
+exports.handler = schedule('0 10 * * *', async () => {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const vapidPublic = process.env.VAPID_PUBLIC_KEY;
+  const vapidPrivate = process.env.VAPID_PRIVATE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey || !vapidPublic || !vapidPrivate) {
+    return { statusCode: 200, body: JSON.stringify({ status: 'not-configured' }) };
   }
 
   webpush.setVapidDetails('mailto:contact@sagittariusdecoded.app', vapidPublic, vapidPrivate);
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-  var subsStore = getSubsStore();
-  var listResult = await subsStore.list();
-  var blobs = (listResult && listResult.blobs) || [];
+  const { data: subs, error } = await supabase.from('push_subscriptions').select('*');
+  if (error) {
+    return { statusCode: 200, body: JSON.stringify({ status: 'error', detail: error.message }) };
+  }
 
-  var sent = 0, removed = 0, failed = 0;
+  // look up premium status for any subscription tied to a user account
+  const userIds = [...new Set((subs || []).map(s => s.user_id).filter(Boolean))];
+  let premiumSet = new Set();
+  if (userIds.length) {
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, subscription_status')
+      .in('id', userIds);
+    (profiles || []).forEach(p => { if (p.subscription_status === 'active') premiumSet.add(p.id); });
+  }
 
-  for (var i = 0; i < blobs.length; i++) {
-    var key = blobs[i].key;
+  let sent = 0, removed = 0, failed = 0;
+  for (const sub of subs || []) {
+    const isPremium = sub.user_id && premiumSet.has(sub.user_id);
     try {
-      var sub = await subsStore.get(key, { type: 'json' });
-      if (!sub) continue;
-      await webpush.sendNotification(sub, JSON.stringify({
+      await webpush.sendNotification(sub.subscription, JSON.stringify({
         title: 'Săgetător',
-        body: 'Horoscopul zilei e gata. ✨',
+        body: messageFor(isPremium),
         url: '/'
       }));
       sent++;
     } catch (e) {
-      // a 404/410 means the subscription is dead (user uninstalled, revoked permission, etc.) — clean it up
       if (e && (e.statusCode === 404 || e.statusCode === 410)) {
-        try { await subsStore.delete(key); removed++; } catch (e2) { /* ignore cleanup failure */ }
+        await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+        removed++;
       } else {
         failed++;
       }
     }
   }
 
-  return { status: 'done', sent: sent, removed: removed, failed: failed };
-}
-
-// runs daily at 10:00 UTC — 12:00 (noon) in Romania during winter (UTC+2), 13:00 during summer DST (UTC+3).
-// content is already generated and cached by scheduled-refresh.js (which runs at midnight), so this
-// function only needs to notify people that today's reading is ready — it never generates anything itself.
-const handler = async () => {
-  var result = { status: 'skipped' };
-  try {
-    result = await sendDailyNotifications();
-  } catch (e) {
-    result = { status: 'error', detail: String(e) };
-  }
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ notifications: result })
-  };
-};
-
-exports.handler = schedule('0 10 * * *', handler);
+  return { statusCode: 200, body: JSON.stringify({ status: 'done', sent, removed, failed }) };
+});
