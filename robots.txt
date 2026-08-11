@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://sagittarius-decoded.netlify.app/sitemap.xml
+
