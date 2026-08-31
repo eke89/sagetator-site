@@ -4250,32 +4250,80 @@ async function generateShareImageCard(){
 
   const parsed = lastParsedReading;
   const introText = (parsed && parsed.intro) ? parsed.intro : (document.getElementById('reading-text').textContent || '');
-  ctx.shadowBlur = 5;
-  ctx.fillStyle = ink;
-  ctx.font = 'italic 33px "Cormorant Garamond", serif';
-  let afterIntroY = wrapCanvasText(ctx, introText, W/2, titleY + 106, W-230, 44);
-  ctx.shadowBlur = 0;
+  const adviceText = parsed && parsed.advice;
+  const thoughtText = parsed && parsed.keepThought;
 
-  if(parsed && parsed.advice){
-    afterIntroY += 36;
-    ctx.fillStyle = gold;
-    ctx.font = '600 18px Montserrat, sans-serif';
-    ctx.fillText('S F A T U L   Z I L E I', W/2, afterIntroY);
-    afterIntroY += 38;
-    ctx.fillStyle = goldBright;
-    ctx.font = 'italic 29px "Cormorant Garamond", serif';
-    afterIntroY = wrapCanvasText(ctx, parsed.advice, W/2, afterIntroY, W-280, 37);
+  // The badge/logo is baked into each background photo at a fixed spot near the
+  // bottom, so text must never be drawn past a safe line — otherwise it overlaps
+  // the artwork. Rather than hoping the reading is short enough, measure how much
+  // room the text actually needs first, and shrink it just enough to fit above
+  // that line before drawing anything.
+  const SAFE_MAX_Y = { zi: 1000, maine: 980, sapt: 920, luna: 700, ieri: 1000 };
+  const safeMaxY = SAFE_MAX_Y[currentTab] || 900;
+  const contentTop = titleY + 104;
+
+  function countWrappedLines(text, maxWidth){
+    const words = text.split(' ');
+    let line = '', lines = 1;
+    for(let i=0;i<words.length;i++){
+      const testLine = line + words[i] + ' ';
+      if(ctx.measureText(testLine).width > maxWidth && line !== ''){
+        lines++;
+        line = words[i] + ' ';
+      } else { line = testLine; }
+    }
+    return lines;
   }
 
-  if(parsed && parsed.keepThought){
-    afterIntroY += 36;
+  function neededHeight(scale){
+    let h = 0;
+    ctx.font = `italic ${Math.round(32*scale)}px "Cormorant Garamond", serif`;
+    h += countWrappedLines(introText, W-230) * (41*scale);
+    if(adviceText){
+      h += 26*scale + 32*scale;
+      ctx.font = `italic ${Math.round(27*scale)}px "Cormorant Garamond", serif`;
+      h += countWrappedLines(adviceText, W-280) * (34*scale);
+    }
+    if(thoughtText){
+      h += 26*scale + 42*scale;
+      ctx.font = `italic ${Math.round(26*scale)}px "Cormorant Garamond", serif`;
+      h += countWrappedLines('« ' + thoughtText + ' »', W-280) * (34*scale);
+    }
+    return h;
+  }
+
+  let scale = 1;
+  for(const s of [1, 0.94, 0.88, 0.82, 0.76, 0.7, 0.64]){
+    if(contentTop + neededHeight(s) <= safeMaxY){ scale = s; break; }
+    scale = s; // keep shrinking to the smallest tried if none fit
+  }
+
+  ctx.shadowBlur = 5;
+  ctx.fillStyle = ink;
+  ctx.font = `italic ${Math.round(32*scale)}px "Cormorant Garamond", serif`;
+  let afterIntroY = wrapCanvasText(ctx, introText, W/2, contentTop, W-230, 41*scale);
+  ctx.shadowBlur = 0;
+
+  if(adviceText){
+    afterIntroY += 26*scale;
     ctx.fillStyle = gold;
-    ctx.font = '600 20px Montserrat, sans-serif';
-    ctx.fillText('G Â N D   D E   P Ă S T R A T', W/2, afterIntroY);
-    afterIntroY += 52;
+    ctx.font = `600 ${Math.round(17*scale)}px Montserrat, sans-serif`;
+    ctx.fillText('S F A T U L   Z I L E I', W/2, afterIntroY);
+    afterIntroY += 32*scale;
     ctx.fillStyle = goldBright;
-    ctx.font = 'italic 28px "Cormorant Garamond", serif';
-    wrapCanvasText(ctx, '« ' + parsed.keepThought + ' »', W/2, afterIntroY, W-280, 37);
+    ctx.font = `italic ${Math.round(27*scale)}px "Cormorant Garamond", serif`;
+    afterIntroY = wrapCanvasText(ctx, adviceText, W/2, afterIntroY, W-280, 34*scale);
+  }
+
+  if(thoughtText){
+    afterIntroY += 26*scale;
+    ctx.fillStyle = gold;
+    ctx.font = `600 ${Math.round(19*scale)}px Montserrat, sans-serif`;
+    ctx.fillText('G Â N D   D E   P Ă S T R A T', W/2, afterIntroY);
+    afterIntroY += 42*scale;
+    ctx.fillStyle = goldBright;
+    ctx.font = `italic ${Math.round(26*scale)}px "Cormorant Garamond", serif`;
+    wrapCanvasText(ctx, '« ' + thoughtText + ' »', W/2, afterIntroY, W-280, 34*scale);
   }
 
   return c;
