@@ -1964,7 +1964,7 @@ footer div:last-child{margin-bottom:0;}
 <div class="topline" style="justify-content:space-between;">
   <div class="live-note">✦ Actualizat în timp real după tranzitele astrale</div>
   <div style="display:flex; gap:8px;">
-    <button class="account-btn-visible" id="account-btn" title="Contul meu" aria-label="Deschide contul tău">👤 Cont</button>
+    <button class="account-btn-visible" id="account-btn" title="Contul meu" aria-label="Deschide contul tău" style="display:none;">👤 Cont</button>
     <button class="theme-toggle-icon" id="music-btn" title="Ambient cosmic" aria-label="Pornește sau oprește muzica ambientală">♫</button>
     <button class="theme-toggle-icon" id="theme-btn" title="Comută tema" aria-label="Comută între mod nocturn și mod luminos">☾</button>
   </div>
@@ -3331,11 +3331,19 @@ function stopLoadingTimer(){
 function renderTldr(scores){
   const row = document.getElementById('tldr-row');
   if(!row) return;
+  const periodInfo = {
+    zi:    { prefix: 'Zi',        energy: 'azi' },
+    ieri:  { prefix: 'Zi',        energy: 'ieri' },
+    maine: { prefix: 'Zi',        energy: 'mâine' },
+    sapt:  { prefix: 'Săptămână', energy: 'săptămâna aceasta' },
+    luna:  { prefix: 'Lună',      energy: 'luna aceasta' }
+  };
+  const period = periodInfo[currentTab] || periodInfo.zi;
   const labels = {
-    dragoste: {icon:'♥︎', good:'Zi bună pentru dragoste', bad:'Atenție în dragoste'},
-    finante:  {icon:'💰', good:'Zi bună pentru bani', bad:'Atenție la cheltuieli'},
-    cariera:  {icon:'⭐', good:'Zi bună pentru carieră', bad:'Atenție la muncă'},
-    familie:  {icon:'⌂', good:'Zi bună pentru familie', bad:'Atenție acasă'}
+    dragoste: {icon:'♥︎', good:`${period.prefix} bună pentru dragoste`, bad:'Atenție în dragoste'},
+    finante:  {icon:'💰', good:`${period.prefix} bună pentru bani`, bad:'Atenție la cheltuieli'},
+    cariera:  {icon:'⭐', good:`${period.prefix} bună pentru carieră`, bad:'Atenție la muncă'},
+    familie:  {icon:'⌂', good:`${period.prefix} bună pentru familie`, bad:'Atenție acasă'}
   };
   const entries = AREA_KEYS
     .map(k => ({key:k, val: scores[k]}))
@@ -3353,7 +3361,7 @@ function renderTldr(scores){
     bullets.push(`<span>${labels[worst.key].icon} ${labels[worst.key].bad}</span>`);
   }
   if(typeof energie === 'number'){
-    const eLabel = energie >= 8 ? 'Energie ridicată azi' : energie >= 5 ? 'Energie moderată azi' : 'Energie scăzută, ai grijă de tine';
+    const eLabel = energie >= 8 ? `Energie ridicată ${period.energy}` : energie >= 5 ? `Energie moderată ${period.energy}` : `Energie scăzută ${period.energy}, ai grijă de tine`;
     bullets.push(`<span>✦ ${eLabel}</span>`);
   }
 
@@ -4538,7 +4546,8 @@ let currentProfile = null;
 let currentNatalChart = null;
 
 function isPremium(){
-  return !!(currentProfile && currentProfile.subscription_status === 'active');
+  // Supabase account system disabled — everything is unlocked by default.
+  return true;
 }
 
 // ---------- modal open/close ----------
@@ -5701,11 +5710,9 @@ if(adminBroadcastBtn){
   });
 }
 
-checkSession().then(()=>{
-  if(new URLSearchParams(window.location.search).get('premium') === 'success' && accountOverlay){
-    accountOverlay.style.display = 'flex';
-  }
-});
+// Supabase account system disabled — skip session check entirely so the app
+// never calls out to Supabase on page load.
+
 </script>
 
 
