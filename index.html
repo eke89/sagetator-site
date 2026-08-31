@@ -4228,7 +4228,7 @@ async function generateShareImageCard(){
   }
 
   const ink = '#f6ecd9';
-  const inkSoft = '#d9c9c0';
+  const inkSoft = '#e8dcd0';
   const gold = '#f2c879';
   const goldBright = '#f6d99a';
 
@@ -4237,54 +4237,45 @@ async function generateShareImageCard(){
   // title placement differs per card: lunar art is busy near the top, so its
   // title sits higher; the others have open sky right under the celestial motif
   const titleY = currentTab === 'luna' ? 90 : 330;
-  ctx.shadowColor = 'rgba(0,0,0,0.45)';
-  ctx.shadowBlur = 6;
+  ctx.shadowColor = 'rgba(0,0,0,0.55)';
+  ctx.shadowBlur = 8;
   ctx.fillStyle = ink;
   ctx.font = 'italic 76px "Cormorant Garamond", serif';
   ctx.fillText('Săgetător', W/2, titleY);
 
-  const now = new Date();
-  if(currentTab === 'maine') now.setDate(now.getDate()+1);
-  const RO_LUNI = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
-  const dateLabels = {
-    zi: `${now.getDate()} ${RO_LUNI[now.getMonth()]} ${now.getFullYear()}`,
-    maine: `${now.getDate()} ${RO_LUNI[now.getMonth()]} ${now.getFullYear()} · previzualizare`,
-    sapt: 'săptămâna aceasta',
-    luna: `${RO_LUNI[now.getMonth()]} ${now.getFullYear()}`,
-    ieri: `${now.getDate()} ${RO_LUNI[now.getMonth()]} ${now.getFullYear()}`
-  };
+  const dateLabel = periodLabelFor(currentTab) || periodLabelFor('zi');
   ctx.fillStyle = inkSoft;
-  ctx.font = '19px Montserrat, sans-serif';
-  ctx.fillText(dateLabels[currentTab] || dateLabels.zi, W/2, titleY + 44);
+  ctx.font = '600 21px Montserrat, sans-serif';
+  ctx.fillText(dateLabel, W/2, titleY + 46);
 
   const parsed = lastParsedReading;
   const introText = (parsed && parsed.intro) ? parsed.intro : (document.getElementById('reading-text').textContent || '');
-  ctx.shadowBlur = 4;
+  ctx.shadowBlur = 5;
   ctx.fillStyle = ink;
-  ctx.font = 'italic 29px "Cormorant Garamond", serif';
-  let afterIntroY = wrapCanvasText(ctx, introText, W/2, titleY + 100, W-260, 40);
+  ctx.font = 'italic 33px "Cormorant Garamond", serif';
+  let afterIntroY = wrapCanvasText(ctx, introText, W/2, titleY + 106, W-230, 44);
   ctx.shadowBlur = 0;
 
   if(parsed && parsed.advice){
-    afterIntroY += 34;
-    ctx.fillStyle = gold;
-    ctx.font = '600 16px Montserrat, sans-serif';
-    ctx.fillText('S F A T U L   Z I L E I', W/2, afterIntroY);
     afterIntroY += 36;
+    ctx.fillStyle = gold;
+    ctx.font = '600 18px Montserrat, sans-serif';
+    ctx.fillText('S F A T U L   Z I L E I', W/2, afterIntroY);
+    afterIntroY += 38;
     ctx.fillStyle = goldBright;
-    ctx.font = 'italic 26px "Cormorant Garamond", serif';
-    afterIntroY = wrapCanvasText(ctx, parsed.advice, W/2, afterIntroY, W-300, 34);
+    ctx.font = 'italic 29px "Cormorant Garamond", serif';
+    afterIntroY = wrapCanvasText(ctx, parsed.advice, W/2, afterIntroY, W-280, 37);
   }
 
   if(parsed && parsed.keepThought){
-    afterIntroY += 34;
+    afterIntroY += 36;
     ctx.fillStyle = gold;
-    ctx.font = '18px Montserrat, sans-serif';
+    ctx.font = '600 20px Montserrat, sans-serif';
     ctx.fillText('G Â N D   D E   P Ă S T R A T', W/2, afterIntroY);
-    afterIntroY += 50;
+    afterIntroY += 52;
     ctx.fillStyle = goldBright;
-    ctx.font = 'italic 25px "Cormorant Garamond", serif';
-    wrapCanvasText(ctx, '« ' + parsed.keepThought + ' »', W/2, afterIntroY, W-300, 34);
+    ctx.font = 'italic 28px "Cormorant Garamond", serif';
+    wrapCanvasText(ctx, '« ' + parsed.keepThought + ' »', W/2, afterIntroY, W-280, 37);
   }
 
   return c;
