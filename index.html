@@ -3452,7 +3452,6 @@ function renderParsedReading(parsed){
   lastParsedReading = parsed;
   if(typeof initFeedbackButtons === 'function') initFeedbackButtons();
   if(typeof applyPremiumGating === 'function') applyPremiumGating();
-  if(typeof prepareShareImage === 'function') prepareShareImage();
 }
 
 // ---------- extra bonus message: separate from the official reading, freshly random every time ----------
@@ -4329,56 +4328,26 @@ async function generateShareImageCard(){
   return c;
 }
 
-// ---------- pre-generate the share image ahead of time, so the click handler can call
-// navigator.share() immediately (without an intermediate await), preserving the
-// "user activation" flag that mobile browsers require for the native share sheet
-// (with the "save to Photos" option) to appear instead of silently falling back
-// to a plain file download. ----------
-let cachedShareImageFile = null;
-let shareImagePrepPromise = null;
-
-async function prepareShareImage(){
-  const prepPromise = (async ()=>{
-    try{
-      const canvas = await generateShareImageCard();
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      if(!blob) return null;
-      return new File([blob], 'horoscop-sagetator.png', { type: 'image/png' });
-    }catch(e){ return null; }
-  })();
-  shareImagePrepPromise = prepPromise;
-  cachedShareImageFile = await prepPromise;
-  return cachedShareImageFile;
-}
-
 const shareImageBtn = document.getElementById('share-image-btn');
 if(shareImageBtn){
   shareImageBtn.addEventListener('click', async ()=>{
-    // Fast path: image was already prepared in the background, so we can call
-    // navigator.share() synchronously within this click handler.
-    let file = cachedShareImageFile;
-
-    if(file && navigator.canShare && navigator.canShare({ files: [file] })){
-      try{
-        await navigator.share({ files: [file], title: 'Horoscop Săgetător' });
-        return;
-      }catch(e){ /* user cancelled or share failed — fall through to download below */ }
-    }
-
-    // Slow path: nothing cached yet (e.g. clicked right away) — generate now,
-    // and offer download since the native "Save to Photos" share sheet may not
-    // trigger reliably after this extra delay on some browsers.
     shareImageBtn.textContent = 'Se pregătește…';
     try{
-      if(!file) file = await (shareImagePrepPromise || prepareShareImage());
-      if(!file){ shareImageBtn.textContent = '🖼 Distribuie ca imagine'; showToast('Nu am putut genera imaginea acum'); return; }
+      const canvas = await generateShareImageCard();
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      if(!blob){
+        shareImageBtn.textContent = '🖼 Distribuie ca imagine';
+        showToast('Nu am putut genera imaginea acum');
+        return;
+      }
+      const file = new File([blob], 'horoscop-sagetator.png', { type: 'image/png' });
 
-      if(navigator.canShare && navigator.canShare({ files: [file] })){
+      if(navigator.share){
         try{
           await navigator.share({ files: [file], title: 'Horoscop Săgetător' });
           shareImageBtn.textContent = '🖼 Distribuie ca imagine';
           return;
-        }catch(e){ /* user cancelled or share failed — fall back to download */ }
+        }catch(e){ /* user cancelled, or the browser refused — fall back to download */ }
       }
 
       const url = URL.createObjectURL(file);
@@ -4389,7 +4358,7 @@ if(shareImageBtn){
       a.click();
       document.body.removeChild(a);
       setTimeout(()=>URL.revokeObjectURL(url), 3000);
-      showToast('Imagine descărcată în Downloads ✦');
+      showToast('Imagine descărcată — vezi Downloads din Chrome (⋮ → Downloads)');
       shareImageBtn.textContent = '🖼 Distribuie ca imagine';
     }catch(e){
       shareImageBtn.textContent = '🖼 Distribuie ca imagine';
