@@ -3452,6 +3452,7 @@ function renderParsedReading(parsed){
   lastParsedReading = parsed;
   if(typeof initFeedbackButtons === 'function') initFeedbackButtons();
   if(typeof applyPremiumGating === 'function') applyPremiumGating();
+  if(typeof prepareShareImage === 'function') prepareShareImage();
 }
 
 // ---------- extra bonus message: separate from the official reading, freshly random every time ----------
@@ -4328,42 +4329,61 @@ async function generateShareImageCard(){
   return c;
 }
 
+// Pre-generate the share image as soon as the reading is on screen (in the
+// background), so that clicking the button doesn't need to wait for the
+// background photo + fonts to load. That wait is exactly what makes mobile
+// browsers "forget" the click happened, and fall back to a plain download
+// instead of opening the native share sheet.
+let cachedShareImageFile = null;
+let cachedShareImageTab = null;
+
+async function prepareShareImage(){
+  try{
+    const canvas = await generateShareImageCard();
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if(!blob) return null;
+    const file = new File([blob], 'horoscop-sagetator.png', { type: 'image/png' });
+    cachedShareImageFile = file;
+    cachedShareImageTab = currentTab;
+    return file;
+  }catch(e){ return null; }
+}
+
 const shareImageBtn = document.getElementById('share-image-btn');
 if(shareImageBtn){
   shareImageBtn.addEventListener('click', async ()=>{
-    shareImageBtn.textContent = 'Se pregătește…';
-    try{
-      const canvas = await generateShareImageCard();
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      if(!blob){
-        shareImageBtn.textContent = '🖼 Distribuie ca imagine';
-        showToast('Nu am putut genera imaginea acum');
-        return;
-      }
-      const file = new File([blob], 'horoscop-sagetator.png', { type: 'image/png' });
+    // Use the pre-generated image only if it matches the tab currently on
+    // screen — otherwise regenerate now so the picture always matches what
+    // the person is actually looking at.
+    let file = (cachedShareImageTab === currentTab) ? cachedShareImageFile : null;
 
-      if(navigator.share){
-        try{
-          await navigator.share({ files: [file], title: 'Horoscop Săgetător' });
-          shareImageBtn.textContent = '🖼 Distribuie ca imagine';
-          return;
-        }catch(e){ /* user cancelled, or the browser refused — fall back to download */ }
-      }
-
-      const url = URL.createObjectURL(file);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'horoscop-sagetator.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(()=>URL.revokeObjectURL(url), 3000);
-      showToast('Imagine descărcată — vezi Downloads din Chrome (⋮ → Downloads)');
+    if(!file){
+      shareImageBtn.textContent = 'Se pregătește…';
+      file = await prepareShareImage();
       shareImageBtn.textContent = '🖼 Distribuie ca imagine';
-    }catch(e){
-      shareImageBtn.textContent = '🖼 Distribuie ca imagine';
-      showToast('Nu am putut genera imaginea acum');
     }
+
+    if(!file){
+      showToast('Nu am putut genera imaginea acum');
+      return;
+    }
+
+    if(navigator.share){
+      try{
+        await navigator.share({ files: [file], title: 'Horoscop Săgetător' });
+        return;
+      }catch(e){ /* user cancelled, or the browser refused — fall back to download */ }
+    }
+
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'horoscop-sagetator.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 3000);
+    showToast('Imagine descărcată — vezi Downloads din Chrome (⋮ → Downloads)');
   });
 }
 
