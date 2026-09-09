@@ -63,10 +63,13 @@ function buildAstroContext(targetDate) {
   return line;
 }
 
-function buildPrompt(cat, targetDate) {
+function buildPrompt(cat, targetDate, previousIntro) {
   const astro = buildAstroContext(targetDate);
   const p0 = `Context astrologic real, foloseste-l ca sa faci continutul specific acestei zile, nu generic: ${astro} `;
   const pStyle = 'Reguli stricte de stil: NU folosi niciodata liniuta lunga "\u2014" (em-dash) in text; foloseste virgula, punct sau punct si virgula in loc, oriunde ai fi tentat sa pui o liniuta intre doua idei. Scrie cu diacritice corecte si ortografie corecta in limba romana peste tot. Scrie ca un astrolog cu experienta, care a studiat mai multe traditii si scoli de astrologie de-a lungul timpului si reinterpreteaza acea intelepciune in cuvinte proprii, originale; nu mentiona, nu cita si nu face referire explicita la nicio sursa, carte, site sau autor anume. Scrie in propozitii complete, curgatoare, naturale, ca un om care vorbeste, nu ca o lista telegrafica de fragmente lipite intre ele. ';
+  const pVariety = previousIntro
+    ? `Foarte important pentru varietate: tranzitele astrologice de fond (ex. un retrograd) pot ramane active mai multe saptamani, dar NU ai voie sa repeti aceeasi formulare sau acelasi unghi zi de zi. Ieri, introducerea a fost: "${previousIntro}" — azi trebuie sa alegi un unghi complet diferit (o alta zona de viata, un alt exemplu concret, o alta structura de fraza, un alt cuvant de inceput), chiar daca tranzitele de fond sunt aceleasi. Foloseste faza exacta a Lunii din context ca element principal de noutate al zilei, nu doar tranzitul retrograd de fond. `
+    : '';
   const p1 = `Scrie un horoscop detaliat, in limba romana, pentru zodia Sagetator (Sagittarius), pentru ${cat.period}. Ton cald, matur, direct, fara clisee ieftine. `;
   const p2 = 'Structura ceruta, EXACT (fiecare camp separat, text natural, propozitii complete): ';
   const p3 = '1) "intro": un paragraf de introducere de 3-4 propozitii, despre tema generala a perioadei. ';
@@ -79,10 +82,10 @@ function buildPrompt(cat, targetDate) {
   const p9b = '7b) "keepThought": o singura propozitie foarte scurta (max 15 cuvinte), memorabila, ton inspirational. ';
   const p11 = 'Raspunde DOAR cu JSON valid, fara text suplimentar, fara markdown, exact in acest format: ';
   const schema = '{"intro":"...","areas":{"dragoste":{"text":"...","tip":"..."},"finante":{"text":"...","tip":"..."},"cariera":{"text":"...","tip":"..."},"familie":{"text":"...","tip":"..."}},"lesson":"...","advice":"...","affirmation":"...","scores":{"dragoste":NUMAR,"finante":NUMAR,"cariera":NUMAR,"familie":NUMAR,"energie":NUMAR},"question":"...","keepThought":"..."}';
-  return p0 + pStyle + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p9b + p11 + schema;
+  return p0 + pStyle + pVariety + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p9b + p11 + schema;
 }
 
-async function generateOne(tab) {
+async function generateOne(tab, previousIntro) {
   const cat = CAT_MAP[tab];
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
@@ -100,7 +103,8 @@ async function generateOne(tab) {
     body: JSON.stringify({
       model: 'claude-sonnet-5',
       max_tokens: 4096,
-      messages: [{ role: 'user', content: buildPrompt(cat, targetDate) }]
+      temperature: 1,
+      messages: [{ role: 'user', content: buildPrompt(cat, targetDate, previousIntro) }]
     })
   });
 
@@ -129,9 +133,19 @@ async function main() {
   const dayKey = todayKey();
   const results = {};
 
+  // Grab yesterday's text for each tab BEFORE it gets overwritten below, so we
+  // can hand it to the model as "don't repeat this" context.
+  const previousIntros = {};
   for (const tab of Object.keys(CAT_MAP)) {
     try {
-      const parsed = await generateOne(tab);
+      const prev = JSON.parse(fs.readFileSync(path.join(dataDir, `${tab}.json`), 'utf8'));
+      if (prev && prev.intro) previousIntros[tab] = prev.intro;
+    } catch (e) { /* no previous file yet, that's fine */ }
+  }
+
+  for (const tab of Object.keys(CAT_MAP)) {
+    try {
+      const parsed = await generateOne(tab, previousIntros[tab]);
       results[tab] = parsed;
       fs.writeFileSync(path.join(dataDir, `${tab}.json`), JSON.stringify(parsed, null, 2));
       console.log(`✓ ${tab}: generated and saved`);
